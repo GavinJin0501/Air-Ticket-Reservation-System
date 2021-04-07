@@ -85,6 +85,7 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
+        session['username'] = username
         ins = "INSERT INTO user VALUES(\'{}\', \'{}\')"
         cursor.execute(ins.format(username, password))
         conn.commit()
