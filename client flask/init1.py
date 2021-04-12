@@ -108,7 +108,7 @@ def home():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     username = session['username']
-    cursor = conn.cursor();
+    cursor = conn.cursor()
     blog = request.form['blog']
     query = "INSERT INTO blog (blog_post, username) VALUES(\'{}\', \'{}\')"
     cursor.execute(query.format(blog, username))
