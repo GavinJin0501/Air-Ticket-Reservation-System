@@ -1,8 +1,10 @@
-#!C:/Users/lx615/AppData/Local/Programs/Python/Python38-32/python
-
 # Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
+
+
+PASSWORD_HASH = "md5"
 
 # Initialize the app from Flask
 app = Flask(__name__)
