@@ -6,66 +6,53 @@ import mysql.connector
 
 PASSWORD_HASH = "md5"
 
-# Initialize the app from Flask
+
 app = Flask(__name__)
 
-# Configure MySQL
 conn = mysql.connector.connect(host='localhost',
                                user='root',
                                password='',
                                database='blog')
 
 
-# Define a route to hello function
 @app.route('/')
 def hello():
     return render_template('index.html')
 
 
-# Define route for login
 @app.route('/login')
 def login():
     return render_template('login.html')
 
 
-# Define route for register
 @app.route('/register')
 def register():
     return render_template('register.html')
 
 
-# Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
-    # grabs information from the forms
     username = request.form['username']
     password = request.form['password']
 
-    # cursor used to send queries
     cursor = conn.cursor()
-    # executes query
-    query = "SELECT * FROM user WHERE username = \'{}\' and password = \'{}\'"
-    cursor.execute(query.format(username, password))
-    # stores the results in a variable
-    data = cursor.fetchone()
-    # use fetchall() if you are expecting more than 1 data row
+    query = "SELECT * FROM user WHERE username = \'{}\'"
+    cursor.execute(query.format(username))
+    data = cursor.fetchall()
+    # print(data)
+    status = check_password_hash(data[0][1], password)
     cursor.close()
     error = None
-    if (data):
-        # creates a session for the the user
-        # session is a built in
+    if status:
         session['username'] = username
         return redirect(url_for('home'))
     else:
-        # returns an error message to the html page
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
 
 
-# Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
-    # grabs information from the forms
     username = request.form['username']
     password = request.form['password']
 
@@ -73,23 +60,18 @@ def registerAuth():
     #                flash("Password length must be at least 4 characters")
     #               return redirect(request.url)
 
-    # cursor used to send queries
     cursor = conn.cursor()
-    # executes query
     query = "SELECT * FROM user WHERE username = \'{}\'"
     cursor.execute(query.format(username))
-    # stores the results in a variable
     data = cursor.fetchone()
-    # use fetchall() if you are expecting more than 1 data row
     error = None
-    if (data):
-        # If the previous query returns data, then user exists
+    if data:
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
         session['username'] = username
         ins = "INSERT INTO user VALUES(\'{}\', \'{}\')"
-        cursor.execute(ins.format(username, password))
+        cursor.execute(ins.format(username, generate_password_hash(password, PASSWORD_HASH)))
         conn.commit()
         cursor.close()
         flash("You are logged in")
