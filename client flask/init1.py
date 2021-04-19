@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, session, url_for, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
+from mysql_query import *
 
 
 PASSWORD_HASH = "md5"
@@ -35,13 +36,7 @@ def loginAuth():
     username = request.form['username']
     password = request.form['password']
 
-    cursor = conn.cursor()
-    query = "SELECT * FROM user WHERE username = \'{}\'"
-    cursor.execute(query.format(username))
-    data = cursor.fetchall()
-    # print(data)
-    status = check_password_hash(data[0][1], password)
-    cursor.close()
+    status = login_check(conn, username, password)
     error = None
     if status:
         session['username'] = username
@@ -60,20 +55,14 @@ def registerAuth():
     #                flash("Password length must be at least 4 characters")
     #               return redirect(request.url)
 
-    cursor = conn.cursor()
-    query = "SELECT * FROM user WHERE username = \'{}\'"
-    cursor.execute(query.format(username))
-    data = cursor.fetchone()
+    data = register_check(conn, username)
     error = None
     if data:
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
         session['username'] = username
-        ins = "INSERT INTO user VALUES(\'{}\', \'{}\')"
-        cursor.execute(ins.format(username, generate_password_hash(password, PASSWORD_HASH)))
-        conn.commit()
-        cursor.close()
+        register_store(conn, username, password)
         flash("You are logged in")
         return render_template('index.html')
 
