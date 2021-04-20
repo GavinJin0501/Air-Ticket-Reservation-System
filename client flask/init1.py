@@ -1,8 +1,7 @@
 # Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect, flash
-from werkzeug.security import generate_password_hash, check_password_hash
-import mysql.connector
 from mysql_query import *
+import mysql.connector
 
 
 PASSWORD_HASH = "md5"

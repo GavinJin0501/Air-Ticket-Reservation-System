@@ -30,3 +30,9 @@ def login_check(conn, username, password):
     cursor.close()
     return status
 
+
+def search_for_flight(conn, source, destination, date):
+    cursor = conn.cursor()
+    query = "SELECT * FROM flight WHERE departure_time = \'{}\'"
+
+
