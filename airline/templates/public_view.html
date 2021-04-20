@@ -29,12 +29,17 @@
             <input type="text" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
-            <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
-            <datalist id="source">
-                {% for line in airport_city %}
-                    <option value="{{line}}">
-                {% endfor %}
-            </datalist>
+            <div id="depart_info">
+                
+                <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
+                <datalist id="source">
+                    {% for line in airport_city %}
+                        <option value="{{line}}">
+                    {% endfor %}
+                </datalist>
+                <label>depart city/airport</label>
+            </div>
+            
             <input type="text", list="destination" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <datalist id="destination">
                 {% for line in airport_city %}
