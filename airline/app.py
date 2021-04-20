@@ -16,7 +16,7 @@ conn = mysql.connector.connect(host='localhost',
 def public_view():
     if session.get("logged_in", False):
         pass
-    return render_template("public_view.html", flights=[()])
+    return render_template("public_view.html", airport_city=[], flights=[])
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
