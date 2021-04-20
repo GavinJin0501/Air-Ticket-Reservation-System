@@ -24,21 +24,41 @@
     
     <!-- Tab content -->
     <div id="Search_Flight" class="tabcontent">
-        <form action="/SearchFlight" id="searchForm" method="POST">
-        <input type="text" name = "depart" placeholder="depart city & airport" required/> </br>
-        <input type="text" name = "arrive" placeholder="arrive city & airport" required/> </br>
-        <input type="text" name = "date" placeholder="date" required/> </br>
-        <input type="submit" value = Search>
+        <form action="/SearchFlight" id="searchForm" autocomplete="off" method="POST">
+            <!-- <input type="text" name = "depart" placeholder="depart city or airport" required/> </br>
+            <input type="text" name = "arrive" placeholder="arrive city or airport" required/> </br>
+            <input type="text" name = "date" placeholder="date" required/> </br>
+            <input type="submit" value = Search> -->
+            <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
+            <datalist id="source">
+                {% for line in airport_city %}
+                    <option value="{{line}}">
+                {% endfor %}
+            </datalist>
+            <input type="text", list="destination" name = "arrive" placeholder="arrive city or airport" required/> </br>
+            <datalist id="destination">
+                {% for line in airport_city %}
+                    <option value="{{line}}">
+                {% endfor %}
+            </datalist>
+            <input type="date" name = "date" placeholder="date" id = "date" required/> </br>
+            <input type="submit" value = Search>
         </form>
     </div>
 
     </body>>
 
-    <script>
-        var flight_list;
-        flight_list = {{flights}};
-        console.log("happy");
-        console.log(flight_list);
+    <script type="text/javascript">
+        var flight_list, airports_and_city, today;
+        today = new Date().toISOString().substr(0, 10);
+        console.log(today);
+        document.querySelector("#date").value = today;
+
+        flight_list = {{flights | safe}};
+        airports_and_city = {{airport_city | safe}};
+        for (var i in airports_and_city) {
+            console.log(airports_and_city[i]);
+        }
         function openSearch(evt, searchbar) {
               // Declare all variables
               var i, tabcontent, tablinks;
