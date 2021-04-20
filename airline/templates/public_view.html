@@ -15,8 +15,15 @@
 
 
     <body>
-
-    <div class="container">
+    
+    <!-- Tab links -->
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Search_Flight')">Search Flight</button>
+        <button class="tablinks" onclick="openCity(event, 'Check_Status')">Check Status</button>
+    </div>
+    
+    <!-- Tab content -->
+    <div id="Search_Flight" class="tabcontent">
         <form id="searchForm">
         <input type="text" name = "depart city & airport" placeholder="depart city & airport" required/> </br>
         <input type="text" name = "arrive city & airport" placeholder="arrive city & airport" required/> </br>
