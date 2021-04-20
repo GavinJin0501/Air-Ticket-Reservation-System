@@ -18,18 +18,41 @@
     
     <!-- Tab links -->
     <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'Search_Flight')">Search Flight</button>
-        <button class="tablinks" onclick="openCity(event, 'Check_Status')">Check Status</button>
+        <button class="tablinks" onclick="openSearch(event, 'Search_Flight')">Search Flight</button>
+        <button class="tablinks" onclick="openSearch(event, 'Check_Status')">Check Status</button>
     </div>
     
     <!-- Tab content -->
     <div id="Search_Flight" class="tabcontent">
-        <form id="searchForm">
-        <input type="text" name = "depart city & airport" placeholder="depart city & airport" required/> </br>
-        <input type="text" name = "arrive city & airport" placeholder="arrive city & airport" required/> </br>
+        <form action="/SearchFlight" id="searchForm">
+        <input type="text" name = "depart" placeholder="depart city & airport" required/> </br>
+        <input type="text" name = "arrive" placeholder="arrive city & airport" required/> </br>
         <input type="text" name = "date" placeholder="date" required/> </br>
         <input type="submit" value = Search>
         </form>
     </div>
 
     </body>>
+
+    <script>
+        function openSearch(evt, searchbar) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(searchbar).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+    </script>
