@@ -21,7 +21,8 @@ def home():
             pass
         elif session["type"] == "airline_staff":
             pass
-    return redirect(url_for("search_flight"))
+    else:
+        return redirect(url_for("search_flight"))
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
@@ -35,6 +36,7 @@ def search_flight():
         destination = request.form['arrive']
         date = request.form['date']
         print(source, destination, date)
+        # insert_into_airport(conn, source, destination)
         # get_flights_by_location(source, destination, date)
         return render_template("public_view.html", airport_city=airport_city, flights=[(1, 2, 3), (4, 5, 6)])
 

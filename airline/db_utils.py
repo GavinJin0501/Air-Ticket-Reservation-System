@@ -15,6 +15,16 @@ def get_airport_and_city(conn):
     return data
 
 
+def insert_into_airport(conn, airport, city):
+    cursor = conn.cursor()
+    query = "INSERT INTO airport VALUES (\'{}\', \'{}\')"
+    cursor.execute(query.format(airport, city))
+    conn.commit()
+    cursor.close()
+    return
+
+
+
 def get_flights_by_location(conn, source, destination, date):
     cursor = conn.cursor()
     query = "SELECT * FROM "
