@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
     margin: 0;
-    padding: 0;
+    padding: 30px;
     font-family: 'Kumbh Sans', sans-serif;
     scroll-behavior: smooth;
   }
@@ -27,12 +27,12 @@
   .tab button {
     background-color: inherit;
     float: left;
-    border: 20px;
+    border: 10px;
     font-family: 'Kumbh Sans', sans-serif;
     font-size: 18px;
     outline: none;
     cursor: pointer;
-    padding: 20px 220px;
+    padding: 20px 200px;
     transition: 0.3s;
   }
   
@@ -52,8 +52,9 @@
   input[type=button], input[type=submit], input[type=reset]  {
   background-color: #636fa4;
   border: 20px;
+  margin: 30px;
   color: white;
-  padding: 15px 80px;
+  padding: 15px 50px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -92,7 +93,7 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 5px;
+    margin: 10px;
     width: 85%;
     border: 2px solid #f6f6f6;
     -webkit-transition: all 0.5s ease-in-out;
