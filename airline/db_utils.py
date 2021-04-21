@@ -21,14 +21,37 @@ def get_airport_and_city(conn):
     return data2
 
 
-def insert_into_airport(conn, airport, city):
+def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_airport=""):
     cursor = conn.cursor()
-    query = "INSERT INTO airport VALUES (\'{}\', \'{}\')"
-    cursor.execute(query.format(airport, city))
-    conn.commit()
+    query = """SELECT * 
+               FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
+               WHERE F.departure_time LIKE \'%{}\' AND """
+    # city+airport -> city+airport
+    if src_airport and dst_airport:
+        query += """F.departure_airport = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
+        cursor.execute(query.format(date, src_airport, dst_airport))
+    # city+airport -> city
+    elif src_airport:
+        query += """F.departure_airport = \'{}\' AND DST.airport_city= \'{}\' ORDER BY F.departure_time"""
+        cursor.execute(query.format(date, src_airport, dst_city))
+    # city -> city+airport
+    elif dst_airport:
+        query += """SRC.airport_city = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
+        cursor.execute(query.format(date, src_city, dst_airport))
+    # city -> city
+    else:
+        query += """SRC.airport_city = \'{}\' AND DST.airport_city= \'{}\' ORDER BY F.departure_time"""
+        cursor.execute(query.format(date, src_city, dst_city))
+    data = cursor.fetchall()
+    for each in data:
+        print(each)
     cursor.close()
-    return
+    return []
 
 
-def get_flights_by_location(conn, source, destination, date):
-    pass
+
+
+
+    data = cursor.fetchall()
+    cursor.close()
