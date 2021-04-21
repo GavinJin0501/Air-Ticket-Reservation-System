@@ -22,9 +22,9 @@ def get_airport_and_city(conn):
 
 
 def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_airport=""):
-    print("==============")
     cursor = conn.cursor()
-    query = """SELECT * 
+    query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
+                      arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
                WHERE F.departure_time LIKE \'{}%\' AND """
@@ -45,7 +45,16 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
         query += """SRC.airport_city = \'{}\' AND DST.airport_city= \'{}\' ORDER BY F.departure_time"""
         cursor.execute(query.format(date, src_city, dst_city))
     data = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i] = data[i][:4] + [data[i][4].strftime("%Y/%m/%d %H:%M:%S"), data[i][5], data[i][6],
+                                 data[i][7].strftime("%Y/%m/%d %H:%M:%S"), int(data[i][8])] \
+                  + data[i][9:]
+    print()
     for each in data:
         print(each)
-    cursor.close()
-    return []
+    print()
+
+    return data

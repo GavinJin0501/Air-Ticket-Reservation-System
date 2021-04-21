@@ -31,7 +31,6 @@ def search_flight():
     flights = []
     print(airport_city)
     if request.method == "GET":
-        print("GET")
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
     elif request.method == "POST":
         source = request.form['depart']
@@ -51,6 +50,9 @@ def search_flight():
         if len(destination) == 2:
             dst_airport = destination[1]
 
+        # flights is a nested list, with its sublist:
+        # [airline_name, flight_num, depart_airport, depart_city, depart_time,
+        #  arrive_airport, arrive_city, arrive_time, price, status, plane_id]
         flights = get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
 
