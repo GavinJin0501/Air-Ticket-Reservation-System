@@ -16,39 +16,69 @@
 
     <body>
     
+    
+        <nav class="navbar">
+            <div class="navbar__container">
+              <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+              <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span> <span class="bar"></span>
+                <span class="bar"></span>
+              </div>
+              <ul class="navbar__menu">
+                <li class="navbar__item">
+                  <a href="/" class="navbar__links" id="search-flight">Search Flight</a>
+                </li>
+                <li class="navbar__item">
+                  <a href="/" class="navbar__links" id="check-status">Check Status</a>
+                <li class="navbar__btn">
+                  <a href="/" class="button" id="login">Login</a>
+                </li>
+                <li class="navbar__btn">
+                    <a href="/" class="button" id="sign-up">Register</a>
+                </li>
+              </ul>
+            </div>
+        </nav>
+
     <!-- Tab links -->
-    <div class="tab">
+    <!-- <div class="tab">
         <button class="tablinks" onclick="openSearch(event, 'Search_Flight')">Search Flight</button>
         <button class="tablinks" onclick="openSearch(event, 'Check_Status')">Check Status</button>
-    </div>
+    </div> -->
     
     <!-- Tab content -->
-    <div id="Search_Flight" class="tabcontent">
-        <form action="/SearchFlight" id="searchForm" autocomplete="off" method="POST">
+    <!-- <div id="Search_Flight" class="tabcontent">
+        <form action="/SearchFlight" id="searchForm" autocomplete="off" method="POST"> -->
             <!-- <input type="text" name = "depart" placeholder="depart city or airport" required/> </br>
             <input type="text" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
-            <div id="depart_info">
-                
-                <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
-                <datalist id="source">
-                    {% for line in airport_city %}
-                        <option value="{{line}}">
-                    {% endfor %}
-                </datalist>
-            </div>
-            
+    <div class="container" id="search-container">
+        <form>
+            <label class="label">Source</label>             
+            <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
+            <datalist id="source">
+                {% for line in airport_city %}
+                    <option value="{{line}}">
+                {% endfor %}
+            </datalist>
+            <label class="label">Destination</label>
             <input type="text", list="destination" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <datalist id="destination">
                 {% for line in airport_city %}
                     <option value="{{line}}">
                 {% endfor %}
             </datalist>
+            <label class="label">Date</label>
             <input type="date" name = "date" placeholder="date" id = "date" required/> </br>
             <input type="submit" value = Search>
         </form>
     </div>
+
+    <div class="container" id="display-container">
+
+    </div>
+    
 
     </body>>
 

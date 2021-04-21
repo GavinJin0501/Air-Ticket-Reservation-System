@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
     margin: 0;
-    padding: 30px;
+    padding: 0;
     font-family: 'Kumbh Sans', sans-serif;
     scroll-behavior: smooth;
   }
@@ -17,8 +17,102 @@
     height: 100vh;
   } */
   
+  .label {
+    color: #4d5da3;
+    font-size: 18px;
+  }
+
+  .navbar {
+    background: #636fa4;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  
+  .navbar__container {
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    z-index: 1;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 50px;
+  }
+  
+  #navbar__logo {
+    background-color: #ff8177;
+    background-image: linear-gradient(to top, #fc3e6d 0%, #ffb199 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 2rem;
+  }
+  
+  .navbar__menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+  }
+  
+  .navbar__item {
+    height: 80px;
+  }
+  
+  .navbar__links {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    text-decoration: none;
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    width: 100%;
+  }
+  
+  .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px 30px;
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar__links:hover {
+    color: #a8b2dd;
+    transition: all 0.3s ease;
+  }
   /* Style the tab */
-.tab {
+  .tab {
     overflow: hidden;
     background-color: #f6f6f6;
   }
@@ -43,16 +137,27 @@
   
   /* Create an active/current tablink class */
   .tab button.active {
-    background-color: #636fa4;
+    background-color: #a8b2dd;
   }
   
 
-  #searchForm
+  .container {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    width: 80%;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+  }
   
-  input[type=button], input[type=submit], input[type=reset]  {
+  input[type=button], input[type=submit], input[type=reset] {
   background-color: #636fa4;
   border: 20px;
-  margin: 30px;
+  margin: 30px auto;
   color: white;
   padding: 15px 50px;
   text-align: center;
@@ -88,13 +193,13 @@
     background-color: #f6f6f6;
     border: none;
     color: #0d0d0d;
-    padding: 15px 32px;
+    padding: 15px 100px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 10px;
-    width: 85%;
+    margin: 10px auto;
+    width: 100%;
     border: 2px solid #f6f6f6;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -115,8 +220,7 @@
   }
   
   input[type=date] {
-    font-family: 'PT Sans', sans-serif;
-    font-size: 1.2rem;
+    margin: 10px;
     display: block;
     padding: 0.5rem 1rem;
   }
