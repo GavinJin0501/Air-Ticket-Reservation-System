@@ -22,6 +22,7 @@ def get_airport_and_city(conn):
 
 
 def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_airport=""):
+    print("==============")
     cursor = conn.cursor()
     query = """SELECT * 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 

@@ -31,6 +31,7 @@ def search_flight():
     flights = []
     print(airport_city)
     if request.method == "GET":
+        print("GET")
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
     elif request.method == "POST":
         source = request.form['depart']

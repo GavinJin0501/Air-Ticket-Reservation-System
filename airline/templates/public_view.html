@@ -54,7 +54,7 @@
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
     <div class="container" id="search-container">
-        <form>
+        <form action="/SearchFlight" autocomplete="off" method="POST">
             <label class="label">Source</label>             
             <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
             <datalist id="source">
