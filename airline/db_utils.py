@@ -26,7 +26,7 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
     query = """SELECT * 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'%{}\' AND """
+               WHERE F.departure_time LIKE \'{}%\' AND """
     # city+airport -> city+airport
     if src_airport and dst_airport:
         query += """F.departure_airport = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
@@ -48,10 +48,3 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
         print(each)
     cursor.close()
     return []
-
-
-
-
-
-    data = cursor.fetchall()
-    cursor.close()

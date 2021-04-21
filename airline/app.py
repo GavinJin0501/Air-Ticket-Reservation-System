@@ -39,7 +39,7 @@ def search_flight():
 
         source = source.split(" - ")
         destination = destination.split(" - ")
-        print(source, destination, date)
+        # print(source, destination, date)
 
         src_city = source[0]
         dst_city = destination[0]
@@ -49,6 +49,7 @@ def search_flight():
             src_airport = source[1]
         if len(destination) == 2:
             dst_airport = destination[1]
+
         flights = get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
 
