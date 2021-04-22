@@ -62,7 +62,11 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
 
 def login_check(conn, username, password, identity):
     cursor = conn.cursor()
-    query = """SELECT password FROM {} WHERE email = \'{}\'"""
+    query = """SELECT password FROM {} WHERE"""
+    if identity == "airline_staff":
+        query += """username = \'{}\'"""
+    else:
+        query += """email = \'{}\'"""
     cursor.execute(query.format(identity, username))
     data = cursor.fetchall()
     cursor.close()
@@ -71,5 +75,34 @@ def login_check(conn, username, password, identity):
     return check_password_hash(data[0][0], password)
 
 
-def register():
-    pass
+def register_check(conn, email, identity):
+    cursor = conn.cursor()
+    query = """SELECT """
+    if identity == "airline_staff":
+        query += "username FROM {} WHERE username = \'{}\'"
+    else:
+        query += "email FROM {} WHERE email = \'{}\'"
+    cursor.execute(query.format(identity, email))
+    data = cursor.fetchall()
+    cursor.close()
+    return data == []
+
+
+def register_to_database(conn, info, identity):
+    cursor = conn.cursor()
+    if identity == "customer":
+        query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', " \
+                "\'{}\', \'{}\', \'{}\') "
+        cursor.execute(query.format(identity, info["email"], info["name"], info["password"], info["building_number"],
+                                    info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
+                                    info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
+    elif identity == "booking_agent":
+        query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\')"
+        cursor.execute(query.format(identity, info["email"], info["password"], info["booking_agent_id"]))
+    else:
+        query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
+        cursor.execute(query.format(info["email"], info["password"], info["first_name"], info["last_name"],
+                                    info["date_of_birth"], info["airline_name"]))
+    conn.commit()
+    cursor.close()
+    return
