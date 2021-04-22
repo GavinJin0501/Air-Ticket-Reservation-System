@@ -78,8 +78,17 @@
 <!--        -->
 
 <!--    {% endif %}-->
-
-    {% if flights%}
+    <!-- {% if flights[0] == "No Flights"%}
+    <div class="label">
+        flights[0]
+    </div>
+    {% endif %} -->
+    {% if flights %}
+        {% if flights[0] == "No flights"%}
+            <div class="label">
+                Sorry. {{flights[0]}}. Please search again.
+            </div>
+        {% else %}
 
             <div class="topbutton">
                 <div class="airlinebutton">
@@ -109,51 +118,44 @@
             </div>
 
             {% for line in flights %}
-                <!-- <div> -->
-                    <section class="button" id="allbutton">
-                        <div class="button">
-                            <section class="button" >
-                                <div class="flight-button-container">
-                                    <div class="otherlabel">{{line[0]}}</div></Br>
-                                    <div class="otherlabel">{{line[1]}}</div></Br>
-                                </div>
-                                <div class="flight-button-container">
-                                    <section class="label"> </section></Br>
-                                    <section class="label"> </section></Br>
-                                    <section class="otherlabel"> {{line[4][:10]}} </section></Br>
-                                </div> 
-                                <div class="flight-button-container">
-                                    <section class="otherlabel">{{line[2]}} {{line[3]}}</section></Br>
-                                    <section class="bigbutton">
-                                        <section class="timelabel">{{line[4][10:]}}</section>
-                                    </section>
-                                </div> 
-                                <div>
-                                    <section class="otherlabel">{{line[5]}} {{line[6]}}</section></Br>
-                                    <section class="bigbutton">
-                                        <section class="timelabel">{{line[7][10:]}}</section>
-                                    </section>
-                                </div>
-                            </section>
-                            <!-- <section class="button" >
-                                <section class="label">Airline</section>
-                            </section> -->
-                        </div> 
-                        <div class="pspbutton">${{line[8]}}</div>
-                        <div class="pspbutton">{{line[9]}}</div>
-                        <div class="pspbutton">{{line[10]}}</div>
-                        <div class="pspbutton">
-                                <a href="/login" class="button" id="login">BUY</a>
-                        </div>
-                    </section>
-                <!-- </div> -->
+                <section class="button" id="allbutton">
+                    <div class="button">
+                        <section class="button" >
+                            <div class="flight-button-container">
+                                <div class="otherlabel">{{line[0]}}</div></Br>
+                                <div class="otherlabel">{{line[1]}}</div></Br>
+                            </div>
+                            <div class="flight-button-container">
+                                <section class="label"> </section></Br>
+                                <section class="label"> </section></Br>
+                                <section class="otherlabel"> {{line[4][:10]}} </section></Br>
+                            </div> 
+                            <div class="flight-button-container">
+                                <section class="otherlabel">{{line[2]}} {{line[3]}}</section></Br>
+                                <section class="bigbutton">
+                                    <section class="timelabel">{{line[4][10:]}}</section>
+                                </section>
+                            </div> 
+                            <div>
+                                <section class="otherlabel">{{line[5]}} {{line[6]}}</section></Br>
+                                <section class="bigbutton">
+                                    <section class="timelabel">{{line[7][10:]}}</section>
+                                </section>
+                            </div>
+                        </section>
+                        <!-- <section class="button" >
+                            <section class="label">Airline</section>
+                        </section> -->
+                    </div> 
+                    <div class="pspbutton">${{line[8]}}</div>
+                    <div class="pspbutton">{{line[9]}}</div>
+                    <div class="pspbutton">{{line[10]}}</div>
+                    <div class="pspbutton">
+                            <a href="/login" class="button" id="login">BUY</a>
+                    </div>
+                </section>
             {% endfor %}
-        <!-- </div> -->
-    {% endif %}
-    {% if flights[0] == "No Flights"%}
-        <div class="label">
-            flights[0]
-        </div>
+        {% endif %}
     {% endif %}
 
 
