@@ -91,9 +91,11 @@ def login_general_page():
             pass
 
 
-@app.route('/login', defaults={'identity': "customer"})
+# identity = customer/booking_agent/airline_staff
 @app.route('/login/<string:identity>', methods=['Get', 'Post'])
 def login_page(identity):
+    if identity not in ["customer", "booking_agent", "airline_staff"]:
+        return redirect(url_for("login_general_page"))
     if not session.get("logged_in", False):
         error = ""
         if request.method == "GET":
@@ -118,18 +120,22 @@ def login_page(identity):
             pass
 
 
-@app.route('/register/Customer', methods=['Get', 'Post'])
-def register_customer():
-    pass
+@app.route('/register', methods=['Get'])
+def register_general_page():
+    if not session.get("logged_in", False):
+        return render_template("register_general.html")
+    else:
+        if session["type"] == "customer":
+            pass
+        elif session["type"] == "agent":
+            pass
+        elif session["type"] == "airline_staff":
+            pass
 
 
-@app.route('/register/Agent', methods=['Get', 'Post'])
-def register_agent():
-    pass
-
-
-@app.route('/register/Staff', methods=['Get', 'Post'])
-def register_airline_staff():
+# identity = customer/booking_agent/airline_staff
+@app.route('/register/<string:identity>', methods=['Get', 'Post'])
+def register_page(identity):
     pass
 
 
