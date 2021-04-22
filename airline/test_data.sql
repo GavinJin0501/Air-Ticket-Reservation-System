@@ -4,7 +4,8 @@ VALUES ("China Eastern Airlines"), ("China Southern Airlines"),
 
 INSERT INTO Airport
 VALUES ("JFK", "NYC"), ("PVG", "Shanghai"), ("PEK", "Beijing"),
-        ("SHA", "Shanghai"), ("PKX", "Beijing");
+       ("SHA", "Shanghai"), ("PKX", "Beijing"),("CSX", "Changsha"),
+       ("CTU", "Chengdu"), ("CKG", "Chongqing"), ("FOC", "Fuzhou"), ("CAN", "Guangzhou");
 
 INSERT INTO airplane
 VALUES ("China Eastern Airlines", 330, 259), ("China Eastern Airlines", 320, 259);

@@ -47,7 +47,7 @@ def home():
 def search_flight():
     airport_city = get_airport_and_city(conn)
     flights = []
-    # print(airport_city)
+    print(airport_city)
     if request.method == "GET":
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
     elif request.method == "POST":
