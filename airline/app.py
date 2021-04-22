@@ -34,13 +34,13 @@ def logged_in_redirect():
 def home():
     if not session.get("logged_in", False):
         return redirect(url_for("search_flight"))
-    else:
-        if session["type"] == "customer":
-            pass
-        elif session["type"] == "agent":
-            pass
-        elif session["type"] == "airline_staff":
-            pass
+    # else:
+    #     if session["type"] == "customer":
+    #         pass
+    #     elif session["type"] == "agent":
+    #         pass
+    #     elif session["type"] == "airline_staff":
+    #         pass
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
@@ -78,17 +78,22 @@ def search_flight():
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
 
 
+@app.route('/CheckStatus')
+def check_flight_status():
+    pass
+
+
 @app.route('/login', methods=['Get'])
 def login_general_page():
     if not session.get("logged_in", False):
         return render_template("login_general.html")
-    else:
-        if session["type"] == "customer":
-            pass
-        elif session["type"] == "agent":
-            pass
-        elif session["type"] == "airline_staff":
-            pass
+    # else:
+    #     if session["type"] == "customer":
+    #         pass
+    #     elif session["type"] == "agent":
+    #         pass
+    #     elif session["type"] == "airline_staff":
+    #         pass
 
 
 # identity = customer/booking_agent/airline_staff
@@ -96,7 +101,7 @@ def login_general_page():
 def login_page(identity):
     if identity not in ["customer", "booking_agent", "airline_staff"]:
         return redirect(url_for("login_general_page"))
-    if not session.get("logged_in", False):
+    elif not session.get("logged_in", False):
         error = ""
         if request.method == "GET":
             return render_template("login_%s.html" % identity, error=error)
@@ -106,10 +111,14 @@ def login_page(identity):
             if not is_math(email, EMAIL_REGEX):
                 error = "Email address invalid"
                 return render_template("login_customer", error=error)
-            if not login_check(conn, email, password, identity):
+            elif not login_check(conn, email, password, identity):
                 error = "Email address or password invalid"
                 return render_template("login_customer", error=error)
-            return redirect(url_for("customer_home"))
+            else:
+                session["logged_in"] = True
+                session["type"] = identity
+                session["email"] = email
+                return redirect(url_for("customer_home"))
 
     else:
         if session["type"] == "customer":

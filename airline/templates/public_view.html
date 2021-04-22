@@ -56,14 +56,14 @@
             <label id="navbar__logo">Welcome! You may search flight here!</label> </br>
             <label class="label">Source</label>             
             <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
-            <datalist id="source">
+            <datalist id="source" >
                 {% for line in airport_city %}
                     <option value="{{line}}">
                 {% endfor %}
             </datalist>
             <label class="label">Destination</label>
             <input type="text", list="destination" name = "arrive" placeholder="arrive city or airport" required/> </br>
-            <datalist id="destination">
+            <datalist id="destination" >
                 {% for line in airport_city %}
                     <option value="{{line}}">
                 {% endfor %}
@@ -141,6 +141,7 @@
         today = new Date().toISOString().substr(0, 10);
         console.log(today);
         document.querySelector("#date").value = today;
+        document.getElementsByName("date")[0].setAttribute('min', today);
 
         flight_list = {{flights | safe}};
         airports_and_city = {{airport_city | safe}};
