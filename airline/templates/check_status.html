@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>B-Airline Login</title>
-<link rel="stylesheet" href="../static/public_view.css" />
-<head>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+    </head>
+
+
+    <body>
         <nav class="navbar">
             <div class="navbar__container">
               <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
@@ -16,10 +18,10 @@
               </div>
               <ul class="navbar__menu">
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="links">Search Flight</a>
+                  <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                 </li>
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="links">Check Status</a>
+                  <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                 <li class="navbar__btn">
                   <a href="/login" class="button" id="login">Login</a>
                 </li>
@@ -30,4 +32,19 @@
             </div>
         </nav>
 
-    
+
+        <div class="search-container" id="search-container">
+            <form action="/CheckStatus" autocomplete="off" method="POST">
+                <label id="navbar__logo">Welcome! You may check status here!</label> </br>
+                <label class="label">Flight Number</label>             
+                <input type="text", list="flight" name = "flightnum" placeholder="flight number" required/> </br>
+                <datalist id="flight-number">
+                    {% for line in flight_number %}
+                        <option value="{{line}}">
+                    {% endfor %}
+                </datalist>
+                <label class="label">Date</label>
+                <input type="date" name = "date" placeholder="date" id = "date" required/> </br>
+                <input type="submit" value = Search>
+            </form>
+        </div>

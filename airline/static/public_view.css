@@ -110,9 +110,9 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 8px 30px;
+    padding: 8px 10px;
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
     border: none;
     outline: none;
     border-radius: 4px;
@@ -121,6 +121,55 @@
     background: linear-gradient(to right, #e8cbc0, #a8b2dd);
     color: #fff;
     transition: all 0.3s ease;
+  }
+
+  .topbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 30px;
+    border: none;
+    margin: none;
+    /* width: 95%; */
+    outline: none;
+    border-radius: 4px;
+    background: #636fa4;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+
+  .airlinebutton {
+    margin: 20px 2px 2px 30px;
+  }
+
+  .datebutton {
+    margin: 20px 2px 2px 100px;
+  }
+
+  .departbutton {
+    margin: 20px 2px 2px 70px;
+  }
+
+  .arrivebutton {
+    margin: 20px 2px 2px 20px;
+  }
+
+  .pricebutton {
+    margin: 20px 2px 2px 90px;
+  }
+
+  .statusbutton {
+    margin: 20px 2px 2px 90px;
+  }
+
+  .planebutton {
+    margin: 20px 2px 2px 65px;
+  }
+
+  .buybutton {
+    margin: 20px 30px 2px 55px;
   }
 
   .bigbutton {
@@ -163,7 +212,7 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 93px 40px;
+    padding: 73px 35px;
     height: 100%;
     /* width: 100%; */
     border: none;
@@ -176,15 +225,15 @@
   }
   
   #allbutton {
-    margin: 30px;
-    width: 90%;
+    margin: 10px;
+    color: none;
   }
 
   .flight-button-container {
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 30px 35px;
+    padding: 10px;
     height: 80%;
     border: none;
     outline: none;

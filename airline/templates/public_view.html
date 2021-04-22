@@ -24,10 +24,10 @@
               </div>
               <ul class="navbar__menu">
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="links">Search Flight</a>
+                  <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                 </li>
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="links">Check Status</a>
+                  <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                 <li class="navbar__btn">
                   <a href="/login" class="button" id="login">Login</a>
                 </li>
@@ -92,6 +92,71 @@
                     &nbsp &nbsp &nbsp&nbsp plane id</label>
             </div> -->
             </br>
+            <!-- <section class="button" id="allbutton">
+                <div class="button">
+                    <section class="button" >
+                        <div class="flight-button-container">
+                            <div class="otherlabel">Airline</div></Br>
+                            <div class="otherlabel">Flight number</div></Br>
+                        </div>
+                        <div class="flight-button-container">
+                            <section class="label"> </section></Br>
+                            <section class="label"> </section></Br>
+                            <section class="otherlabel"> &nbspDate&nbsp&nbsp&nbsp </section></Br>
+                        </div> 
+                        <div class="flight-button-container">
+                            <section class="otherlabel">Depart airport</section></Br>
+                            <section class="bigbutton">
+                                <section class="otherlabel">Depart&nbsptime</section>
+                            </section>
+                        </div> 
+                        <div>
+                            <section class="otherlabel">Arrive airport</section></Br>
+                            <section class="bigbutton">
+                                <section class="otherlabel">Arrive&nbsptime</section>
+                            </section>
+                        </div>
+                    </section>
+                    <!-- <section class="button" >
+                        <section class="label">Airline</section>
+                    </section> -->
+<!--                     
+                </div> 
+                <div class="pspbutton">Price</div>
+                <div class="pspbutton">Status</div>
+                <div class="pspbutton">&nbspPlane&nbspnumber</div>
+                <div class="pspbutton">
+                    <div class="button">BUY</div>
+                </div>
+            </section> --> 
+
+            <div class="topbutton">
+                <div class="airlinebutton">
+                    Airline/flight
+                </div>
+                <div class="datebutton">
+                    Date
+                </div>
+                <div class="departbutton">
+                    Depart airport/time
+                </div>
+                <div class="arrivebutton">
+                    Arrive airport/time
+                </div>
+                <div class="pricebutton">
+                    Price
+                </div>
+                <div class="statusbutton">
+                    Status
+                </div>
+                <div class="planebutton">
+                    Plane&nbspnumber
+                </div>
+                <div class="buybutton">
+                    buy
+                </div>
+            </div>
+
             {% for line in flights %}
                 <!-- <div> -->
                     <section class="button" id="allbutton">
@@ -126,6 +191,9 @@
                         <div class="pspbutton">${{line[8]}}</div>
                         <div class="pspbutton">{{line[9]}}</div>
                         <div class="pspbutton">{{line[10]}}</div>
+                        <div class="pspbutton">
+                                <a href="/login" class="button" id="login">BUY</a>
+                        </div>
                     </section>
                 <!-- </div> -->
             {% endfor %}
