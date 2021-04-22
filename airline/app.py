@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import mysql.connector
-import json
+import re
 from db_utils import *
 
 app = Flask(__name__)
@@ -12,18 +12,35 @@ conn = mysql.connector.connect(host='localhost',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 
+# math standards for email, :
+EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+
+
+def is_math(stdin, pattern):
+    return re.search(pattern, stdin) is not None
+
+
+def logged_in_redirect():
+    if session["type"] == "customer":
+        pass
+    elif session["type"] == "agent":
+        pass
+    elif session["type"] == "airline_staff":
+        pass
+    return redirect()
+
 
 @app.route('/')
 def home():
-    if session.get("logged_in", False):
+    if not session.get("logged_in", False):
+        return redirect(url_for("search_flight"))
+    else:
         if session["type"] == "customer":
             pass
         elif session["type"] == "agent":
             pass
         elif session["type"] == "airline_staff":
             pass
-    else:
-        return redirect(url_for("search_flight"))
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
@@ -55,22 +72,100 @@ def search_flight():
         # [airline_name, flight_num, depart_airport, depart_city, depart_time,
         #  arrive_airport, arrive_city, arrive_time, price, status, plane_id]
         flights = get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
+        if not flights:
+            flights = ["No flights"]
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
+
+
+@app.route('/login', methods=['Get'])
+def login():
+    if not session.get("logged_in", False):
+        return render_template("login_general.html")
+    else:
+        if session["type"] == "customer":
+            pass
+        elif session["type"] == "agent":
+            pass
+        elif session["type"] == "airline_staff":
+            pass
 
 
 @app.route('/login/Customer', methods=['Get', 'Post'])
 def login_customer():
-    pass
+    if not session.get("logged_in", False):
+        error = ""
+        if request.method == "GET":
+            return render_template("login_customer.html", error=error)
+        elif request.method == "POST":
+            email = request.form["username"]
+            password = request.form["password"]
+            if not is_math(email, EMAIL_REGEX):
+                error = "Email address invalid"
+                return render_template("login_customer", error=error)
+            if not login_check(conn, email, password, "customer"):
+                error = "Email address or password invalid"
+                return render_template("login_customer", error=error)
+            return redirect(url_for("customer_home"))
+
+    else:
+        if session["type"] == "customer":
+            pass
+        elif session["type"] == "agent":
+            pass
+        elif session["type"] == "airline_staff":
+            pass
 
 
 @app.route('/login/Agent', methods=['Get', 'Post'])
 def login_agent():
-    pass
+    if not session.get("logged_in", False):
+        error = ""
+        if request.method == "GET":
+            return render_template("login_customer.html", error=error)
+        elif request.method == "POST":
+            email = request.form["username"]
+            password = request.form["password"]
+            if not is_math(email, EMAIL_REGEX):
+                error = "Email address invalid"
+                return render_template("login_customer", error=error)
+            if not login_check(conn, email, password, "booking_agent"):
+                error = "Email address or password invalid"
+                return render_template("login_customer", error=error)
+            return redirect(url_for("customer_home"))
+
+    else:
+        if session["type"] == "customer":
+            pass
+        elif session["type"] == "agent":
+            pass
+        elif session["type"] == "airline_staff":
+            pass
 
 
-@app.route('/login/AirlineStaff', methods=['Get', 'Post'])
+@app.route('/login/Staff', methods=['Get', 'Post'])
 def login_airline_staff():
-    pass
+    if not session.get("logged_in", False):
+        error = ""
+        if request.method == "GET":
+            return render_template("login_customer.html", error=error)
+        elif request.method == "POST":
+            email = request.form["username"]
+            password = request.form["password"]
+            if not is_math(email, EMAIL_REGEX):
+                error = "Email address invalid"
+                return render_template("login_customer", error=error)
+            if not login_check(conn, email, password, "airline_staff"):
+                error = "Email address or password invalid"
+                return render_template("login_customer", error=error)
+            return redirect(url_for("customer_home"))
+
+    else:
+        if session["type"] == "customer":
+            pass
+        elif session["type"] == "agent":
+            pass
+        elif session["type"] == "airline_staff":
+            pass
 
 
 @app.route('/register/Customer', methods=['Get', 'Post'])
@@ -83,7 +178,7 @@ def register_agent():
     pass
 
 
-@app.route('/register/AirlineStaff', methods=['Get', 'Post'])
+@app.route('/register/Staff', methods=['Get', 'Post'])
 def register_airline_staff():
     pass
 

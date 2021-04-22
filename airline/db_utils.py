@@ -58,3 +58,18 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
     print()
 
     return data
+
+
+def login_check(conn, username, password, identity):
+    cursor = conn.cursor()
+    query = """SELECT password FROM {} WHERE email = \'{}\'"""
+    cursor.execute(query.format(identity, username))
+    data = cursor.fetchall()
+    cursor.close()
+    if not data:
+        return False
+    return check_password_hash(data[0][0], password)
+
+
+def register():
+    pass
