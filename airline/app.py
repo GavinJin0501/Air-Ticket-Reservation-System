@@ -10,6 +10,7 @@ conn = mysql.connector.connect(host='localhost',
                                user='root',
                                password='',
                                database='air_ticket_reservation_system')
+app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 
 
 @app.route('/')

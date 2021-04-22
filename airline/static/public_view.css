@@ -55,6 +55,7 @@
     -moz-text-fill-color: transparent;
     display: flex;
     align-items: center;
+    text-align: center;
     cursor: pointer;
     text-decoration: none;
     font-size: 2rem;
@@ -71,14 +72,19 @@
   }
   
   .navbar__links {
+    font-size: 20px;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 130px;
+    width: 100%;
     text-decoration: none;
-    height: 100%;
     transition: all 0.3s ease;
+  }
+
+  #links {
+    height: 100%;
+    width: 130px;
   }
   
   .navbar__btn {
@@ -106,14 +112,68 @@
     color: #fff;
     transition: all 0.3s ease;
   }
-  
-  .navbar__links:hover {
-    color: #a8b2dd;
+
+  .bigbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 40px 30px;
+    /* height: 100%; */
+    /* width: 100%; */
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    color: #fff;
     transition: all 0.3s ease;
   }
 
-  .navbar__item:active {
+  .loginbutton {
+    display: block;
+    align-items: center;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 15px 130px;
+    width: 100%;
+    border: 10px;
+    margin: 20px;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .pspbutton {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 60px 40px;
+    height: 100%;
+    /* width: 100%; */
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar__links:hover {
     color: #e8cbc0;
+    transition: all 0.3s ease;
+  }
+
+
+  .navbar__item:active {
+    color: #a8b2dd;
     transition: all 0.3s ease;
   } 
 
@@ -173,12 +233,16 @@
     padding: 0 50px;
   }
   
+  #choose-login{
+    border-bottom: 30px solid #a8b2dd;
+  }
+
   input[type=button], input[type=submit], input[type=reset] {
   background-color: #636fa4;
-  border: 20px auto;
-  margin: 30px auto;
+  border: auto;
+  margin: auto;
   color: white;
-  padding: 15px 50px;
+  padding: 15px 40px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -188,7 +252,7 @@
   box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
-  margin: 5px 20px 40px 20px;
+  margin: 5px 20px 40px 130px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
@@ -230,7 +294,7 @@
   }
   
   input[type=text]:focus {
-    background-color: #fff;
+    background-color: #e8cbc0;
     border-bottom: 2px solid #636fa4;
   }
   

@@ -28,10 +28,10 @@
               </div>
               <ul class="navbar__menu">
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="search-flight">Search Flight</a>
+                  <a href="/" class="navbar__links" id="links">Search Flight</a>
                 </li>
                 <li class="navbar__item">
-                  <a href="/" class="navbar__links" id="check-status">Check Status</a>
+                  <a href="/" class="navbar__links" id="links">Check Status</a>
                 <li class="navbar__btn">
                   <a href="/" class="button" id="login">Login</a>
                 </li>
@@ -79,7 +79,7 @@
 
     {% if flights%}
         <div class="container" id="display-container"></div>
-            <div class="button" id="display-section">
+            <!-- <div class="button" id="display-section">
                 <label class="label">airline &nbsp &nbsp &nbsp flight
                     &nbsp &nbsp &nbsp&nbsp depart airport
                     &nbsp &nbsp &nbsp&nbsp depart time 
@@ -88,10 +88,39 @@
                     &nbsp &nbsp &nbsp&nbsp price
                     &nbsp &nbsp &nbsp&nbsp status
                     &nbsp &nbsp &nbsp&nbsp plane id</label>
-            </div>
+            </div> -->
             </br>
             {% for line in flights %}
-                <div class="button" value="{{line}}"></div> </br>
+                <!-- <div> -->
+                    <section class="button" >
+                        <div class="button">
+                            <section class="button" >
+                                <div>
+                                    <section class="label">{{line[0]}}</section></Br>
+                                    <section class="label">{{line[1]}}</section></Br>
+                                </div>
+                                <div>
+                                    <section class="label">{{line[2]}} {{line[3]}}</section></Br>
+                                    <section class="bigbutton">
+                                        <section class="label">{{line[4]}}</section>
+                                    </section>
+                                </div> 
+                                <div>
+                                    <section class="label">{{line[5]}} {{line[6]}}</section></Br>
+                                    <section class="bigbutton">
+                                        <section class="label">{{line[7]}}</section>
+                                    </section>
+                                </div>
+                            </section>
+                            <!-- <section class="button" >
+                                <section class="label">Airline</section>
+                            </section> -->
+                        </div> 
+                        <div class="pspbutton">${{line[8]}}</div>
+                        <div class="pspbutton">{{line[9]}}</div>
+                        <div class="pspbutton">{{line[10]}}</div>
+                    </section>
+                <!-- </div> -->
             {% endfor %}
         </div>
     {% endif %}
