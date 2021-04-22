@@ -118,16 +118,14 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    font-size: 22px;
-    padding: 40px 30px;
+    font-size: 25px;
+    padding: 25px 30px;
     /* height: 100%; */
     /* width: 100%; */
     border: none;
     outline: none;
     border-radius: 4px;
-    background:  #a8b2dd;
-    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
-    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background:  #e8cbc0;
     color: #fff;
     transition: all 0.3s ease;
   }
@@ -137,10 +135,10 @@
     align-items: center;
     text-decoration: none;
     font-size: 22px;
-    padding: 15px 130px;
+    padding: 15px 50px;
     width: 100%;
     border: 10px;
-    margin: 20px;
+    margin: 10px;
     outline: none;
     border-radius: 4px;
     background:  #a8b2dd;
@@ -155,7 +153,7 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 60px 40px;
+    padding: 72px 40px;
     height: 100%;
     /* width: 100%; */
     border: none;
@@ -221,13 +219,14 @@
   }
 
   .search-container {
-    display: flex;
+    /* display: flex; */
     justify-content: space-between;
     height: auto;
     border-top: 30px solid #a8b2dd;
     background-color: #a8b2dd;
     z-index: 1;
-    width: 35%;
+    /* width: 35%; */
+    width: 350px;
     max-width: 2000px;
     margin: 50px auto;
     padding: 0 50px;
@@ -239,8 +238,8 @@
 
   input[type=button], input[type=submit], input[type=reset] {
   background-color: #636fa4;
-  border: auto;
-  margin: auto;
+  border: 10px;
+  margin: 10px;
   color: white;
   padding: 15px 40px;
   text-align: center;
@@ -252,7 +251,7 @@
   box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
-  margin: 5px 20px 40px 130px;
+  margin: 15px 45px 40px 45px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
