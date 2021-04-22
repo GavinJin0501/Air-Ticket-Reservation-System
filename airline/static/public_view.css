@@ -208,7 +208,7 @@
     align-items: center;
     text-decoration: none;
     padding: 8px 10px;
-    height: 110px;
+    height: 100px;
     width: 1500px;
     border: none;
     outline: none;
@@ -236,26 +236,22 @@
     align-items: center;
     text-decoration: none;
     padding: 10px;
-    height: 90px;
+    height: 80px;
     width: 150px;
     border: none;
     outline: none;
-    background:#a8b2dd;
-    border-radius: 4px;
-  }
+    background:#a8b2dd;}
 
   .flight-button-container1 {
     justify-content: center;
     align-items: center;
     text-decoration: none;
     padding: 10px;
-    height: 90px;
+    height: 80px;
     width: 150px;
     border: none;
     outline: none;
-    background:#f6f6f6;
-    border-radius: 4px;
-  }
+    background:#f6f6f6;}
 
 
 
@@ -311,6 +307,7 @@
     max-width: 2000px;
     margin: 50px auto;
     padding: 0 50px;
+    border-radius: 10px;
   }
 
   .search-container {
