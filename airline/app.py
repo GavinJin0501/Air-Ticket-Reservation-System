@@ -57,7 +57,7 @@ def search_flight():
 
         source = source.split(" - ")
         destination = destination.split(" - ")
-        # print(source, destination, date)
+        print(source, destination, date)
 
         src_city = source[0]
         dst_city = destination[0]
@@ -72,8 +72,9 @@ def search_flight():
         # [airline_name, flight_num, depart_airport, depart_city, depart_time,
         #  arrive_airport, arrive_city, arrive_time, price, status, plane_id]
         flights = get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
-        if not flights:
-            flights = ["No flights"]
+        # if not flights:
+        #     flights = ["No flights"]
+        # print(flights)
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
 
 
