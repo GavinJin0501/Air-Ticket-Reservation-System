@@ -77,7 +77,7 @@
         </form>
     </div>
 
-    {% if flight_list%}
+    {% if flights%}
         <div class="container" id="display-container"></div>
             <div class="button" id="display-section">
                 <label class="label">airline &nbsp &nbsp &nbsp flight
@@ -90,7 +90,7 @@
                     &nbsp &nbsp &nbsp&nbsp plane id</label>
             </div>
             </br>
-            {% for line in flight_list %}
+            {% for line in flights %}
                 <div class="button" value="{{line}}"></div> </br>
             {% endfor %}
         </div>
@@ -140,7 +140,7 @@
         var arrayLength = flight_list.length;
             for (var i = 0; i < arrayLength; i++) 
                 //   console.log(flight_list[i]);
-                {document.getElementById("display_section").innerHTML += flight_list[i]
+                {document.getElementById("display_section").innerHTML += flight_list[i];
                 }
         // for (var j in flight_list) {
         //     let info = j
