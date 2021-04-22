@@ -79,7 +79,7 @@ def search_flight():
 
 
 @app.route('/login', methods=['Get'])
-def login():
+def login_general_page():
     if not session.get("logged_in", False):
         return render_template("login_general.html")
     else:
@@ -91,71 +91,20 @@ def login():
             pass
 
 
-@app.route('/login/Customer', methods=['Get', 'Post'])
-def login_customer():
+@app.route('/login', defaults={'identity': "customer"})
+@app.route('/login/<string:identity>', methods=['Get', 'Post'])
+def login_page(identity):
     if not session.get("logged_in", False):
         error = ""
         if request.method == "GET":
-            return render_template("login_customer.html", error=error)
+            return render_template("login_%s.html" % identity, error=error)
         elif request.method == "POST":
             email = request.form["username"]
             password = request.form["password"]
             if not is_math(email, EMAIL_REGEX):
                 error = "Email address invalid"
                 return render_template("login_customer", error=error)
-            if not login_check(conn, email, password, "customer"):
-                error = "Email address or password invalid"
-                return render_template("login_customer", error=error)
-            return redirect(url_for("customer_home"))
-
-    else:
-        if session["type"] == "customer":
-            pass
-        elif session["type"] == "agent":
-            pass
-        elif session["type"] == "airline_staff":
-            pass
-
-
-@app.route('/login/Agent', methods=['Get', 'Post'])
-def login_agent():
-    if not session.get("logged_in", False):
-        error = ""
-        if request.method == "GET":
-            return render_template("login_customer.html", error=error)
-        elif request.method == "POST":
-            email = request.form["username"]
-            password = request.form["password"]
-            if not is_math(email, EMAIL_REGEX):
-                error = "Email address invalid"
-                return render_template("login_customer", error=error)
-            if not login_check(conn, email, password, "booking_agent"):
-                error = "Email address or password invalid"
-                return render_template("login_customer", error=error)
-            return redirect(url_for("customer_home"))
-
-    else:
-        if session["type"] == "customer":
-            pass
-        elif session["type"] == "agent":
-            pass
-        elif session["type"] == "airline_staff":
-            pass
-
-
-@app.route('/login/Staff', methods=['Get', 'Post'])
-def login_airline_staff():
-    if not session.get("logged_in", False):
-        error = ""
-        if request.method == "GET":
-            return render_template("login_customer.html", error=error)
-        elif request.method == "POST":
-            email = request.form["username"]
-            password = request.form["password"]
-            if not is_math(email, EMAIL_REGEX):
-                error = "Email address invalid"
-                return render_template("login_customer", error=error)
-            if not login_check(conn, email, password, "airline_staff"):
+            if not login_check(conn, email, password, identity):
                 error = "Email address or password invalid"
                 return render_template("login_customer", error=error)
             return redirect(url_for("customer_home"))
