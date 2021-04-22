@@ -14,6 +14,8 @@
     </head>
 
 
+
+
     <body>
     
     
@@ -53,7 +55,7 @@
             <input type="text" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
-    <div class="container" id="search-container">
+    <div class="search-container" id="search-container">
         <form action="/SearchFlight" autocomplete="off" method="POST">
             <label class="label">Source</label>             
             <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
@@ -75,12 +77,32 @@
         </form>
     </div>
 
-    <div class="container" id="display-container">
+    {% if flight_list%}
+        <div class="container" id="display-container"></div>
+            <div class="button" id="display-section">
+                <label class="label">airline &nbsp &nbsp &nbsp flight
+                    &nbsp &nbsp &nbsp&nbsp depart airport
+                    &nbsp &nbsp &nbsp&nbsp depart time 
+                    &nbsp &nbsp &nbsp&nbsp arrive airport
+                    &nbsp &nbsp &nbsp&nbsp arrive time
+                    &nbsp &nbsp &nbsp&nbsp price
+                    &nbsp &nbsp &nbsp&nbsp status
+                    &nbsp &nbsp &nbsp&nbsp plane id</label>
+            </div>
+            </br>
+            {% for line in flight_list %}
+                <div class="button" value="{{line}}"></div> </br>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-    </div>
-    
 
-    </body>>
+
+
+    </body>
+
+
+
 
     <script type="text/javascript">
         var flight_list, airports_and_city, today;
@@ -113,5 +135,15 @@
               // Show the current tab, and add an "active" class to the button that opened the tab
               document.getElementById(searchbar).style.display = "block";
               evt.currentTarget.className += " active";
+
+
+        var arrayLength = flight_list.length;
+            for (var i = 0; i < arrayLength; i++) 
+                //   console.log(flight_list[i]);
+                {document.getElementById("display_section").innerHTML += flight_list[i]
+                }
+        // for (var j in flight_list) {
+        //     let info = j
+        // }
         }
     </script>

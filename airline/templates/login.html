@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B-Airline Login</title>
+<link rel="stylesheet" href="../static/public_view.css" />
+<head>
+</head>
+<body>
+
+    <nav class="navbar">
+		<div class="navbar__container">
+		  <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+		  <div class="navbar__toggle" id="mobile-menu">
+			<span class="bar"></span> <span class="bar"></span>
+			<span class="bar"></span>
+		  </div>
+		  <ul class="navbar__menu">
+			<li class="navbar__item">
+			  <a href="/" class="navbar__links" id="customer">Customer</a>
+			</li>
+			<li class="navbar__item">
+			  <a href="/" class="navbar__links" id="booking-agent">Booking Agent</a>
+			<li class="navbar__item">
+				<a href="/" class="navbar__links" id="airline-staff">Airline Staff</a>
+			</li>
+		  </ul>
+		</div>
+	</nav>
+
+
+
+    <div class="search-container" id="search-container">
+        <form action="/loginAuth" method="POST">
+            <label id="navbar__logo">Welcome to B-Air, Customer!</label>
+            <label class="label"> </label> </br>
+            <label class="label">Email</label> </br>
+            <input type="text" name = "username" placeholder="email" required/> </br>
+            <label class="label">Password</label> </br>
+            <input type="text" name = "password" placeholder="password" required/> </br>
+            <label class="label"> </label> </br>
+            <input type="submit" value = Login />
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+        </form>
+    </div>
+
+</body>
+
+
+</html>

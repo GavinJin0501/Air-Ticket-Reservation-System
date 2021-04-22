@@ -94,7 +94,7 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 10px 30px;
+    padding: 8px 30px;
     height: 100%;
     width: 100%;
     border: none;
@@ -111,6 +111,12 @@
     color: #a8b2dd;
     transition: all 0.3s ease;
   }
+
+  .navbar__item:active {
+    color: #e8cbc0;
+    transition: all 0.3s ease;
+  } 
+
   /* Style the tab */
   .tab {
     overflow: hidden;
@@ -149,6 +155,19 @@
     background-color: #a8b2dd;
     z-index: 1;
     width: 80%;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+  }
+
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    width: 40%;
     max-width: 2000px;
     margin: 50px auto;
     padding: 0 50px;
