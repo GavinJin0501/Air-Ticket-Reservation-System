@@ -80,55 +80,6 @@
 <!--    {% endif %}-->
 
     {% if flights%}
-        <!-- <div class="container" id="display-container"></div> -->
-            <!-- <div class="button" id="display-section">
-                <label class="label">airline &nbsp &nbsp &nbsp flight
-                    &nbsp &nbsp &nbsp&nbsp depart airport
-                    &nbsp &nbsp &nbsp&nbsp depart time 
-                    &nbsp &nbsp &nbsp&nbsp arrive airport
-                    &nbsp &nbsp &nbsp&nbsp arrive time
-                    &nbsp &nbsp &nbsp&nbsp price
-                    &nbsp &nbsp &nbsp&nbsp status
-                    &nbsp &nbsp &nbsp&nbsp plane id</label>
-            </div> -->
-            </br>
-            <!-- <section class="button" id="allbutton">
-                <div class="button">
-                    <section class="button" >
-                        <div class="flight-button-container">
-                            <div class="otherlabel">Airline</div></Br>
-                            <div class="otherlabel">Flight number</div></Br>
-                        </div>
-                        <div class="flight-button-container">
-                            <section class="label"> </section></Br>
-                            <section class="label"> </section></Br>
-                            <section class="otherlabel"> &nbspDate&nbsp&nbsp&nbsp </section></Br>
-                        </div> 
-                        <div class="flight-button-container">
-                            <section class="otherlabel">Depart airport</section></Br>
-                            <section class="bigbutton">
-                                <section class="otherlabel">Depart&nbsptime</section>
-                            </section>
-                        </div> 
-                        <div>
-                            <section class="otherlabel">Arrive airport</section></Br>
-                            <section class="bigbutton">
-                                <section class="otherlabel">Arrive&nbsptime</section>
-                            </section>
-                        </div>
-                    </section>
-                    <!-- <section class="button" >
-                        <section class="label">Airline</section>
-                    </section> -->
-<!--                     
-                </div> 
-                <div class="pspbutton">Price</div>
-                <div class="pspbutton">Status</div>
-                <div class="pspbutton">&nbspPlane&nbspnumber</div>
-                <div class="pspbutton">
-                    <div class="button">BUY</div>
-                </div>
-            </section> --> 
 
             <div class="topbutton">
                 <div class="airlinebutton">
@@ -198,6 +149,11 @@
                 <!-- </div> -->
             {% endfor %}
         <!-- </div> -->
+    {% endif %}
+    {% if flights[0] == "No Flights"%}
+        <div class="label">
+            flights[0]
+        </div>
     {% endif %}
 
 
