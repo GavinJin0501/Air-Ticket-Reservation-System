@@ -53,6 +53,7 @@
             <input type="submit" value = Search> -->
     <div class="search-container" id="search-container">
         <form action="/SearchFlight" autocomplete="off" method="POST">
+            <label id="navbar__logo">Welcome! You may search flight here!</label> </br>
             <label class="label">Source</label>             
             <input type="text", list="source" name = "depart" placeholder="depart city or airport" required/> </br>
             <datalist id="source">
@@ -88,23 +89,28 @@
             </br>
             {% for line in flights %}
                 <!-- <div> -->
-                    <section class="button" >
+                    <section class="button" id="allbutton">
                         <div class="button">
                             <section class="button" >
-                                <div>
-                                    <section class="label">{{line[0]}}</section></Br>
-                                    <section class="label">{{line[1]}}</section></Br>
+                                <div class="flight-button-container">
+                                    <div class="otherlabel">{{line[0]}}</div></Br>
+                                    <div class="otherlabel">{{line[1]}}</div></Br>
                                 </div>
-                                <div>
-                                    <section class="label">{{line[2]}} {{line[3]}}</section></Br>
+                                <div class="flight-button-container">
+                                    <section class="label"> </section></Br>
+                                    <section class="label"> </section></Br>
+                                    <section class="otherlabel"> {{line[4][:10]}} </section></Br>
+                                </div> 
+                                <div class="flight-button-container">
+                                    <section class="otherlabel">{{line[2]}} {{line[3]}}</section></Br>
                                     <section class="bigbutton">
-                                        <section class="label">{{line[4]}}</section>
+                                        <section class="timelabel">{{line[4][10:]}}</section>
                                     </section>
                                 </div> 
                                 <div>
-                                    <section class="label">{{line[5]}} {{line[6]}}</section></Br>
+                                    <section class="otherlabel">{{line[5]}} {{line[6]}}</section></Br>
                                     <section class="bigbutton">
-                                        <section class="label">{{line[7]}}</section>
+                                        <section class="timelabel">{{line[7][10:]}}</section>
                                     </section>
                                 </div>
                             </section>

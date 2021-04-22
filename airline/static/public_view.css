@@ -22,6 +22,16 @@
     font-size: 18px;
   }
 
+  .timelabel {
+    color: #384375;
+    font-size: 25px;
+  }
+
+  .otherlabel {
+    color: #384375;
+    font-size: 18px;
+  }
+
   .navbar {
     background: #636fa4;
     height: 80px;
@@ -153,17 +163,36 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 72px 40px;
+    padding: 93px 40px;
     height: 100%;
     /* width: 100%; */
     border: none;
     outline: none;
     border-radius: 4px;
     background:  #a8b2dd;
-    color: #fff;
+    color: #384375;
+    font-size: 20px;
     transition: all 0.3s ease;
   }
   
+  #allbutton {
+    margin: 30px;
+    width: 90%;
+  }
+
+  .flight-button-container {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 30px 35px;
+    height: 80%;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+  }
+
+
+
   .navbar__links:hover {
     color: #e8cbc0;
     transition: all 0.3s ease;
