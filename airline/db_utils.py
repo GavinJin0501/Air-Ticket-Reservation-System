@@ -62,13 +62,15 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
 
 def login_check(conn, username, password, identity):
     cursor = conn.cursor()
-    query = """SELECT password FROM {} WHERE"""
+    query = """SELECT password FROM {} WHERE """
     if identity == "airline_staff":
         query += """username = \'{}\'"""
     else:
         query += """email = \'{}\'"""
+    print(query.format(identity, username))
     cursor.execute(query.format(identity, username))
     data = cursor.fetchall()
+    print(data)
     cursor.close()
     if not data:
         return False

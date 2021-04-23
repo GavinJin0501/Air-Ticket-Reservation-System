@@ -34,8 +34,8 @@
 
 
     <div class="search-container" id="search-container">
-        <form action="/login/customer" autocomplete="off" method="POST">
-            <label id="navbar__logo">Welcome to B-Air, customer!</label>
+        <form action="/login/airline_staff" autocomplete="off" method="POST">
+            <label id="navbar__logo">Welcome to B-Air, airline staff!</label>
             <label class="label"> </label> </br>
             <label class="label">Email</label> </br>
             <input type="text" name = "username" placeholder="email" required/> </br>
@@ -43,7 +43,7 @@
             <input type="text" name = "password" placeholder="password" required/> </br>
             <label class="label"> </label> </br>
             <input type="submit" value = Login />
-			<a href="/register/customer" class="navbar__links" id="register-customer">Don't have an account? Register</a>
+			<a href="/register/airline_staff" class="navbar__links" id="register-customer">Don't have an account? Register</a>
 			<label class="label"> </label> </br>
             {% if error %}
                 <p class="error"><strong>Error:</strong> {{error}}</p>
