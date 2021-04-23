@@ -128,10 +128,10 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 8px 30px;
+    padding: 8px 10px;
     border: none;
     margin: none;
-    width: 1500px;
+    width: 100%;
     outline: none;
     border-radius: 4px;
     background: #636fa4;
@@ -209,7 +209,7 @@
     text-decoration: none;
     padding: 8px 10px;
     height: 100px;
-    width: 1500px;
+    width: 100%;
     border: none;
     outline: none;
     border-radius: 4px;
