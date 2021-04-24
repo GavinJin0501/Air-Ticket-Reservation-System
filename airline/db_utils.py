@@ -93,17 +93,16 @@ def register_check(conn, email, identity):
 def register_to_database(conn, info, identity):
     cursor = conn.cursor()
     if identity == "customer":
-        query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', " \
-                "\'{}\', \'{}\', \'{}\') "
-        cursor.execute(query.format(identity, info["email"], info["name"], info["password"], info["building_number"],
+        query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\') """
+        cursor.execute(query.format(identity, info["email"], info["name"], generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
                                     info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
                                     info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
     elif identity == "booking_agent":
         query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\')"
-        cursor.execute(query.format(identity, info["email"], info["password"], info["booking_agent_id"]))
+        cursor.execute(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
     else:
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
-        cursor.execute(query.format(info["email"], info["password"], info["first_name"], info["last_name"],
+        cursor.execute(query.format(info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
                                     info["date_of_birth"], info["airline_name"]))
     conn.commit()
     cursor.close()
