@@ -117,3 +117,36 @@
 
 
 </html>
+
+<script>
+    function formValidation() {
+        var form_src, form_dst, form_date;
+
+        form_src = document.getElementsByName("depart")[0].value;
+        form_dst = document.getElementsByName("arrive")[0].value;
+        form_date = document.getElementsByName("date")[0].value;
+
+        if (!airports_and_city.includes(form_src)) {
+            alert("Source is not valid! Choose from the datalist!");
+            return false;
+        }
+        if (!airports_and_city.includes(form_dst)) {
+            alert("Destination is not valid! Choose from the datalist!");
+            return false;
+        }
+        if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
+            alert("Source and destination can not be the same!");
+            return false;
+        }
+        if (form_date < today) {
+            alert("You can only search flights after (include) today")
+            return false;
+        }
+            
+        if (!moment(form_date, date_format, true).isValid()) {
+            alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+            return false;
+        }
+        return true;
+        }
+</script>
