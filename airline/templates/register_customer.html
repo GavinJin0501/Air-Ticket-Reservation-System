@@ -119,6 +119,16 @@
 </html>
 
 <script>
+    // Initialize date format
+    date_format = 'YYYY-MM-DD';
+    today = new Date().toISOString().substr(0, 10);
+    pastest = new Date();
+    pastest.setYear(pastest.getYear()-100);
+    pastest = pastest.toISOString().substr(0, 10);
+    document.getElementsByName("passport_expiration")[0].setAttribute('min', today);
+    document.getElementsByName("date_of_birth")[0].setAttribute('min', pastest);
+    document.getElementsByName("date_of_birth")[0].setAttribute('max', today);
+    
     function formValidation() {
         var form_usn, form_pn, form_pw, form_cpw, form_date;
 
