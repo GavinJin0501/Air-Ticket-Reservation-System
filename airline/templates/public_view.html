@@ -54,7 +54,7 @@
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
     <div class="search-container" id="search-container">
-        <form action="/SearchFlight" autocomplete="off" onsubmit=formValidation() method="POST">
+        <form action="/SearchFlight" autocomplete="off" onsubmit="return formValidation()" method="POST">
             <label id="navbar__logo">Welcome! You may search flight here!</label> </br>
             <label class="label">Source</label>             
             <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" required/> </br>
