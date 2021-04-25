@@ -12,8 +12,10 @@
         crossorigin="anonymous"
         /> -->
         <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/moment.js"></script>
         <script src="../static/lib/jquery-1.12.4.js"></script>
         <script src="../static/lib/jquery-ui.js"></script>
+    </head>
     <body>
         <nav class="navbar">
             <div class="navbar__container">
@@ -52,17 +54,17 @@
             <input type="text" name = "date" placeholder="date" required/> </br>
             <input type="submit" value = Search> -->
     <div class="search-container" id="search-container">
-        <form action="/SearchFlight" autocomplete="off" method="POST">
+        <form action="/SearchFlight" autocomplete="off" onsubmit=formValidation() method="POST">
             <label id="navbar__logo">Welcome! You may search flight here!</label> </br>
             <label class="label">Source</label>             
-            <input type="text" id="src_dl" list="source" name = "depart" placeholder="depart city or airport" required/> </br>
+            <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" required/> </br>
             <!-- <datalist id="source">
                 {% for line in airport_city %}
                     <option value="{{line}}">
                 {% endfor %}
             </datalist> -->
             <label class="label">Destination</label>
-            <input type="text" id="dst_dl" list="destination" name = "arrive" placeholder="arrive city or airport" required/> </br>
+            <input type="text" id="dst_dl" name = "arrive" placeholder="arrive city or airport" required/> </br>
             <!-- <datalist id="destination" >
                 {% for line in airport_city %}
                     <option value="{{line}}">
@@ -160,12 +162,12 @@
         {% endif %}
     {% endif %}
 
-
-
-
     </body>
     <script type="text/javascript">
-        var flight_list, airports_and_city, today;
+        var flight_list, airports_and_city, today, date_format;
+
+        // Initialize date format
+        date_format = 'YYYY-MM-DD';
         today = new Date().toISOString().substr(0, 10);
         console.log(today);
         document.querySelector("#date").value = today;
@@ -173,42 +175,40 @@
 
         flight_list = {{flights | safe}};
         airports_and_city = {{airport_city | safe}};
-        for (var i in airports_and_city) {
-            console.log(airports_and_city[i]);
-        }
-        function openSearch(evt, searchbar) {
-              // Declare all variables
-              var i, tabcontent, tablinks;
-
-
-              // Get all elements with class="tabcontent" and hide them
-              tabcontent = document.getElementsByClassName("tabcontent");
-              for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-              }
-
-              // Get all elements with class="tablinks" and remove the class "active"
-              tablinks = document.getElementsByClassName("tablinks");
-              for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-              }
-
-              // Show the current tab, and add an "active" class to the button that opened the tab
-              document.getElementById(searchbar).style.display = "block";
-              evt.currentTarget.className += " active";
-
-
-        var arrayLength = flight_list.length;
-            for (var i = 0; i < arrayLength; i++) 
-                //   console.log(flight_list[i]);
-                {document.getElementById("display_section").innerHTML += flight_list[i];
-                }
-        // for (var j in flight_list) {
-        //     let info = j
-        // }
-        }
+        
         $(document).ready(function() {
             $("#src_dl").autocomplete({source: airports_and_city});
             $("#dst_dl").autocomplete({source: airports_and_city});
         });
+
+        function formValidation() {
+            var form_src, form_dst, form_date;
+
+            form_src = document.getElementsByName("depart")[0].value;
+            form_dst = document.getElementsByName("arrive")[0].value;
+            form_date = document.getElementsByName("date")[0].value;
+
+            if (!airports_and_city.includes(form_src)) {
+                alert("Source is not valid! Choose from the datalist!");
+                return false;
+            }
+            if (!airports_and_city.includes(form_dst)) {
+                alert("Destination is not valid! Choose from the datalist!");
+                return false;
+            }
+            if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
+                alert("Source and destination can not be the same!");
+                return false;
+            }
+            if (form_date < today) {
+                alert("You can only search flights after (include) today")
+                return false;
+            }
+                
+            if (!moment(form_date, date_format, true).isValid()) {
+                alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+                return false;
+            }
+            return true;
+        }
     </script>

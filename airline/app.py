@@ -49,6 +49,8 @@ def search_flight():
         destination = request.form['arrive']
         date = request.form['date']
 
+        print(date)
+
         source = source.split(" - ")
         destination = destination.split(" - ")
         # print(source, destination, date)
