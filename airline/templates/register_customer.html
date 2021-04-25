@@ -34,7 +34,7 @@
 
 
     <div class="register-container" id="register-container">
-        <form action="/register/customer" autocomplete="off" method="POST">
+        <form action="/register/customer" autocomplete="off" onsubmit="return formValidation()" method="POST">
             <label id="navbar__logo">Welcome to B-Air, customer!</label>
             <section>
                 <div class="bluebutton">
@@ -100,13 +100,13 @@
                 </div>
             </section>
             
-            {% if not password == confirm_password%}
+            <!-- {% if not password == confirm_password%}
             <div class="topbutton">
                 <div class='warning'>
                     Sorry, the password is not confirmed. Please type again.
                 </div>
             </div>
-            {% endif %}
+            {% endif %} -->
 
 <!-- if account already exist -->
             <!-- <a href="/" class="button" id="go-back">Go back</a> -->
@@ -120,33 +120,24 @@
 
 <script>
     function formValidation() {
-        var form_src, form_dst, form_date;
+        var form_usn, form_pn, form_pw, form_cpw, form_date;
 
-        form_src = document.getElementsByName("depart")[0].value;
-        form_dst = document.getElementsByName("arrive")[0].value;
+        form_usn = document.getElementsByName("username")[0].value;
+        form_pn = document.getElementsByName("phone_number")[0].value;
         form_date = document.getElementsByName("date")[0].value;
 
-        if (!airports_and_city.includes(form_src)) {
-            alert("Source is not valid! Choose from the datalist!");
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!re.test(form_usn.toLowerCase())) {
+            alert("Email format is wrong! Please try again");
             return false;
         }
-        if (!airports_and_city.includes(form_dst)) {
-            alert("Destination is not valid! Choose from the datalist!");
+
+        if (form_pn.length>11) {
+            alert("Phone number too long, should be within 11 characters! Please try again");
             return false;
         }
-        if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
-            alert("Source and destination can not be the same!");
-            return false;
-        }
-        if (form_date < today) {
-            alert("You can only search flights after (include) today")
-            return false;
-        }
-            
-        if (!moment(form_date, date_format, true).isValid()) {
-            alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
-            return false;
-        }
+
+        
         return true;
         }
 </script>
