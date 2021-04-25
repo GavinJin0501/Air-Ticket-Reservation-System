@@ -94,11 +94,6 @@ def register_to_database(conn, info, identity):
     cursor = conn.cursor()
     if identity == "customer":
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\') """
-        print()
-        print(query.format(identity, info["email"], info["name"], generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
-                                    info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
-                                    info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
-        print()
         cursor.execute(query.format(identity, info["email"], info["name"], generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
                                     info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
                                     info["passport_expiration"], info["passport_country"], info["date_of_birth"]))

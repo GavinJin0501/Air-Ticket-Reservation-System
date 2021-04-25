@@ -22,28 +22,23 @@ def is_match(stdin, pattern):
 
 
 def logged_in_redirect():
-    if session["type"] == "customer":
+    if session["type"] == "airline_staff":
         pass
-    elif session["type"] == "agent":
-        pass
-    elif session["type"] == "airline_staff":
-        pass
-    return redirect()
+    else:
+        return redirect(url_for("search_flight"))
 
 
 @app.route('/')
 def home():
-    if not session.get("logged_in", False):
-        return redirect(url_for("search_flight"))
-    else:
-        if session["type"] == "airline_staff":
-            pass
-        else:
-            return redirect(url_for("search_flight"))
+    if session.get("logged_in", False):
+        return logged_in_redirect()
+    return redirect(url_for("search_flight"))
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
 def search_flight():
+    if session.get("logged_in", False) and session.get("type") == "airline_staff":
+        pass
     airport_city = get_airport_and_city(conn)
     flights = []
     print(airport_city)
@@ -82,20 +77,16 @@ def search_flight():
 
 @app.route('/CheckStatus')
 def check_flight_status():
+    if session.get("logged_in", False) and session.get("type") == "airline_staff":
+        pass
     pass
 
 
 @app.route('/login', methods=['Get'])
 def login_general_page():
-    if not session.get("logged_in", False):
-        return render_template("login_general.html")
-    # else:
-    #     if session["type"] == "customer":
-    #         pass
-    #     elif session["type"] == "agent":
-    #         pass
-    #     elif session["type"] == "airline_staff":
-    #         pass
+    if session.get("logged_in", False):
+        return logged_in_redirect()
+    return render_template("login_general.html")
 
 
 # identity = customer/booking_agent/airline_staff
@@ -103,7 +94,9 @@ def login_general_page():
 def login_page(identity):
     if identity not in ["customer", "booking_agent", "airline_staff"]:
         return redirect(url_for("login_general_page"))
-    elif not session.get("logged_in", False):
+    elif session.get("logged_in", False):
+        return logged_in_redirect()
+    else:
         error = ""
         if request.method == "GET":
             return render_template("login_%s.html" % identity, error=error)
@@ -122,26 +115,12 @@ def login_page(identity):
                 session["email"] = email
                 return redirect(url_for("search_flight"))
 
-    # else:
-    #     if session["type"] == "customer":
-    #         pass
-    #     elif session["type"] == "agent":
-    #         pass
-    #     elif session["type"] == "airline_staff":
-    #         pass
-
 
 @app.route('/register', methods=['Get'])
 def register_general_page():
-    if not session.get("logged_in", False):
-        return render_template("register_general.html")
-    # else:
-    #     if session["type"] == "customer":
-    #         pass
-    #     elif session["type"] == "agent":
-    #         pass
-    #     elif session["type"] == "airline_staff":
-    #         pass
+    if session.get("logged_in", False):
+        return logged_in_redirect()
+    return render_template("register_general.html")
 
 
 # identity = customer/booking_agent/airline_staff
@@ -149,7 +128,9 @@ def register_general_page():
 def register_page(identity):
     if identity not in ["customer", "booking_agent", "airline_staff"]:
         return redirect(url_for("register_general_page"))
-    elif not session.get("logged_in", False):
+    elif session.get("logged_in", False):
+        return logged_in_redirect()
+    else:
         error = ""
         if request.method == "GET":
             return render_template("register_%s.html" % identity, error=error)
