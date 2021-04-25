@@ -79,6 +79,7 @@ def home():
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
+
     username = session['username']
     cursor = conn.cursor()
     blog = request.form['blog']

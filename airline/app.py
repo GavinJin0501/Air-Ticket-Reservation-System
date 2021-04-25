@@ -3,6 +3,7 @@ import mysql.connector
 import re
 from db_utils import *
 
+
 app = Flask(__name__)
 
 app.secret_key = 'some key that you will never guess'
@@ -34,13 +35,11 @@ def logged_in_redirect():
 def home():
     if not session.get("logged_in", False):
         return redirect(url_for("search_flight"))
-    # else:
-    #     if session["type"] == "customer":
-    #         pass
-    #     elif session["type"] == "agent":
-    #         pass
-    #     elif session["type"] == "airline_staff":
-    #         pass
+    else:
+        if session["type"] == "airline_staff":
+            pass
+        else:
+            return redirect(url_for("search_flight"))
 
 
 @app.route('/SearchFlight', methods=['GET', 'POST'])
@@ -188,10 +187,10 @@ def register_page(identity):
 @app.route('/logout')
 def logout():
     if not session.get("logged_in", False):
-        return redirect(url_for("public_view"))
+        return redirect(url_for("search_flight"))
     else:
         session["logged_in"] = False
-        return redirect(url_for("public_view"))
+        return redirect(url_for("search_flight"))
 
 
 if __name__ == '__main__':

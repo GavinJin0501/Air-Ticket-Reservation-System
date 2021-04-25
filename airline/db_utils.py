@@ -52,11 +52,10 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
         data[i] = data[i][:4] + [data[i][4].strftime("%Y/%m/%d %H:%M:%S"), data[i][5], data[i][6],
                                  data[i][7].strftime("%Y/%m/%d %H:%M:%S"), int(data[i][8])] \
                   + data[i][9:]
-    print()
-    for each in data:
-        print(each)
-    print()
-
+    # print()
+    # for each in data:
+    #     print(each)
+    # print()
     return data
 
 
@@ -67,10 +66,8 @@ def login_check(conn, username, password, identity):
         query += """username = \'{}\'"""
     else:
         query += """email = \'{}\'"""
-    print(query.format(identity, username))
     cursor.execute(query.format(identity, username))
     data = cursor.fetchall()
-    print(data)
     cursor.close()
     if not data:
         return False
@@ -84,6 +81,9 @@ def register_check(conn, email, identity):
         query += "username FROM {} WHERE username = \'{}\'"
     else:
         query += "email FROM {} WHERE email = \'{}\'"
+    # print()
+    # print(query)
+    # print()
     cursor.execute(query.format(identity, email))
     data = cursor.fetchall()
     cursor.close()
@@ -94,14 +94,26 @@ def register_to_database(conn, info, identity):
     cursor = conn.cursor()
     if identity == "customer":
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\') """
+        print()
+        print(query.format(identity, info["email"], info["name"], generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
+                                    info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
+                                    info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
+        print()
         cursor.execute(query.format(identity, info["email"], info["name"], generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
                                     info["street"], info["city"], info["state"], info["phone_number"], info["passport_number"],
                                     info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
     elif identity == "booking_agent":
         query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\')"
+        print()
+        print(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
+        print()
         cursor.execute(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
     else:
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
+        print()
+        print(query.format(info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
+                                    info["date_of_birth"], info["airline_name"]))
+        print()
         cursor.execute(query.format(info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
                                     info["date_of_birth"], info["airline_name"]))
     conn.commit()
