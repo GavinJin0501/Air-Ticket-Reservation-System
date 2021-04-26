@@ -34,7 +34,7 @@
 
 
     <div class="search-container" id="search-container">
-        <form action="/login/customer" autocomplete="off" method="POST">
+        <form action="/login/customer" onsubmit="return formValidation()" autocomplete="off" method="POST">
             <label id="navbar__logo">Welcome to B-Air, customer!</label>
             <label class="label"> </label> </br>
             <label class="label">Email</label> </br>
@@ -53,6 +53,19 @@
     </div>
 
 </body>
+<script type="text/javascript">
+	function formValidation() {
+		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		var form_usn = document.getElementsByName("username")[0].value;
+
+		if (!re.test(form_usn.toLowerCase())) {
+            alert("Email format is wrong! Please try again");
+            return false;
+        }
+		return true;
+	}
+
+</script>
 
 
 </html>

@@ -77,14 +77,14 @@ def search_flight():
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
 
 
-@app.route('/CheckStatus')
+@app.route('/CheckStatus', methods=['GET', 'POST'])
 def check_flight_status():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
         pass
-    pass
+    
 
 
-@app.route('/login', methods=['Get'])
+@app.route('/login', methods=['GET'])
 def login_general_page():
     if session.get("logged_in", False):
         return logged_in_redirect()
@@ -92,7 +92,7 @@ def login_general_page():
 
 
 # identity = customer/booking_agent/airline_staff
-@app.route('/login/<string:identity>', methods=['Get', 'Post'])
+@app.route('/login/<string:identity>', methods=['GET', 'POST'])
 def login_page(identity):
     if identity not in ["customer", "booking_agent", "airline_staff"]:
         return redirect(url_for("login_general_page"))
@@ -105,10 +105,10 @@ def login_page(identity):
         elif request.method == "POST":
             email = request.form["username"]
             password = request.form["password"]
-            if not is_match(email, EMAIL_REGEX):
-                error = "Email address invalid"
-                return render_template("login_%s.html" % identity, error=error)
-            elif not login_check(conn, email, password, identity):
+            # if not is_match(email, EMAIL_REGEX):
+            #     error = "Email address invalid"
+            #     return render_template("login_%s.html" % identity, error=error)
+            if not login_check(conn, email, password, identity):
                 error = "Email address or password invalid"
                 return render_template("login_%s.html" % identity, error=error)
             else:
@@ -118,7 +118,7 @@ def login_page(identity):
                 return redirect(url_for("search_flight"))
 
 
-@app.route('/register', methods=['Get'])
+@app.route('/register', methods=['GET'])
 def register_general_page():
     if session.get("logged_in", False):
         return logged_in_redirect()
@@ -126,7 +126,7 @@ def register_general_page():
 
 
 # identity = customer/booking_agent/airline_staff
-@app.route('/register/<string:identity>', methods=['Get', 'Post'])
+@app.route('/register/<string:identity>', methods=['GET', 'POST'])
 def register_page(identity):
     if identity not in ["customer", "booking_agent", "airline_staff"]:
         return redirect(url_for("register_general_page"))
