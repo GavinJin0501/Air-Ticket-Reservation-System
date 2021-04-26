@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 PASSWORD_HASH = "md5"
 
@@ -132,5 +133,41 @@ def get_flight_status(conn, flight_num, departure_date, arrival_date):
     for i in range(len(data)):
         data[i] = list(data[i])
         data[i][-1] = data[i][-1].strftime("%Y-%m-%d %H:%M:%S")
+
+    return data
+
+
+def get_upcoming_flights(conn, identity, email):
+    cursor = conn.cursor()
+    email = email.replace("\'", "\'\'")
+    query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
+                      arrival_airport, DST.airport_city, arrival_time, status, airplane_id
+               FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) """
+    if identity == "airline_staff":
+        query += """WHERE airline_name IN (
+                        SELECT airline_name
+                        FROM airline_staff
+                        WHERE username = \'%s\'
+        )"""
+    elif identity == "customer":
+        query += """WHERE flight_num IN (
+                        SELECT flight_num
+                        FROM purchases NATURAL JOIN ticket
+                        WHERE customer_email = \'%s\'
+        )"""
+    else:
+        query += """WHERE flight_num IN (
+                        SELECT flight_num
+                        FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
+                        WHERE email =  \'%s\'
+        )"""
+    
+    print("get upcoming flights query is:\n")
+    cursor.execute(query % email)
+    data = cursor.fetchall()
+    cursor.close()
+
+    # need to pre-process the data!!!!
 
     return data
