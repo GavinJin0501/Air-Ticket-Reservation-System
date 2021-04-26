@@ -19,23 +19,40 @@
     <body>
         <nav class="navbar">
             <div class="navbar__container">
-              <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
-              <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span> <span class="bar"></span>
-                <span class="bar"></span>
-              </div>
+                {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{identity}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
               <ul class="navbar__menu">
                 <li class="navbar__item">
                   <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                 </li>
                 <li class="navbar__item">
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
-                <li class="navbar__btn">
-                  <a href="/login" class="button" id="login">Login</a>
-                </li>
-                <li class="navbar__btn">
-                    <a href="/register" class="button" id="sign-up">Register</a>
-                </li>
+                {% if session["logged_in"] == True%}
+                    <!-- <li class="navbar__item" id="navbar__logo"></li>
+                        {{email}}
+                    </li> -->
+                    <li class="navbar__btn">
+                    <a href="/logout" class="button" id="logout">Logout</a>
+                    </li>
+                {% else %}    
+                    <li class="navbar__btn">
+                    <a href="/login" class="button" id="login">Login</a>
+                    </li>
+                    <li class="navbar__btn">
+                        <a href="/register" class="button" id="sign-up">Register</a>
+                    </li>
+                {% endif%}
               </ul>
             </div>
         </nav>
@@ -55,7 +72,7 @@
             <input type="submit" value = Search> -->
     <div class="search-container" id="search-container">
         <form action="/SearchFlight" autocomplete="off" onsubmit="return formValidation()" method="POST">
-            <label id="navbar__logo">Welcome! You may search flight here!</label> </br>
+            <label id="navbar__logo">Welcome! <br/> You may search flight here!</p></label> </br>
             <label class="label">Source</label>             
             <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" required/> </br>
             <!-- <datalist id="source">

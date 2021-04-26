@@ -45,9 +45,15 @@ def search_flight():
     airport_city = get_airport_and_city(conn)
     flights = []
     # print(airport_city)
+    if not session.get("logged_in"):
+        identity = "guest"
+        email = ""
+    else:
+        identity = session.get("type", "guest")
+        email = session.get("email", "guest")
 
     if request.method == "GET":
-        return render_template("public_view.html", airport_city=airport_city, flights=flights)
+        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity, email=email)
     elif request.method == "POST":
         source = request.form['depart']
         destination = request.form['arrive']
@@ -73,7 +79,7 @@ def search_flight():
         if not flights:
             flights = ["No flights"]
         # print(flights)
-        return render_template("public_view.html", airport_city=airport_city, flights=flights)
+        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity, email=email)
 
 
 @app.route('/CheckStatus', methods=['GET', 'POST'])
