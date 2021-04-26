@@ -78,9 +78,6 @@ def register_check(conn, email, identity):
         query += "username FROM {} WHERE username = \'{}\'"
     else:
         query += "email FROM {} WHERE email = \'{}\'"
-    # print()
-    # print(query)
-    # print()
     cursor.execute(query.format(identity, email.replace("\'", "\'\'")))
     data = cursor.fetchall()
     cursor.close()
