@@ -37,14 +37,14 @@
             <form action="/CheckStatus" autocomplete="off" method="POST">
                 <label id="navbar__logo">Welcome! You may check status here!</label> </br>
                 <label class="label">Flight Number</label>             
-                <input type="text", list="flight" name = "flightnum" placeholder="flight number" required/> </br>
+                <input type="text", list="flight" name = "flight_num" placeholder="flight number" required/> </br>
                 <datalist id="flight-number">
                     {% for line in flight_number %}
                         <option value="{{line}}">
                     {% endfor %}
                 </datalist>
                 <label class="label">Date</label>
-                <input type="date" name = "date" placeholder="date" id = "date" required/> </br>
+                <input type="date" name = "departure_date" placeholder="date" id = "date" required/> </br>
                 <input type="submit" value = Search>
             </form>
         </div>

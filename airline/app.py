@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
+from datetime import datetime
 import mysql.connector
 import re
 from db_utils import *
@@ -23,7 +24,7 @@ def is_match(stdin, pattern):
 
 def logged_in_redirect():
     if session["type"] == "airline_staff":
-        pass
+        return redirect(url_for())
     else:
         return redirect(url_for("search_flight"))
 
@@ -38,10 +39,13 @@ def home():
 @app.route('/SearchFlight', methods=['GET', 'POST'])
 def search_flight():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        pass
+        return redirect(url_for())
+
+    # results for autocomplete in the client side
     airport_city = get_airport_and_city(conn)
     flights = []
-    print(airport_city)
+    # print(airport_city)
+
     if request.method == "GET":
         return render_template("public_view.html", airport_city=airport_city, flights=flights)
     elif request.method == "POST":
@@ -49,17 +53,12 @@ def search_flight():
         destination = request.form['arrive']
         date = request.form['date']
 
-        print(date)
-
         source = source.split(" - ")
         destination = destination.split(" - ")
         # print(source, destination, date)
 
         src_city = source[0]
         dst_city = destination[0]
-        if src_city == dst_city:
-            error = "Can not travel between the same city"
-            return render_template("public_view.html", airport_city=airport_city, flights=flights, error=error)
         src_airport = ""
         dst_airport = ""
         if len(source) == 2:
@@ -80,8 +79,23 @@ def search_flight():
 @app.route('/CheckStatus', methods=['GET', 'POST'])
 def check_flight_status():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        pass
+        return redirect(url_for())
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    recent_flight_status = get_flight_status(conn, "", today, "")
     
+    if request.method == "GET":
+        return render_template("check_status.html")
+    elif request.method == "POST":
+        flight_num = request.form.get("flight_num", "")
+        departure_date = request.form.get("departure_date", "")
+        arrival_date = request.form.get("arrival_date", "")
+
+        flight_status_ans = get_flight_status(conn, flight_num, departure_date, arrival_date)
+        if not flight_status_ans:
+            flight_status_ans = ["No such a flight at the given time!"]
+        # print(flight_status_ans)
+        return render_template("check_status.html", status_result=flight_status_ans)
 
 
 @app.route('/login', methods=['GET'])

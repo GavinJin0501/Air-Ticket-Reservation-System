@@ -27,7 +27,7 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'{}%\' AND """
+               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND """
     # city+airport -> city+airport
     if src_airport and dst_airport:
         query += """F.departure_airport = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
@@ -49,13 +49,10 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
 
     for i in range(len(data)):
         data[i] = list(data[i])
-        data[i] = data[i][:4] + [data[i][4].strftime("%Y-%m-%d %H:%M:%S"), data[i][5], data[i][6],
-                                 data[i][7].strftime("%Y-%m-%d %H:%M:%S"), int(data[i][8])] \
-                  + data[i][9:]
-    # print()
-    # for each in data:
-    #     print(each)
-    # print()
+        data[i][4] = data[i][4].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][7] = data[i][7].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][8] = int(data[i][8])
+
     return data
 
 
@@ -114,3 +111,29 @@ def register_to_database(conn, info, identity):
     conn.commit()
     cursor.close()
     return
+
+
+def get_flight_status(conn, flight_num, departure_date, arrival_date):
+    cursor = conn.cursor()
+    query = """SELECT airline_name, flight_num, status, airport_city, departure_time
+                FROM flight JOIN airport ON (flight.arrival_airport = airport.airport_name) """
+    if not flight_num:
+        query += """WHERE departure_time LIKE \'{}%\'"""
+        cursor.execute(query.format(departure_date))
+        data = cursor.fetchall()
+    else:
+        if departure_date:
+            query += """WHERE flight_num = \'{}\' AND departure_time LIKE \'{}%\'"""
+            cursor.execute(query.format(flight_num, departure_date))
+            data = cursor.fetchall()
+        else:
+            query += """WHERE flight_num = \'{}\' AND arrival_time LIKE \'{}%\'"""
+            cursor.execute(query.format(flight_num, arrival_date))
+            data = cursor.fetchall()
+    cursor.close()
+    
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i][-1] = data[i][-1].strftime("%Y-%m-%d %H:%M:%S")
+
+    return data
