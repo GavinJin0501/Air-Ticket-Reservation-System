@@ -118,8 +118,8 @@ def view_my_flights(identity):
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        upcoming_flights = get_upcoming_flights(conn, identity, email)
-        return render_template("ViewMyFlights.html", flights=upcoming_flights)
+        upcoming_flights = get_upcoming_flights(conn, identity, session["email"])
+        return render_template("view_my_flights.html", flights=upcoming_flights)
 
 # ======================================================================================
 

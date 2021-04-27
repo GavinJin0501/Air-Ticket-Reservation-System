@@ -22,13 +22,12 @@
                 </li>
                 <li class="navbar__item">
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
-
-                  {% if session["logged_in"] == True%}
                     {% if session.get("type", "guest") == "customer" %}
-                      <li class="navbar__item">
-                        <a href="/ViewMyFlights/customer" class="navbar__links" id="links">View My Flights</a>
-                      </li>
-                    {% endif %}
+                  <li class="navbar__item">
+                    <a href="/ViewMyFlights/customer" class="navbar__links" id="links">View My Flights</a>
+                  </li>
+                  {% endif %}
+                  {% if session["logged_in"] == True%}
                         <li class="navbar__btn">
                         <a href="/logout" class="button" id="logout">Logout</a>
                         </li>
@@ -39,8 +38,7 @@
                         <li class="navbar__btn">
                             <a href="/register" class="button" id="sign-up">Register</a>
                         </li>
-                    {% endif%}
-
+                    {% endif %}
               </ul>
             </div>
         </nav>
@@ -49,7 +47,7 @@
         <div class="search-container" id="search-container">
             <form action="/CheckStatus" autocomplete="off" method="POST">
                 <label id="navbar__logo">Welcome! You may check status here!</label> </br>
-                <label class="label">Flight Number</label>             
+                <label class="label">Flight Number</label>
                 <input type="text", list="flight" name = "flight_num" placeholder="flight number" required/> </br>
                 <datalist id="flight-number">
                     {% for line in flight_number %}
@@ -61,3 +59,9 @@
                 <input type="submit" value = Search>
             </form>
         </div>
+    </body>
+
+    <srcipt type="text/javascript">
+        var flights = {{flights | safe}};
+    </srcipt>
+</html>

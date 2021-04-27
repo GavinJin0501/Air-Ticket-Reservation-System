@@ -141,7 +141,7 @@ def get_upcoming_flights(conn, identity, email):
     cursor = conn.cursor()
     email = email.replace("\'", "\'\'")
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
-                      arrival_airport, DST.airport_city, arrival_time, status, airplane_id
+                      arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) """
     if identity == "airline_staff":
@@ -163,11 +163,15 @@ def get_upcoming_flights(conn, identity, email):
                         WHERE email =  \'%s\'
         )"""
     
-    print("get upcoming flights query is:\n")
+    print("get upcoming flights query is:\n", query % email)
     cursor.execute(query % email)
     data = cursor.fetchall()
     cursor.close()
 
     # need to pre-process the data!!!!
-
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i][4] = data[i][4].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][7] = data[i][7].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][8] = int(data[i][8])
     return data

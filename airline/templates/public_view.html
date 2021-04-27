@@ -39,6 +39,11 @@
                 <li class="navbar__item">
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                 {% if session["logged_in"] == True%}
+                    {% if session.get("type", "guest") == "customer" %}
+                      <li class="navbar__item">
+                        <a href="/ViewMyFlights/customer" class="navbar__links" id="links">View My Flights</a>
+                      </li>
+                    {% endif %}
                     <!-- <li class="navbar__item" id="navbar__logo"></li>
                         {{email}}
                     </li> -->
@@ -170,10 +175,17 @@
                             </div>
                             <div class="flight-button-container">
                                 <section class="otherlabel">{{line[10]}}</section>
-                            </div> 
+                            </div>
+                            {% if not session.get("logged_in", False) %}
                             <div class="flight-button-container1">
                                 <a href="/login" class="button" id="buybutton">BUY</a>
                             </div>
+                            {% else %}
+                            <div class="flight-button-container1">
+                                <a href="/purchase" class="button" id="buybutton">BUY</a>
+                            </div>
+                            {% endif %}
+
                 </section>
             {% endfor %}
         {% endif %}
