@@ -291,11 +291,9 @@ def register_page(identity):
 # ======================================================================================
 @app.route('/logout')
 def logout():
-    if not session.get("logged_in", False):
-        return redirect(url_for("search_flight"))
-    else:
+    if session.get("logged_in", False):
         session["logged_in"] = False
-        return redirect(url_for("search_flight"))
+    return redirect(url_for("home"))
 
 
 # ======================================================================================
