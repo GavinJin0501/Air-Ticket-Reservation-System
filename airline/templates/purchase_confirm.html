@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+    </head>
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Kumbh Sans', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  html {
+    background:  #636fa4;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #636fa4);
+    background: linear-gradient(to right, #e8cbc0, #636fa4);;
+  }
+
+  /* body {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+  } */
+
+  .label {
+    color: #4d5da3;
+    font-size: 18px;
+  }
+
+  .timelabel {
+    color: #384375;
+    font-size: 22px;
+  }
+
+  .otherlabel {
+    color: #384375;
+    font-size: 16px;
+  }
+
+  .navbar {
+    background: #636fa4;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+
+  .navbar__container {
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    z-index: 1;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 50px;
+  }
+
+  #navbar__logo {
+    background-color: #ff8177;
+    background-image: linear-gradient(to top, #fc3e6d 0%, #ffb199 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 2rem;
+  }
+
+  .navbar__menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+  }
+
+  .navbar__item {
+    height: 80px;
+  }
+
+  .navbar__links {
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  #links {
+    height: 100%;
+    width: 130px;
+  }
+
+  .navbar__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    width: 100%;
+  }
+
+  .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 10px;
+    height: 100%;
+    /* width: 100%; */
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .topbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 10px;
+    border: none;
+    margin: none;
+    width: 100%;
+    outline: none;
+    border-radius: 4px;
+    background: #636fa4;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  #buybutton {
+    height: 40px;
+    width: 100px;
+    margin: none;
+  }
+
+  .bigbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 25px;
+    padding: 20px 30px;
+    height: 30px;
+    width: 100px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #e8cbc0;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .loginbutton {
+    display: block;
+    align-items: center;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 15px 50px;
+    width: 100%;
+    border: 10px;
+    margin: 10px;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .pspbutton {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    height: 90px;
+    width: 150px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    color: #384375;
+    font-size: 20px;
+    transition: all 0.3s ease;
+  }
+
+  #allbutton {
+    margin: 10px;
+    color: none;
+  }
+
+  .bluebutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 10px;
+    height: 100px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #636fa4;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+
+
+  .bar-container {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    height: 50px;
+    width: 150px;
+    border: none;
+    outline: none;
+    border-radius: 4px;}
+
+
+  .flight-button-container {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    height: 80px;
+    width: 150px;
+    border: none;
+    outline: none;
+    background:#a8b2dd;}
+
+  .flight-button-container1 {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    height: 80px;
+    width: 150px;
+    border: none;
+    outline: none;
+    background:#f6f6f6;}
+
+
+
+  .navbar__links:hover {
+    color: #e8cbc0;
+    transition: all 0.3s ease;
+  }
+
+
+  .navbar__item:active {
+    color: #a8b2dd;
+    transition: all 0.3s ease;
+  }
+
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    background-color: #f6f6f6;
+  }
+
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: 10px;
+    font-family: 'Kumbh Sans', sans-serif;
+    font-size: 18px;
+    outline: none;
+    cursor: pointer;
+    padding: 20px 200px;
+    transition: 0.3s;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #f6f6f6;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #a8b2dd;
+  }
+
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    width: 80%;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+    border-radius: 10px;
+  }
+
+  .search-container {
+    /* display: flex; */
+    justify-content: space-between;
+    height: auto;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    /* width: 35%; */
+    width: 350px;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+  }
+
+
+  .smaller-container {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    height: 200px;
+    width: 300px;
+    border: none;
+    margin: 15px;
+    outline: none;
+    background:#a8b2dd;}
+
+  .bluebutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 8px 10px;
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background:  #a8b2dd;
+    transition: all 0.3s ease;
+  }
+
+  .register-container {
+    /* display: flex; */
+    justify-content: space-between;
+    height: auto;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    /* width: 35%; */
+    width: 800px;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+  }
+
+  #choose-login{
+    border-bottom: 30px solid #a8b2dd;
+  }
+
+  input[type=button], input[type=submit], input[type=reset] {
+  background-color: #636fa4;
+  border: 10px;
+  margin: 10px;
+  color: white;
+  padding: 15px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 18px;
+  -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+  box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  margin: 15px 45px 40px 45px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  }
+
+  .warning{
+    color:#ff8177;
+    font-size: 25px;
+  }
+
+  input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+    background-color: #636fa4;
+  }
+
+  input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+    -moz-transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+
+  input[type=text] {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 15px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px auto;
+    width: 100%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+  }
+
+  input[type=text]:focus {
+    background-color: #e8cbc0;
+    border-bottom: 2px solid #636fa4;
+  }
+
+  input[type=text]:placeholder {
+    color: #cccccc;
+  }
+
+  input[type=date] {
+    margin: 10px;
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+
+    </style>
+<body>
+    <nav class="navbar">
+            <div class="navbar__container">
+                {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{identity}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+
+            </div>
+        </nav>
+    <div class="search-container" id="search-container">
+        <form action="/purchase/customer" onsubmit="return formValidation()" autocomplete="off" method="POST">
+            <label id="navbar__logo">Purchase confirmation!</label>
+            <label class="label"> </label> </br>
+            <label class="label">Airline name</label> </br>
+            <input type="text" name = "username" placeholder="email" value="{{airline_name}}" readonly/> </br>
+            <label class="label">Flight number</label> </br>
+            <input type="text" name = "password" placeholder="password" value="{{flight_num}}" readonly/> </br>
+            {% if session["type"] == "customer" %}
+                <label class="label">Your email</label> </br>
+                <input type="text" name = "customer_email" placeholder="email" value="{{email}}" readonly/> </br></br>
+                <input type="checkbox" id="customer_policy" name="customer_policy" required>
+                <label for="customer_policy"> I agree with B-Air's customer policy on purchasing the ticket</label><br>
+            {% endif %}
+             </br></br>
+            <input type="submit" value = Confirm />
+<!--			<a href="/register/customer" class="navbar__links" id="register-customer">Don't have an account? Register</a>-->
+<!--			<label class="label"> </label> </br>-->
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+        </form>
+    </div>
+
+</body>
+<script type="text/javascript">
+	function formValidation() {
+		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		var form_usn = document.getElementsByName("username")[0].value;
+
+		if (!re.test(form_usn.toLowerCase())) {
+            alert("Email format is wrong! Please try again");
+            return false;
+        }
+		return true;
+	}
+
+</script>
+</html>

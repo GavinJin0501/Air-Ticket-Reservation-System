@@ -144,6 +144,7 @@
 
             </div>
 
+        <form>
             {% for line in flights %}
                 <section class="button">
                     <div class="bluebutton">
@@ -178,11 +179,14 @@
                             </div>
                             {% if not session.get("logged_in", False) %}
                             <div class="flight-button-container1">
-                                <a href="/login" class="button" id="buybutton">BUY</a>
+<!--                                <a href="/login" class="button" id="buybutton" onclick="">BUY</a>-->
+                                <button class="button" type="submit" formaction="/login" formmethod="get">BUY</button>
                             </div>
                             {% else %}
                             <div class="flight-button-container1">
-                                <a href="/purchase" class="button" id="buybutton">BUY</a>
+<!--                                <a href="/purchase/{{line[0]}}/{{line[1]}}" class="button" id="buybutton" methods="POST">BUY</a>-->
+                                <button class="button" type="submit" formaction="/purchase/{{line[0]}}/{{line[1]}}" formmethod="GET">BUY</button>
+
                             </div>
                             {% endif %}
 
@@ -190,7 +194,7 @@
             {% endfor %}
         {% endif %}
     {% endif %}
-
+    </form>
     </body>
     <script type="text/javascript">
         var flight_list, airports_and_city, today, date_format;

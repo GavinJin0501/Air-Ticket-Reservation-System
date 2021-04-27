@@ -15,6 +15,8 @@ conn = mysql.connector.connect(host='localhost',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+
+
 # ======================================================================================
 
 
@@ -23,11 +25,13 @@ EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
 def is_match(stdin, pattern):
     return re.search(pattern, stdin) is not None
 
+
 def logged_in_redirect():
     if session["type"] == "airline_staff":
         return redirect(url_for())
     else:
         return redirect(url_for("search_flight"))
+
 
 # ======================================================================================
 
@@ -59,7 +63,8 @@ def search_flight():
         email = session.get("email", "guest")
 
     if request.method == "GET":
-        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity, email=email)
+        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity,
+                               email=email)
     elif request.method == "POST":
         source = request.form['depart']
         destination = request.form['arrive']
@@ -85,7 +90,9 @@ def search_flight():
         if not flights:
             flights = ["No flights"]
         # print(flights)
-        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity, email=email)
+        return render_template("public_view.html", airport_city=airport_city, flights=flights, identity=identity,
+                               email=email)
+
 
 @app.route('/CheckStatus', methods=['GET', 'POST'])
 def check_flight_status():
@@ -107,6 +114,7 @@ def check_flight_status():
         print(flight_status_ans)
         return render_template("check_status.html", status_result=flight_status_ans)
 
+
 @app.route('/ViewMyFlights/<string:identity>', methods=["GET"])
 def view_my_flights(identity):
     if not session.get("logged_in", False):
@@ -121,6 +129,48 @@ def view_my_flights(identity):
         upcoming_flights = get_upcoming_flights(conn, identity, session["email"])
         return render_template("view_my_flights.html", flights=upcoming_flights)
 
+
+@app.route('/purchase/<airline_name>/<flight_num>', methods=["GET"])
+def purchase(airline_name, flight_num):
+    if not session.get("logged_in", False):
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") == "airline_staff":
+        return redirect(url_for())
+
+    if request.method == "GET":
+        return redirect(url_for("purchase_confirm", airline_name=airline_name, flight_num=flight_num))
+
+
+@app.route('/purchase/confirm/<airline_name>/<flight_num>', methods=["GET", "POST"])
+def purchase_confirm(airline_name, flight_num):
+    if not session.get("logged_in", False):
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") == "airline_staff":
+        return redirect(url_for())
+
+    if request.method == "GET":
+        print(airline_name, flight_num)
+        identity = session["type"]
+        return render_template("purchase_confirm.html", email=session["email"], identity=identity, airline_name=airline_name,
+                               flight_num=flight_num)
+    elif request.method == "POST":
+        print(airline_name, flight_num)
+        identity = session["type"]
+        if identity == "customer":
+            customer_email = session["email"]
+            agent_email = ""
+        else:
+            customer_email = request.form.get("email")
+            agent_email = session["email"]
+
+        if purchase_ticket(conn, identity, customer_email, airline_name, flight_num):
+            print("purchase success")
+            return redirect(url_for("view_my_flights", identity=identity))
+        else:
+            print("purchase fail")
+            return redirect(url_for("home"))
+
+
 # ======================================================================================
 
 
@@ -132,6 +182,7 @@ def login_general_page():
         return logged_in_redirect()
     return render_template("login_general.html")
 
+
 # identity = customer/booking_agent/airline_staff
 @app.route('/login/<string:identity>', methods=['GET', 'POST'])
 def login_page(identity):
@@ -139,7 +190,7 @@ def login_page(identity):
         return redirect(url_for("login_general_page"))
     elif session.get("logged_in", False):
         return logged_in_redirect()
-    
+
     error = ""
     if request.method == "GET":
         return render_template("login_%s.html" % identity, error=error)
@@ -157,6 +208,8 @@ def login_page(identity):
             session["type"] = identity
             session["email"] = email
             return redirect(url_for("search_flight"))
+
+
 # ======================================================================================
 
 
@@ -209,6 +262,8 @@ def register_page(identity):
             session["type"] = identity
             session["email"] = info["email"]
             return redirect(url_for("search_flight"))
+
+
 # ======================================================================================
 
 
@@ -221,20 +276,14 @@ def register_page(identity):
 # 2. Check if his type is valid for this funciton
 
 
-
-
-
 # Booking agent functions:
 # ======================================================================================
 # ======================================================================================
 
 
-
 # Airline staff functions:
 # ======================================================================================
 # ======================================================================================
-
-
 
 
 # Logout function:
@@ -246,6 +295,8 @@ def logout():
     else:
         session["logged_in"] = False
         return redirect(url_for("search_flight"))
+
+
 # ======================================================================================
 
 

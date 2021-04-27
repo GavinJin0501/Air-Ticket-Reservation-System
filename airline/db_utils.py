@@ -163,7 +163,7 @@ def get_upcoming_flights(conn, identity, email):
                         WHERE email =  \'%s\'
         )"""
     
-    print("get upcoming flights query is:\n", query % email)
+    # print("get upcoming flights query is:\n", query % email)
     cursor.execute(query % email)
     data = cursor.fetchall()
     cursor.close()
@@ -175,3 +175,7 @@ def get_upcoming_flights(conn, identity, email):
         data[i][7] = data[i][7].strftime("%Y-%m-%d %H:%M:%S")
         data[i][8] = int(data[i][8])
     return data
+
+
+def purchase_ticket(conn, identity, customer_email, airline_name, flight_num):
+    cursor = conn.cursor()
