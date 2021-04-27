@@ -485,8 +485,15 @@
             {% if session["type"] == "customer" %}
                 <label class="label">Your email</label> </br>
                 <input type="text" name = "customer_email" placeholder="email" value="{{email}}" readonly/> </br></br>
-                <input type="checkbox" id="customer_policy" name="customer_policy" required>
+                <input type="checkbox" id="customer_policy" name="policy" required>
                 <label for="customer_policy"> I agree with B-Air's customer policy on purchasing the ticket</label><br>
+            {% else %}
+                <label class="label">Your email</label> </br>
+                <input type="text" name = "deputy_email" placeholder="email" value="{{email}}" readonly/> </br></br>
+                <label class="label">Your email</label> </br>
+                <input type="text" name = "on_behalf_customer_email" placeholder="email" value="{{email}}" readonly/> </br></br>
+                <input type="checkbox" id="agent_policy" name="policy" required>
+                <label for="agent_policy"> I agree with B-Air's agent policy on purchasing the ticket</label><br>
             {% endif %}
              </br></br>
             <input type="submit" value = Confirm />
