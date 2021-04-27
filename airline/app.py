@@ -149,27 +149,28 @@ def purchase_confirm(airline_name, flight_num):
         return redirect(url_for())
 
     if request.method == "GET":
-        print(airline_name, flight_num)
+        # print(airline_name, flight_num)
         identity = session["type"]
         return render_template("purchase_confirm.html", email=session["email"], identity=identity, airline_name=airline_name,
                                flight_num=flight_num)
     elif request.method == "POST":
-        print(airline_name, flight_num)
+        # print(airline_name, flight_num)
         identity = session["type"]
         if identity == "customer":
             customer_email = session["email"]
             agent_email = ""
         else:
-            customer_email = request.form.get("email")
+            customer_email = request.form.get("customer_email")
             agent_email = session["email"]
 
-        if purchase_ticket(conn, identity, customer_email, airline_name, flight_num):
+        if purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
             print("purchase success")
             return redirect(url_for("view_my_flights", identity=identity))
         else:
             print("purchase fail")
-            return redirect(url_for("home"))
-
+            error = "No ticket! This flight is full!"
+            return render_template("purchase_confirm.html", email=session["email"], identity=identity, airline_name=airline_name,
+                               flight_num=flight_num, error=error)
 
 # ======================================================================================
 

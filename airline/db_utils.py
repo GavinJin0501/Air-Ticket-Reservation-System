@@ -177,5 +177,45 @@ def get_upcoming_flights(conn, identity, email):
     return data
 
 
-def purchase_ticket(conn, identity, customer_email, airline_name, flight_num):
+def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
     cursor = conn.cursor()
+    query = """SELECT COUNT(ticket_id) 
+               FROM ticket 
+               WHERE flight_num = \'%s\'""" % flight_num
+    # print(query)
+    cursor.execute(query)
+    ticket_num = cursor.fetchall()
+    ticket_num = ticket_num[0][0] if ticket_num else 0
+    query = """SELECT seats 
+               FROM airplane NATURAL JOIN flight 
+               WHERE flight_num = \'%s\'""" % flight_num 
+    # print(query)
+    cursor.execute(query)
+    seat_num = cursor.fetchall()
+    seat_num = seat_num[0][0] if seat_num else 0
+    # print(ticket_num, seat_num)
+    if ticket_num >= seat_num:
+        return False
+    
+    ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
+    today = datetime.today().strftime("%Y-%m-%d")
+    query = """INSERT INTO ticket
+               VALUES (\'%s\', \'%s\', \'%s\')""" % (ticket_id, airline_name, flight_num)
+    cursor.execute(query)
+    # conn.commit()
+
+    if identity == "customer":
+        query = """INSERT INTO purchases
+                   VALUES (\'%s\', \'%s\', NULL, \'%s\')""" % (ticket_id, customer_email, today)
+    else:
+        query = """SELECT booking_agent_id
+                   FROM booking_agent
+                   WHERE email = \'%s\'""" % agent_email
+        cursor.execute(query)
+        agent_id = cursor.fetchall()[0][0]
+        query = """INSERT INTO purchases
+                   VALUES (\'%s\', \'%s\', \'%s\', \'%s\')""" % (ticket_id, customer_email, agent_id, today)
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    return True

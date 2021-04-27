@@ -111,7 +111,7 @@ CREATE TABLE `flight` (
 --
 
 CREATE TABLE `ticket` (
-  `ticket_id` varchar(11) NOT NULL,
+  `ticket_id` varchar(20) NOT NULL,
   `airline_name` varchar(50) NOT NULL,
   `flight_num` varchar(10) NOT NULL,
   PRIMARY KEY(`ticket_id`),
@@ -126,7 +126,7 @@ CREATE TABLE `ticket` (
 --
 
 CREATE TABLE `purchases` (
-  `ticket_id` varchar(11) NOT NULL,
+  `ticket_id` varchar(20) NOT NULL,
   `customer_email` varchar(50) NOT NULL,
   `booking_agent_id` varchar(11),
   `purchase_date` date NOT NULL,
