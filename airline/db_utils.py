@@ -5,13 +5,21 @@ PASSWORD_HASH = "md5"
 
 
 def get_airport_and_city(conn):
+    data1 = []
+    data2 = []
     cursor = conn.cursor()
-    query = "SELECT airport_city, airport_name FROM `airport`"
-    cursor.execute(query)
-    data1 = cursor.fetchall()
-    query = "SELECT DISTINCT airport_city FROM `airport`"
-    cursor.execute(query)
-    data2 = cursor.fetchall()
+    # query = "SELECT airport_city, airport_name FROM `airport`"
+    # cursor.execute(query)
+    # data1 = cursor.fetchall()
+    cursor.callproc("GetAirportWithCity")
+    for result in cursor.stored_results():
+        data1 = result.fetchall()
+    # query = "SELECT DISTINCT airport_city FROM `airport`"
+    # cursor.execute(query)
+    # data2 = cursor.fetchall()
+    cursor.callproc("GetUniqueAirportCity")
+    for result in cursor.stored_results():
+        data2 = result.fetchall()
     cursor.close()
     for i in range(len(data1)):
         data1[i] = data1[i][0] + " - " + data1[i][1]
@@ -19,6 +27,7 @@ def get_airport_and_city(conn):
         data2[i] = data2[i][0]
     data2 += data1
     data2.sort()
+    print(data2)
     return data2
 
 
@@ -134,7 +143,7 @@ def get_flight_status(conn, flight_num, departure_date, arrival_date):
             cursor.execute(query.format(arrival_date))
             data = cursor.fetchall()
     cursor.close()
-    
+
     for i in range(len(data)):
         data[i] = list(data[i])
         data[i][-1] = data[i][-1].strftime("%Y-%m-%d %H:%M:%S")
@@ -167,7 +176,7 @@ def get_upcoming_flights(conn, identity, email):
                         FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
                         WHERE email =  \'%s\'
         )"""
-    
+
     # print("get upcoming flights query is:\n", query % email)
     cursor.execute(query % email)
     data = cursor.fetchall()
@@ -193,7 +202,7 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     ticket_num = ticket_num[0][0] if ticket_num else 0
     query = """SELECT seats 
                FROM airplane NATURAL JOIN flight 
-               WHERE flight_num = \'%s\'""" % flight_num 
+               WHERE flight_num = \'%s\'""" % flight_num
     # print(query)
     cursor.execute(query)
     seat_num = cursor.fetchall()
@@ -201,7 +210,7 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     # print(ticket_num, seat_num)
     if ticket_num >= seat_num:
         return False
-    
+
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")
     query = """INSERT INTO ticket
