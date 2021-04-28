@@ -99,10 +99,14 @@ def check_flight_status():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
         return redirect(url_for())
 
+    if session.get("logged_in", False):
+        identity = session.get("type", "guest")
+    else:
+        identity = "guest"
     if request.method == "GET":
         today = datetime.now().strftime("%Y-%m-%d")
         recent_flight_status = get_flight_status(conn, "", today, "")
-        return render_template("check_status.html", status_result=recent_flight_status)
+        return render_template("check_status.html", identity=identity, status_result=recent_flight_status)
     elif request.method == "POST":
         flight_num = request.form.get("flight_num", "")
         departure_date = request.form.get("departure_date", "")
@@ -112,7 +116,7 @@ def check_flight_status():
         if not flight_status_ans:
             flight_status_ans = ["No such a flight at the given time!"]
         print(flight_status_ans)
-        return render_template("check_status.html", status_result=flight_status_ans)
+        return render_template("check_status.html", identity=identity, status_result=flight_status_ans)
 
 
 @app.route('/ViewMyFlights/<string:identity>', methods=["GET"])
@@ -127,7 +131,7 @@ def view_my_flights(identity):
 
     if request.method == "GET":
         upcoming_flights = get_upcoming_flights(conn, identity, session["email"])
-        return render_template("view_my_flights.html", flights=upcoming_flights)
+        return render_template("view_my_flights.html", identity=identity, flights=upcoming_flights)
 
 
 @app.route('/purchase/<airline_name>/<flight_num>', methods=["GET"])

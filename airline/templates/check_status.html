@@ -11,11 +11,19 @@
     <body>
         <nav class="navbar">
             <div class="navbar__container">
-              <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
-              <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span> <span class="bar"></span>
-                <span class="bar"></span>
-              </div>
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{identity}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
               <ul class="navbar__menu">
                 <li class="navbar__item">
                   <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>

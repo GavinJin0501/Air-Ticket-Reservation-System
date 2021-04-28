@@ -11,11 +11,19 @@
     <body>
         <nav class="navbar">
             <div class="navbar__container">
-              <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
-              <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span> <span class="bar"></span>
-                <span class="bar"></span>
-              </div>
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{identity}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
               <ul class="navbar__menu">
                 <li class="navbar__item">
                   <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
@@ -48,12 +56,12 @@
             <form action="/CheckStatus" autocomplete="off" method="POST">
                 <label id="navbar__logo">Welcome! </br> You may view your flights here!</label> </br>
                 <label class="label">Flight Number</label>
-                <input type="text", list="flight" name = "flight_num" placeholder="flight number" required/> </br>
-                <datalist id="flight-number">
-                    {% for line in flight_number %}
-                        <option value="{{line}}">
-                    {% endfor %}
-                </datalist>
+                <input type="text" list="flight-number" name = "flight_num" placeholder="flight number" required/> </br>
+<!--                <datalist id="flight-number">-->
+<!--                    {% for line in flight_number %}-->
+<!--                        <option value="{{line}}">-->
+<!--                    {% endfor %}-->
+<!--                </datalist>-->
                 <label class="label">Date</label>
                 <input type="date" name = "departure_date" placeholder="date" id = "date" required/> </br>
                 <input type="submit" value = Search>
@@ -61,7 +69,6 @@
         </div>
     </body>
 
-    <srcipt type="text/javascript">
-        var flights = {{flights | safe}};
-    </srcipt>
-</html>
+    <script>
+        var flights;
+    </script>
