@@ -52,6 +52,7 @@
   
   .navbar__item {
     height: 80px;
+    width: 200px
   }
   
   .navbar__links {
