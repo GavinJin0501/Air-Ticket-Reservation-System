@@ -104,8 +104,10 @@ def check_flight_status():
     else:
         identity = "guest"
     if request.method == "GET":
-        today = datetime.now().strftime("%Y-%m-%d")
+        # today = datetime.now().strftime("%Y-%m-%d")
+        today = "2021-05-01"
         recent_flight_status = get_flight_status(conn, "", today, "")
+        print(recent_flight_status)
         return render_template("check_status.html", identity=identity, status_result=recent_flight_status)
     elif request.method == "POST":
         flight_num = request.form.get("flight_num", "")
@@ -155,7 +157,8 @@ def purchase_confirm(airline_name, flight_num):
     if request.method == "GET":
         # print(airline_name, flight_num)
         identity = session["type"]
-        return render_template("purchase_confirm.html", email=session["email"], identity=identity, airline_name=airline_name,
+        return render_template("purchase_confirm.html", email=session["email"], identity=identity,
+                               airline_name=airline_name,
                                flight_num=flight_num)
     elif request.method == "POST":
         # print(airline_name, flight_num)
@@ -173,8 +176,24 @@ def purchase_confirm(airline_name, flight_num):
         else:
             print("purchase fail")
             error = "No ticket! This flight is full!"
-            return render_template("purchase_confirm.html", email=session["email"], identity=identity, airline_name=airline_name,
-                               flight_num=flight_num, error=error)
+            return render_template("purchase_confirm.html", email=session["email"], identity=identity,
+                                   airline_name=airline_name,
+                                   flight_num=flight_num, error=error)
+
+
+@app.route('/TrackMySpending', methods=["GET"])
+def track_my_spending():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "customer":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        # List of lists: [[purchase_date, price], .........]
+        my_spendings = get_my_spendings(conn, email=session["email"])
+        return render_template("track_my_spendings", identity=session["type"], my_spendings=my_spendings)
 
 # ======================================================================================
 
@@ -269,27 +288,9 @@ def register_page(identity):
             return redirect(url_for("search_flight"))
 
 
-# ======================================================================================
-
-
-# Customer functions:
-# ======================================================================================
-# ======================================================================================
-
 # STEPS:
 # 1. Check if user is logged in
 # 2. Check if his type is valid for this funciton
-
-
-# Booking agent functions:
-# ======================================================================================
-# ======================================================================================
-
-
-# Airline staff functions:
-# ======================================================================================
-# ======================================================================================
-
 
 # Logout function:
 # ======================================================================================

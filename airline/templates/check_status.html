@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>B-Airline</title>
         <link rel="stylesheet" href="../static/public_view.css" />
+        <script src="../static/lib/moment.js"></script>
     </head>
 
 
@@ -55,17 +56,51 @@
 
 
         <div class="search-container" id="search-container">
-            <form action="/CheckStatus" autocomplete="off" method="POST">
-                <label id="navbar__logo">Welcome! </br> You may check status here!</label> </br>
+            <form action="/CheckStatus" onsubmit="return formValidation()" autocomplete="off" method="POST">
+                <label id="navbar__logo">Welcome! </br> You may check flight status here!</label> </br>
                 <label class="label">Flight Number</label>             
-                <input type="text", list="flight" name = "flight_num" placeholder="flight number" required/> </br>
-                <datalist id="flight-number">
-                    {% for line in flight_number %}
-                        <option value="{{line}}">
-                    {% endfor %}
-                </datalist>
-                <label class="label">Date</label>
-                <input type="date" name = "departure_date" placeholder="date" id = "date" required/> </br>
+                <input type="text" name = "flight_num" placeholder="flight number" required/> </br>
+<!--                <datalist id="flight-number">-->
+<!--                    {% for line in flight_number %}-->
+<!--                        <option value="{{line}}">-->
+<!--                    {% endfor %}-->
+<!--                </datalist>-->
+                <label class="label">Departure Date</label>
+                <input type="date" name = "departure_date" placeholder="date" id = "date"/>
+                <label class="label">Arrival Date</label>
+                <input type="date" name = "arrival_date" placeholder="date" id = "date"/> </br>
                 <input type="submit" value = Search>
             </form>
         </div>
+    </body>
+    <script type="text/javascript">
+        var flights_status = {{status_result | safe}}, date_format = 'YYYY-MM-DD';
+
+        function formValidation() {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var form_departure_date, form_arrival_date;
+
+            form_departure_date = document.getElementsByName("departure_date")[0].value;
+            form_arrival_date = document.getElementsByName("arrival_date")[0].value;
+
+            if ((!form_departure_date) && (!form_arrival_date)) {
+                alert("At least one of departure/arrival date should be filled!");
+                return false;
+            }
+
+            if (form_departure_date && (!moment(form_departure_date, date_format, true).isValid())) {
+                alert("Departure date is not valid. Support format: 'YYYY-MM-DD'");
+                return false;
+            }
+
+            if (form_arrival_date && (!moment(form_departure_date, date_format, true).isValid())) {
+                alert("Arrival date is not valid. Support format: 'YYYY-MM-DD'");
+                return false;
+            }
+
+            return true;
+
+        }
+
+    </script>
+</html>

@@ -120,13 +120,18 @@ def get_flight_status(conn, flight_num, departure_date, arrival_date):
         cursor.execute(query.format(departure_date))
         data = cursor.fetchall()
     else:
-        if departure_date:
-            query += """WHERE flight_num = \'{}\' AND departure_time LIKE \'{}%\'"""
-            cursor.execute(query.format(flight_num, departure_date))
+        query += """WHERE flight_num = \'%s\' AND """ % flight_num
+        if departure_date and arrival_date:
+            query += """departure_time LIKE \'{}%\' AND arrival_time LIKE \'{}%\'"""
+            cursor.execute(query.format(departure_date, arrival_date))
+            data = cursor.fetchall()
+        elif departure_date:
+            query += """departure_time LIKE \'{}%\'"""
+            cursor.execute(query.format(departure_date))
             data = cursor.fetchall()
         else:
-            query += """WHERE flight_num = \'{}\' AND arrival_time LIKE \'{}%\'"""
-            cursor.execute(query.format(flight_num, arrival_date))
+            query += """arrival_time LIKE \'{}%\'"""
+            cursor.execute(query.format(arrival_date))
             data = cursor.fetchall()
     cursor.close()
     
@@ -219,3 +224,19 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     conn.commit()
     cursor.close()
     return True
+
+
+def get_my_spendings(conn, email):
+    cursor = conn.cursor()
+    query = """SELECT purchase_date, price
+               FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
+               WHERE customer_email = \'%s\'
+               ORDER BY purchase_date DESC""" % email
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(data)):
+        data[i] = list(data[i])
+
+    return data

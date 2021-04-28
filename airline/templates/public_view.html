@@ -210,8 +210,18 @@
         airports_and_city = {{airport_city | safe}};
         
         $(document).ready(function() {
-            $("#src_dl").autocomplete({source: airports_and_city});
-            $("#dst_dl").autocomplete({source: airports_and_city});
+            $("#src_dl").autocomplete({
+                source: function(request, response){
+                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    response(results.slice(0, 5));
+                }
+            });
+            $("#dst_dl").autocomplete({
+                source: function(request, response){
+                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    response(results.slice(0, 5));
+                }
+            });
         });
 
         function formValidation() {
