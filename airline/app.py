@@ -187,7 +187,8 @@ def track_my_spending():
     if request.method == "GET":
         # List of lists: [[purchase_date, price], .........]
         my_spendings = get_my_spendings(conn, email=session["email"])
-        return render_template("track_my_spendings", identity=session["type"], my_spendings=my_spendings)
+        print(my_spendings)
+        return render_template("track_my_spending.html", identity=session["type"], my_spendings=my_spendings)
 
 
 @app.route('/ViewMyCommission', methods=["GET"])
@@ -195,12 +196,13 @@ def view_my_commission():
     if not session.get("logged_in", False):
         flash("Don't cheat! Login first!")
         return redirect(url_for("home"))
-    elif session.get("type", "guest") != "agent":
+    elif session.get("type", "guest") != "booking_agent":
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
     if request.method == "GET":
         my_commission = get_my_commission(conn, session["email"], "", "")
+        print(my_commission)
         return render_template("", my_commission=my_commission)
 
 
@@ -209,12 +211,13 @@ def view_top_customers():
     if not session.get("logged_in", False):
         flash("Don't cheat! Login first!")
         return redirect(url_for("home"))
-    elif session.get("type", "guest") != "agent":
+    elif session.get("type", "guest") != "booking_agent":
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
-    if request.methods == "GET":
+    if request.method == "GET":
         most_tickets, most_commission = top_customers(conn, email=session["email"])
+        print(most_tickets, most_commission)
         return render_template("", most_tickets=most_tickets, most_commission=most_commission)
 # ======================================================================================
 

@@ -248,13 +248,15 @@ def get_my_spendings(conn, email):
 
     for i in range(len(data)):
         data[i] = list(data[i])
+        data[i][0] = data[i][0].strftime("%Y-%m-%d")
+        data[i][1] = int(data[i][1])
 
     return data
 
 
 def get_my_commission(conn, email, start_date="", end_date=""):
     cursor = conn.cursor()
-    query = """SELECT purchase_data, price * 0.1
+    query = """SELECT purchase_date, price * 0.1
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
                WHERE email = \'%s\' """ % email
     if start_date:
@@ -268,6 +270,8 @@ def get_my_commission(conn, email, start_date="", end_date=""):
 
     for i in range(len(data)):
         data[i] = list(data[i])
+        data[i][0] = data[i][0].strftime("%Y-%m-%d")
+        data[i][1] = int(data[i][1])
 
     return data
 
@@ -283,25 +287,25 @@ def top_customers(conn, email):
     cursor.execute(query)
 
     six_month_before = (datetime.today() - timedelta(days=6*31)).strftime("%Y-%m-%d")
-    query = """SELECT customer_email, num_of_ticket
-               FROM top_customers
-               WHERE purchase_date >= \'%s\' AND 4 >= (
-                    SELECT COUNT(DISTINCT num_of_ticket)
+    query = """SELECT t1.customer_email, t1.num_of_ticket
+               FROM top_customers AS t1
+               WHERE t1.purchase_date >= \'%s\' AND 4 >= (
+                    SELECT COUNT(DISTINCT t2.num_of_ticket)
                     FROM top_customers AS t2
-                    WHERE t2.num_of_ticket >= num_of_ticket
+                    WHERE t2.num_of_ticket >= t1.num_of_ticket
                )
-               ORDER BY num_of_ticekt DESC
+               ORDER BY t1.num_of_ticket DESC
             """ % six_month_before
     cursor.execute(query)
     most_tickets = cursor.fetchall()
 
     a_year_before = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-    query = """SELECT customer_email, amount_of_commission
-               FROM top_customers
-               WHERE purchase_date >= \'%s\' AND 4 >= (
-                    SELECT COUNT(DISTINCT amount_of_commission)
+    query = """SELECT t1.customer_email, t1.amount_of_commission
+               FROM top_customers AS t1
+               WHERE t1.purchase_date >= \'%s\' AND 4 >= (
+                    SELECT COUNT(DISTINCT t2.amount_of_commission)
                     FROM top_customers AS t2
-                    WHERE t2.amount_of_commission >= amount_of_commission
+                    WHERE t1.amount_of_commission >= t1.amount_of_commission
                )
              """ % a_year_before
     cursor.execute(query)
@@ -312,5 +316,6 @@ def top_customers(conn, email):
         most_tickets[i] = list(most_tickets[i])
     for i in range(len(most_commission)):
         most_commission[i] = list(most_commission[i])
+        most_commission[i][-1] = int(most_commission[i][-1])
 
     return most_tickets, most_commission
