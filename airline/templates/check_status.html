@@ -35,7 +35,7 @@
                   {% if session["logged_in"] == True%}
                     {% if session.get("type", "guest") == "customer" %}
                       <li class="navbar__item">
-                        <a href="/ViewMyFlights/customer" class="navbar__links" id="links">View My Flights</a>
+                        <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
                       </li>
                     {% endif %}
                         <li class="navbar__btn">

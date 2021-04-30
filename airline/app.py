@@ -15,8 +15,6 @@ conn = mysql.connector.connect(host='localhost',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
-
-
 # ======================================================================================
 
 
@@ -31,8 +29,6 @@ def logged_in_redirect():
         return redirect(url_for())
     else:
         return redirect(url_for("search_flight"))
-
-
 # ======================================================================================
 
 
@@ -103,6 +99,7 @@ def check_flight_status():
         identity = session.get("type", "guest")
     else:
         identity = "guest"
+
     if request.method == "GET":
         # today = datetime.now().strftime("%Y-%m-%d")
         today = "2021-05-01"
@@ -121,18 +118,15 @@ def check_flight_status():
         return render_template("check_status.html", identity=identity, status_result=flight_status_ans)
 
 
-@app.route('/ViewMyFlights/<string:identity>', methods=["GET"])
-def view_my_flights(identity):
+@app.route('/ViewMyFlights', methods=["GET"])
+def view_my_flights():
     if not session.get("logged_in", False):
         return redirect(url_for("home"))
-    elif identity not in ["customer", "booking_agent", "airline_staff"]:
-        return redirect(url_for("home"))
-    elif identity != session.get("type", "guest"):
-        flash("Don't try to cheat your identity!")
-        return redirect(url_for("home"))
 
+    identity = session.get("type", "guest")
     if request.method == "GET":
         upcoming_flights = get_upcoming_flights(conn, identity, session["email"])
+        print(upcoming_flights)
         return render_template("view_my_flights.html", identity=identity, flights=upcoming_flights)
 
 
@@ -195,6 +189,18 @@ def track_my_spending():
         my_spendings = get_my_spendings(conn, email=session["email"])
         return render_template("track_my_spendings", identity=session["type"], my_spendings=my_spendings)
 
+
+@app.route('/ViewMyCommission', methods=["GET"])
+def view_my_commission():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "agent":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        pass
 # ======================================================================================
 
 
@@ -299,8 +305,6 @@ def logout():
     if session.get("logged_in", False):
         session["logged_in"] = False
     return redirect(url_for("home"))
-
-
 # ======================================================================================
 
 
