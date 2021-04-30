@@ -200,7 +200,22 @@ def view_my_commission():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        pass
+        my_commission = get_my_commission(conn, session["email"], "", "")
+        return render_template("", my_commission=my_commission)
+
+
+@app.route('/ViewTopCustomers', methods=["GET"])
+def view_top_customers():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "agent":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.methods == "GET":
+        most_tickets, most_commission = top_customers(conn, email=session["email"])
+        return render_template("", most_tickets=most_tickets, most_commission=most_commission)
 # ======================================================================================
 
 

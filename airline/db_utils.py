@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 PASSWORD_HASH = "md5"
 
@@ -249,3 +250,67 @@ def get_my_spendings(conn, email):
         data[i] = list(data[i])
 
     return data
+
+
+def get_my_commission(conn, email, start_date="", end_date=""):
+    cursor = conn.cursor()
+    query = """SELECT purchase_data, price * 0.1
+               FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
+               WHERE email = \'%s\' """ % email
+    if start_date:
+        query += " AND purchase_date >= \'%s\'" % start_date
+    if end_date:
+        query += " AND purchase_date <= \'%s\'" % end_date
+    query += " ORDER BY purchase_date DESC"
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(data)):
+        data[i] = list(data[i])
+
+    return data
+
+
+def top_customers(conn, email):
+    cursor = conn.cursor()
+    query = """CREATE OR REPLACE VIEW top_customers AS (
+                    SELECT customer_email, COUNT(ticket_id) AS num_of_ticket, SUM(price * 0.1) AS amount_of_commission, purchase_date
+                    FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
+                    WHERE email = \'%s\'
+                    GROUP BY customer_email
+               )""" % email
+    cursor.execute(query)
+
+    six_month_before = (datetime.today() - timedelta(days=6*31)).strftime("%Y-%m-%d")
+    query = """SELECT customer_email, num_of_ticket
+               FROM top_customers
+               WHERE purchase_date >= \'%s\' AND 4 >= (
+                    SELECT COUNT(DISTINCT num_of_ticket)
+                    FROM top_customers AS t2
+                    WHERE t2.num_of_ticket >= num_of_ticket
+               )
+               ORDER BY num_of_ticekt DESC
+            """ % six_month_before
+    cursor.execute(query)
+    most_tickets = cursor.fetchall()
+
+    a_year_before = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
+    query = """SELECT customer_email, amount_of_commission
+               FROM top_customers
+               WHERE purchase_date >= \'%s\' AND 4 >= (
+                    SELECT COUNT(DISTINCT amount_of_commission)
+                    FROM top_customers AS t2
+                    WHERE t2.amount_of_commission >= amount_of_commission
+               )
+             """ % a_year_before
+    cursor.execute(query)
+    most_commission = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(most_tickets)):
+        most_tickets[i] = list(most_tickets[i])
+    for i in range(len(most_commission)):
+        most_commission[i] = list(most_commission[i])
+
+    return most_tickets, most_commission
