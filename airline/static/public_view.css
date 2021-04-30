@@ -93,6 +93,17 @@
     transition: all 0.3s ease;
   }
 
+  .navbar__links__long {
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
   #links {
     height: 100%;
     width: 150px;
@@ -273,6 +284,11 @@
 
 
   .navbar__links:hover {
+    color: #e8cbc0;
+    transition: all 0.3s ease;
+  }
+
+  .navbar__links__long:hover {
     color: #e8cbc0;
     transition: all 0.3s ease;
   }
