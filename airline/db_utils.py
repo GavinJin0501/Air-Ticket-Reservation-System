@@ -9,15 +9,9 @@ def get_airport_and_city(conn):
     data1 = []
     data2 = []
     cursor = conn.cursor()
-    # query = "SELECT airport_city, airport_name FROM `airport`"
-    # cursor.execute(query)
-    # data1 = cursor.fetchall()
     cursor.callproc("GetAirportWithCity")
     for result in cursor.stored_results():
         data1 = result.fetchall()
-    # query = "SELECT DISTINCT airport_city FROM `airport`"
-    # cursor.execute(query)
-    # data2 = cursor.fetchall()
     cursor.callproc("GetUniqueAirportCity")
     for result in cursor.stored_results():
         data2 = result.fetchall()
@@ -91,17 +85,32 @@ def airline_staff_initialization(conn, email):
     return data[0][0]
 
 
-def register_check(conn, email, identity):
+def register_check(conn, info, identity):
     cursor = conn.cursor()
-    query = """SELECT """
     if identity == "airline_staff":
-        query += "username FROM {} WHERE username = \'{}\'"
+        query = """SELECT airline_name FROM airline WHERE airline_name = \'%s\'""" % info["airline_name"]
+        cursor.execute(query)
+        data = cursor.fetchall()
+        if not data:
+            cursor.close()
+            return False, "No such airline"
+        query = "SELECT username FROM %s WHERE username = \'%s\'" % (identity, info["email"].replace("\'", "\'\'"))
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.close()
+        if data:
+            return False, "Email has already been used"
+        else:
+            return True, ""
     else:
-        query += "email FROM {} WHERE email = \'{}\'"
-    cursor.execute(query.format(identity, email.replace("\'", "\'\'")))
-    data = cursor.fetchall()
-    cursor.close()
-    return data == []
+        query = "SELECT email FROM %s WHERE email = \'%s\'" % (identity, info["email"].replace("\'", "\'\'"))
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.close()
+        if data:
+            return False, "Email has already been used"
+        else:
+            return True, ""
 
 
 def register_to_database(conn, info, identity):

@@ -263,6 +263,9 @@ def add_airplane():
     if request.method == "GET":
         return render_template("AddAirplane.html", status=False, error="")
     elif request.method == "POST":
+        airline_name = request.form["airline_name"]
+        airplane_id = request.form["airplane_id"]
+        seats = request.form["seats"]
         pass
 
 
@@ -351,8 +354,9 @@ def register_page(identity):
             if not is_match(info["email"], EMAIL_REGEX):
                 error = "Email address invalid"
                 return render_template("register_%s.html" % identity, error=error)
-            elif not db_utils.register_check(conn, info["email"], identity):
-                error = "Email has already been used"
+
+            status, error = db_utils.register_check(conn, info, identity)
+            if not status:
                 return render_template("register_%s.html" % identity, error=error)
 
             db_utils.register_to_database(conn, info, identity)
@@ -378,6 +382,16 @@ def logout():
 
 # ======================================================================================
 
+
+# Error page:
+# ======================================================================================
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("not_found.html"), 404
+
+
+
+# ======================================================================================
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=5000, debug=True)
