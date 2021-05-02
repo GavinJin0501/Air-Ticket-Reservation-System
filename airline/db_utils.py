@@ -82,6 +82,15 @@ def login_check(conn, username, password, identity):
     return check_password_hash(data[0][0], password)
 
 
+def airline_staff_initialization(conn, email):
+    cursor = conn.cursor()
+    query = """SELECT airline_name FROM airline_staff WHERE email = \'%s\'""" % email
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    return data[0][0]
+
+
 def register_check(conn, email, identity):
     cursor = conn.cursor()
     query = """SELECT """
@@ -319,3 +328,40 @@ def top_customers(conn, email):
         most_commission[i][-1] = int(most_commission[i][-1])
 
     return most_tickets, most_commission
+
+
+def create_new_flight(conn, info):
+    cursor = conn.cursor()
+    # Check flight num
+    query = """SELECT flight_num FROM flight WHERE flight_num = \'%s\'""" % info["flight_num"]
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if data:
+        cursor.close()
+        return False, "Flight number already exists!"
+
+    # Check departure airport name
+    query = """SELECT departure_airport FROM flight WHERE departure_airport = \'%s\'""" % info["departure_airport"]
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if not data:
+        cursor.close()
+        return False, "Departure airport does not exist in the database!"
+
+    # Check arrival airport name
+    query = """SELECT arrival_airport FROM flight WHERE arrival_airport = \'%s\'""" % info["arrival_airport"]
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if not data:
+        cursor.close()
+        return False, "Arrival airport does not exist in the database!"
+
+    # Check plane id
+    query = """SELECT plane_id FROM airplane WHERE departure_airport = \'%s\'""" % info["plane_id"]
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if not data:
+        cursor.close()
+        return False, "Airplane does not exist in the database!"
+
+    pass

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, f
 from datetime import datetime
 import mysql.connector
 import re
-from db_utils import *
+import db_utils
 
 # App initlization:
 # ======================================================================================
@@ -15,6 +15,8 @@ conn = mysql.connector.connect(host='localhost',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+
+
 # ======================================================================================
 
 
@@ -29,10 +31,12 @@ def logged_in_redirect():
         return redirect(url_for())
     else:
         return redirect(url_for("search_flight"))
+
+
 # ======================================================================================
 
 
-# App initlization:
+# App initialization:
 @app.route('/')
 def home():
     if session.get("logged_in", False):
@@ -48,7 +52,7 @@ def search_flight():
         return redirect(url_for())
 
     # results for autocomplete in the client side
-    airport_city = get_airport_and_city(conn)
+    airport_city = db_utils.get_airport_and_city(conn)
     flights = []
     # print(airport_city)
     if not session.get("logged_in"):
@@ -82,7 +86,7 @@ def search_flight():
         # flights is a nested list, with its sublist:
         # [airline_name, flight_num, depart_airport, depart_city, depart_time,
         #  arrive_airport, arrive_city, arrive_time, price, status, plane_id]
-        flights = get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
+        flights = db_utils.get_flights_by_location(conn, date, src_city, dst_city, src_airport, dst_airport)
         if not flights:
             flights = ["No flights"]
         # print(flights)
@@ -103,7 +107,7 @@ def check_flight_status():
     if request.method == "GET":
         # today = datetime.now().strftime("%Y-%m-%d")
         today = "2021-05-01"
-        recent_flight_status = get_flight_status(conn, "", today, "")
+        recent_flight_status = db_utils.get_flight_status(conn, "", today, "")
         print(recent_flight_status)
         return render_template("check_status.html", identity=identity, status_result=recent_flight_status)
     elif request.method == "POST":
@@ -111,7 +115,7 @@ def check_flight_status():
         departure_date = request.form.get("departure_date", "")
         arrival_date = request.form.get("arrival_date", "")
 
-        flight_status_ans = get_flight_status(conn, flight_num, departure_date, arrival_date)
+        flight_status_ans = db_utils.get_flight_status(conn, flight_num, departure_date, arrival_date)
         if not flight_status_ans:
             flight_status_ans = ["No such a flight at the given time!"]
         print(flight_status_ans)
@@ -125,7 +129,7 @@ def view_my_flights():
 
     identity = session.get("type", "guest")
     if request.method == "GET":
-        upcoming_flights = get_upcoming_flights(conn, identity, session["email"])
+        upcoming_flights = db_utils.get_upcoming_flights(conn, identity, session["email"])
         print(upcoming_flights)
         return render_template("view_my_flights.html", identity=identity, flights=upcoming_flights)
 
@@ -164,7 +168,7 @@ def purchase_confirm(airline_name, flight_num):
             customer_email = request.form.get("customer_email")
             agent_email = session["email"]
 
-        if purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
+        if db_utils.purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
             print("purchase success")
             return redirect(url_for("view_my_flights", identity=identity))
         else:
@@ -186,7 +190,7 @@ def track_my_spending():
 
     if request.method == "GET":
         # List of lists: [[purchase_date, price], .........]
-        my_spendings = get_my_spendings(conn, email=session["email"])
+        my_spendings = db_utils.get_my_spendings(conn, email=session["email"])
         print(my_spendings)
         return render_template("track_my_spending.html", identity=session["type"], my_spendings=my_spendings)
 
@@ -201,9 +205,9 @@ def view_my_commission():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        my_commission = get_my_commission(conn, session["email"], "", "")
+        my_commission = db_utils.get_my_commission(conn, session["email"], "", "")
         print(my_commission)
-        return render_template("", my_commission=my_commission)
+        return render_template("ViewMyCommission.html", my_commission=my_commission)
 
 
 @app.route('/ViewTopCustomers', methods=["GET"])
@@ -216,9 +220,37 @@ def view_top_customers():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        most_tickets, most_commission = top_customers(conn, email=session["email"])
+        most_tickets, most_commission = db_utils.top_customers(conn, email=session["email"])
         print(most_tickets, most_commission)
-        return render_template("", most_tickets=most_tickets, most_commission=most_commission)
+        return render_template("ViewTopCustomers.html", most_tickets=most_tickets, most_commission=most_commission)
+
+
+@app.route('/CreateNewFlights', methods=["GET", "POST"])
+def create_new_flights():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        return render_template("CreateNewFlights.html", identity="airline_staff", status=False, error="")
+    elif request.method == "POST":
+        info = {"airline_name": request.form["airline_name"],
+                "flight_num": request.form["flight_num"],  # no repetitive check
+                "departure_airport": request.form["departure_airport"],  # have check
+                "departure_time": request.form["departure_time"],
+                "arrival_airport": request.form["arrival_airport"],  # have check
+                "arrival_time": request.form["arrival_time"],
+                "price": request.form["price"],
+                "status": request.form["status"],
+                "plane_id": request.form["plane_id"],  # have check
+                }
+        status, error = db_utils.create_new_flight(conn, info)
+        return render_template("CreateNewFlights.html", identity="airline_staff", status=status, error=error)
+
+
 # ======================================================================================
 
 
@@ -248,13 +280,15 @@ def login_page(identity):
         # if not is_match(email, EMAIL_REGEX):
         #     error = "Email address invalid"
         #     return render_template("login_%s.html" % identity, error=error)
-        if not login_check(conn, email, password, identity):
+        if not db_utils.login_check(conn, email, password, identity):
             error = "Email address or password invalid"
             return render_template("login_%s.html" % identity, error=error)
         else:
             session["logged_in"] = True
             session["type"] = identity
             session["email"] = email
+            if identity == "airline_staff":
+                session["airline"] = db_utils.airline_staff_initialization(conn, email)
             return redirect(url_for("search_flight"))
 
 
@@ -297,24 +331,30 @@ def register_page(identity):
                     "passport_country": request.form.get("passport_country"),
                     "date_of_birth": request.form.get("date_of_birth"),
                     "booking_agent_id": request.form.get("booking_agent_id"),
-                    "airline_name": request.form.get("airline_name")}
+                    "airline_name": request.form.get("airline_name")
+                    }
             if not is_match(info["email"], EMAIL_REGEX):
                 error = "Email address invalid"
                 return render_template("register_%s.html" % identity, error=error)
-            elif not register_check(conn, info["email"], identity):
+            elif not db_utils.register_check(conn, info["email"], identity):
                 error = "Email has already been used"
                 return render_template("register_%s.html" % identity, error=error)
 
-            register_to_database(conn, info, identity)
+            db_utils.register_to_database(conn, info, identity)
             session["logged_in"] = True
             session["type"] = identity
             session["email"] = info["email"]
+            if identity == "airline_staff":
+                session["airline"] = info["airline_name"]
             return redirect(url_for("search_flight"))
+
+
+# ======================================================================================
 
 
 # STEPS:
 # 1. Check if user is logged in
-# 2. Check if his type is valid for this funciton
+# 2. Check if his type is valid for this function
 
 # Logout function:
 # ======================================================================================
@@ -323,6 +363,8 @@ def logout():
     if session.get("logged_in", False):
         session["logged_in"] = False
     return redirect(url_for("home"))
+
+
 # ======================================================================================
 
 
