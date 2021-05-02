@@ -364,4 +364,29 @@ def create_new_flight(conn, info):
         cursor.close()
         return False, "Airplane does not exist in the database!"
 
-    pass
+    query = """INSERT INTO flight
+               VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %d, \'%s\')
+            """ % (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"], info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["airplane_id"])
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    return True, ""
+
+
+def change_flight_status(conn, flight_num, status):
+    cursor = conn.cursor()
+    query = """SELECT flight_num, status FROM flight WHERE flight_num = \'%s\'""" % flight_num
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if not data:
+        return False, "Flight %s does not exist!" % flight_num
+    elif data[0][1] == status:
+        return False, "Flight %s has the status \'%s\'. Don't need to change" % flight_num, status
+
+    query = """ALTER TABLE flight
+               SET status = \'%s\'
+               WHERE flight_num = \'%s\'""" % (flight_num, status)
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    return True, ""

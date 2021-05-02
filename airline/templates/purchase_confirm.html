@@ -459,7 +459,7 @@
     <nav class="navbar">
             <div class="navbar__container">
                 {% if session["logged_in"] == True%}
-                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{identity}}</a>
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
                     <div class="navbar__toggle" id="mobile-menu">
                         <span class="bar"></span> <span class="bar"></span>
                         <span class="bar"></span>
