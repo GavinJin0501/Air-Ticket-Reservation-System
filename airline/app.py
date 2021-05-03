@@ -96,7 +96,7 @@ def check_flight_status():
         #today = "2021-05-01"
         recent_flight_status = db_utils.get_flight_status(conn, "", today, "")
         print(recent_flight_status)
-        return render_template("check_status.html", status_result=recent_flight_status)
+        return render_template("check_status.html", status=False, error="", status_result=recent_flight_status)
     elif request.method == "POST":
         flight_num = request.form.get("flight_num", "")
         departure_date = request.form.get("departure_date", "")
@@ -104,10 +104,12 @@ def check_flight_status():
 
         flight_status_ans = db_utils.get_flight_status(conn, flight_num, departure_date, arrival_date)
         error = ""
+        status = True
         if not flight_status_ans:
             error = "No such a flight at the given time!"
+            status = False
         print(flight_status_ans)
-        return render_template("check_status.html", status_result=flight_status_ans, error=error)
+        return render_template("check_status.html", status=status, error=error, status_result=flight_status_ans)
 
 
 @app.route('/ViewMyFlights', methods=["GET"])
