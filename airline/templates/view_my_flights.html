@@ -57,21 +57,20 @@
 
         </nav>
         <div class="table-container">  
+<!-- <<<<<<< Updated upstream -->
             <table id="example" class="display">
                 <!-- <thead style="display: table-header-group;"></thead> -->
+<!-- ======= -->
+            <table id="example" class="table table-bordered table-striped">
+                <tfoot style="display: table-header-group;"></tfoot>
+<!-- >>>>>>> Stashed changes -->
             </table>
         </div>  
         
     </body>
 
     <script>
-        let mountains = [
-        { name: {{flights | safe}}, height: 1658, place: "Parco Foreste Casentinesi" },
-        { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
-        { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
-        { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
-        { name: "Monte Amiata", height: 1738, place: "Siena" }
-        ];
+        let mountains = {{flights | safe}}
 
         function generateTableHead(table, data) {
             let thead = table.createTHead();
@@ -104,7 +103,7 @@
         }
 
         let table = document.querySelector("table");
-        let data = Object.keys(mountains[0]);
+        let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
         generateTable(table, mountains);
         generateTableHead(table, data);
 
@@ -112,7 +111,7 @@
             // Setup - add a text input to each footer cell
             $('#example tfoot th').each( function () {
                 var title = $(this).text();
-                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+                $(this).html( '<input type="text" placeholder="'+title+'" />' );
             } );
         
             // DataTable
