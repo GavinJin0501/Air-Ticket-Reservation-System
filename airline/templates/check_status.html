@@ -92,35 +92,40 @@
                 </div> -->
             </div>
         {% endif%}
-
-    <form>
-        {% for line in status_result %}
-            <section class="button">
-                <div class="bluebutton">
-                    <section class="bluebutton">
-                        <div class="status-button-container1">
-                            <div class="otherlabel">{{line[0]}}</div>
-                        </br>
-                            <div class="otherlabel">{{line[1]}}</div>
-                        </div>
-                        <div class="status-button-container">
-                            <section class="otherlabel">{{line[4]}}</section>
-                        </div>
-                        <div class="status-button-container1">
-                            {% if line[2] == 'Upcoming' %}
-                                <section class="upcominglabel">{{line[2]}}</section>
-                            {% elif line[2] == 'In-progress' %}
-                                <section class="inprogresslabel">{{line[2]}}</section>
-                            {% elif line[2] == 'Delayed' %}
-                                <section class="delayedlabel">{{line[2]}}</section>
-                            {% elif line[2] == 'Canceled' %}
-                                <section class="canceledlabel">{{line[2]}}</section>
-                            {% endif%}
-                        </div> 
-                    </section>
-                </div>
-            </section>
-        {% endfor%}
+        
+        {% if error %}
+            <div class='warning'>
+                {{error}}
+            </div>
+        {% else %}
+            {% for line in status_result %}
+                <section class="button">
+                    <div class="bluebutton">
+                        <section class="bluebutton">
+                            <div class="status-button-container1">
+                                <div class="otherlabel">{{line[0]}}</div>
+                            </br>
+                                <div class="otherlabel">{{line[1]}}</div>
+                            </div>
+                            <div class="status-button-container">
+                                <section class="otherlabel">{{line[4]}}</section>
+                            </div>
+                            <div class="status-button-container1">
+                                {% if line[2] == 'Upcoming' %}
+                                    <section class="upcominglabel">{{line[2]}}</section>
+                                {% elif line[2] == 'In-progress' %}
+                                    <section class="inprogresslabel">{{line[2]}}</section>
+                                {% elif line[2] == 'Delayed' %}
+                                    <section class="delayedlabel">{{line[2]}}</section>
+                                {% elif line[2] == 'Canceled' %}
+                                    <section class="canceledlabel">{{line[2]}}</section>
+                                {% endif%}
+                            </div> 
+                        </section>
+                    </div>
+                </section>
+            {% endfor%}
+        {% endif %}
 
 
 

@@ -425,8 +425,8 @@
     /* display: flex; */
     justify-content: space-between;
     height: auto;
-    border-top: 30px solid #636fa4;
-    background-color: #636fa4;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
     z-index: 1;
     /* width: 35%; */
     width: 1400px;
@@ -540,6 +540,27 @@
     transition: all 0.5s ease-in-out;
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
+  }
+
+  #tabletext {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 10px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0;
+    width: 100%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    /* -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px; */
   }
   
   input[type=text]:focus {

@@ -62,7 +62,7 @@
                 <!-- <thead style="display: table-header-group;"></thead> -->
 <!-- ======= -->
             <table id="example" class="table table-bordered table-striped">
-                <tfoot style="display: table-header-group;"></tfoot>
+                <thead style="display: table-header-group;"></tfoot       >
 <!-- >>>>>>> Stashed changes -->
             </table>
         </div>  
@@ -111,7 +111,7 @@
             // Setup - add a text input to each footer cell
             $('#example tfoot th').each( function () {
                 var title = $(this).text();
-                $(this).html( '<input type="text" placeholder="'+title+'" />' );
+                $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
             } );
         
             // DataTable
