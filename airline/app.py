@@ -103,10 +103,11 @@ def check_flight_status():
         arrival_date = request.form.get("arrival_date", "")
 
         flight_status_ans = db_utils.get_flight_status(conn, flight_num, departure_date, arrival_date)
+        error = ""
         if not flight_status_ans:
-            flight_status_ans = ["No such a flight at the given time!"]
+            error = "No such a flight at the given time!"
         print(flight_status_ans)
-        return render_template("check_status.html", status_result=flight_status_ans)
+        return render_template("check_status.html", status_result=flight_status_ans, error=error)
 
 
 @app.route('/ViewMyFlights', methods=["GET"])
@@ -300,7 +301,7 @@ def view_all_booking_agent():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        top_five_tickets_past_month = db_utils.top_five_tickets_past_month(conn)
+        tickets_past_month = db_utils.top_five_tickets_past_month(conn)
 
 # ======================================================================================
 

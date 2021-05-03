@@ -12,7 +12,9 @@
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     </head>
 
-
+    <style>
+        tfoot {display: table-row-group;}
+    </style>
     <body>
         <nav class="navbar">
             <div class="navbar__container">
@@ -81,14 +83,6 @@
                 th.appendChild(text);
                 row.appendChild(th);
             }
-            let tfoot = table.createTFoot();
-            let frow = tfoot.insertRow(0);
-            for (let key of data) {
-                let fth = document.createElement("th");
-                let ftext = document.createTextNode(key);
-                fth.appendChild(ftext);
-                frow.appendChild(fth);
-            }
         }
 
         function generateTable(table, data) {
@@ -102,10 +96,23 @@
             }
         }
 
+        function generateTableFoot(table, data) {
+            let tfoot = table.createTFoot();
+            let frow = tfoot.insertRow(0);
+            for (let key of data) {
+                let fth = document.createElement("th");
+                let ftext = document.createTextNode(key);
+                fth.appendChild(ftext);
+                frow.appendChild(fth);
+            }
+        }
+
         let table = document.querySelector("table");
         let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
         generateTable(table, mountains);
+        generateTableFoot(table, data);
         generateTableHead(table, data);
+        
 
         $(document).ready(function() {
             // Setup - add a text input to each footer cell
@@ -133,6 +140,5 @@
             });
         
         } );
-
     </script>
     
