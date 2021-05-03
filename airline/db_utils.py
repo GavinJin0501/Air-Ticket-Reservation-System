@@ -434,3 +434,5 @@ def add_airport(conn, airport_name, airport_city):
     cursor.close()
     return True, ""
 
+def top_five_tickets_past_month(conn):
+    pass

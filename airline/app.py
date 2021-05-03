@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'some key that you will never guess'
 conn = mysql.connector.connect(host='localhost',
                                user='root',
-                               password='bbbb',
+                               password='',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
@@ -290,7 +290,17 @@ def add_airport():
         return render_template("AddAirport.html", status=status, error=error)
 
 
-@app.route('/')
+@app.route('/ViewAllBookingAgent', methods=["GET"])
+def view_all_booking_agent():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        top_five_tickets_past_month = db_utils.top_five_tickets_past_month(conn)
 
 # ======================================================================================
 

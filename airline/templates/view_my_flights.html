@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="../static/lib/jquery-ui.css">
         <script src="../static/lib/jquery-1.12.4.js"></script>
         <script src="../static/lib/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     </head>
 
@@ -56,7 +57,7 @@
 
         </nav>
         <div class="table-container">  
-            <table id="example">
+            <table id="example" class="display">
                 <!-- <thead style="display: table-header-group;"></thead> -->
             </table>
         </div>  
@@ -73,57 +74,66 @@
         ];
 
         function generateTableHead(table, data) {
-        let thead = table.createTHead();
-        let row = thead.insertRow();
-        for (let key of data) {
-            let th = document.createElement("th");
-            let text = document.createTextNode(key);
-            th.appendChild(text);
-            row.appendChild(th);
-        }
+            let thead = table.createTHead();
+            let row = thead.insertRow();
+            for (let key of data) {
+                let th = document.createElement("th");
+                let text = document.createTextNode(key);
+                th.appendChild(text);
+                row.appendChild(th);
+            }
+            let tfoot = table.createTFoot();
+            let frow = tfoot.insertRow(0);
+            for (let key of data) {
+                let fth = document.createElement("th");
+                let ftext = document.createTextNode(key);
+                fth.appendChild(ftext);
+                frow.appendChild(fth);
+            }
         }
 
         function generateTable(table, data) {
-        for (let element of data) {
-            let row = table.insertRow();
-            for (key in element) {
-            let cell = row.insertCell();
-            let text = document.createTextNode(element[key]);
-            cell.appendChild(text);
+            for (let element of data) {
+                let row = table.insertRow();
+                for (key in element) {
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[key]);
+                cell.appendChild(text);
+                }
             }
-        }
         }
 
         let table = document.querySelector("table");
         let data = Object.keys(mountains[0]);
         generateTable(table, mountains);
         generateTableHead(table, data);
-    </script>
-    <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
-    </script>
 
-    <script>
         $(document).ready(function() {
-        // Setup - add a text input to each footer cell
-        $('#example​ thead tr').clone(true).appendTo( '#example​ thead' );
-        $('#example​ thead tr:eq(1) th').each( function (i) {
-            var title = $(this).text();
-            $(this).html( 'input type="text" placeholder="Search '+title+'" ' );
-    
-            $( 'input', this ).on( 'keyup change', function () {
-                if ( table.column(i).search() !== this.value ) {
-                    table
-                        .column(i)
-                        .search( this.value )
-                        .draw();
-                }
+            // Setup - add a text input to each footer cell
+            $('#example tfoot th').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
             } );
+        
+            // DataTable
+            var table = $('#example').DataTable({
+                initComplete: function () {
+                    // Apply the search
+                    this.api().columns().every( function () {
+                        var that = this;
+        
+                        $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                            if ( that.search() !== this.value ) {
+                                that
+                                    .search( this.value )
+                                    .draw();
+                            }
+                        } );
+                    } );
+                }
+            });
+        
         } );
-
-        var table = $('#example​').DataTable( {
-            orderCellsTop: true,
-            fixedHeader: true
-        } );
-    } );
 
     </script>
+    
