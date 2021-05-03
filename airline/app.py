@@ -266,8 +266,31 @@ def add_airplane():
         airline_name = request.form["airline_name"]
         airplane_id = request.form["airplane_id"]
         seats = request.form["seats"]
-        pass
 
+        status, error = db_utils.add_airplane(conn, airline_name, airplane_id, seats)
+        return render_template("AddAirplane.html", status=status, error=error)
+
+
+@app.route('/AddAirport')
+def add_airport():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        return render_template("AddAirport.html", status=False, error="")
+    elif request.method == "POST":
+        airport_name = request.form["airport_name"]
+        airport_city = request.form["airport_city"]
+
+        status, error = db_utils.add_airport(conn, airport_name, airport_city)
+        return render_template("AddAirport.html", status=status, error=error)
+
+
+@app.route('/')
 
 # ======================================================================================
 

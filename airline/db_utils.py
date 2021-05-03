@@ -388,8 +388,10 @@ def change_flight_status(conn, flight_num, status):
     cursor.execute(query)
     data = cursor.fetchall()
     if not data:
+        cursor.close()
         return False, "Flight %s does not exist!" % flight_num
     elif data[0][1] == status:
+        cursor.close()
         return False, "Flight %s has the status \'%s\'. Don't need to change" % flight_num, status
 
     query = """ALTER TABLE flight
@@ -399,3 +401,36 @@ def change_flight_status(conn, flight_num, status):
     conn.commit()
     cursor.close()
     return True, ""
+
+
+def add_airplane(conn, airline_name, airplane_id, seats):
+    cursor = conn.cursor()
+    query = """SELECT * FROM airplane WHERE airline_name = \'%s\' AND airplane_id = \'%s\'""" % (airline_name, airplane_id)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if data:
+        cursor.close()
+        return False, "You can not add an existing airplane!"
+    query = """INSERT INTO airplane
+               VALUES (\'%s\', \'%s\', \'%d\')""" % (airline_name, airplane_id, seats)
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    return True, ""
+
+
+def add_airport(conn, airport_name, airport_city):
+    cursor = conn.cursor()
+    query = """SELECT * FROM airport WHERE airport_name = \'%s\'""" % airport_name
+    cursor.execute(query)
+    data = cursor.fetchall()
+    if data:
+        cursor.close()
+        return False, "This airport name already exists!"
+    query = """INSERT INTO airport
+               VALUES ('%s\', \'%s\')""" % (airport_name, airport_city)
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    return True, ""
+
