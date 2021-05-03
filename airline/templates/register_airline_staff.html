@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>B-Airline Customer Register</title>
+<title>B-Airline Booking Agent Register</title>
 <link rel="stylesheet" href="../static/public_view.css" />
 <head>
 </head>
@@ -34,26 +34,45 @@
 
 
     <div class="register-container" id="register-container">
-        <form action="/register/customer" autocomplete="off" onsubmit="return formValidation()" method="POST">
-            <label id="navbar__logo">Welcome to B-Air, customer!</label>
+        <form action="/register/booking_agent" autocomplete="off" onsubmit="return formValidation()" method="POST">
+            <label id="navbar__logo">Welcome to B-Air, ariline staff!</label>
             <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
-                        <label class="label">Email</label> </br>
-                        <input type="text" id = "em" name = "username" placeholder="email" required/> </br>
+                        <label class="label">Username</label> </br>
+                        <input type="text" id = "em" name = "username" placeholder="username" required/> </br>
                         <label class="label"> Password</label> </br>
                         <input type="text" id = "pword" name = "password" placeholder="password" required/> </br>
                     </div>
                     <div class="smaller-container">
-                        <label class="label">Name</label> </br>
-                        <input type="text" id = "nm" name = "name" placeholder="name" required/> </br>
-                        <label class="label">Confirm Password</label> </br>
-                        <input type="text" id = "cpword" name = "confirm_password" placeholder="confirm password" required/> </br>
+                        <label class="label">First name</label> </br>
+                        <input type="text" id = "fm" name = "first_name" placeholder="first name" required/> </br>
+                        <label class="label">Last name</label> </br>
+                        <input type="text" id = "lm" name = "last_name" placeholder="last name" required/> </br>
                     </div>
                 </div>
+                <div class="bluebutton">
+                    <div class="smaller-container">
+                        <label class="label">Airline name</label> </br>
+                        <input type="text" id = "fm" name = "airline name" placeholder="airline name" required/> </br>
+                        <label class="label">Date of birth</label>
+                        <input type="date" id = "dob" name = "date_of_birth" placeholder="date of birth" required/>
+                    </div>
+                    <div class="smaller-container">
+                        </br>
+                        <input type="submit" value = Register />
+                        <a href="/login/booking_agent" class="navbar__links__long" id="register-booking_agent">Already have an account? Login</a></br>
+                        <!-- </div> -->
+                        <!-- <label class="label">Confirm Password</label> </br>
+                        <input type="text" id = "cpword" name = "confirm_password" placeholder="confirm password" required/> </br> -->
+                    </div>
+                </div>
+                <div class="bluebutton"></div>
+                <div class="bluebutton"></div>
+                <div class="bluebutton"></div>
             </section>
 
-            <section>
+            <!-- <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Building number</label> </br>
@@ -85,20 +104,20 @@
                         <input type="text" id = "pc" name = "passport_country" placeholder="passport country" required/> </br>
                     </div>
                 </div>
-            </section>
+            </section> -->
 
-            <section>
-                <div class="bluebutton">
-                    <div class="smaller-container">
+            <!-- <section>
+                <div class="bluebutton"> -->
+                    <!-- <div class="smaller-container">
                         <label class="label">Date of birth</label>
                         <input type="date" id = "dob" name = "date_of_birth" placeholder="date of birth" required/>
-                    </div>
-                    <div class="smaller-container">
+                    </div> -->
+                    <!-- <div class="smaller-container">
                         <input type="submit" value = Register />
-                        <a href="/login/customer" class="navbar__links__long" id="register-customer">Already have an account? Login</a></br>
+                        <a href="/login/booking_agent" class="navbar__links" id="register-booking_agent">Already have an account? Login</a></br>
                     </div>
                 </div>
-            </section>
+            </section> -->
             
             <!-- {% if not password == confirm_password%}
             <div class="topbutton">
@@ -147,35 +166,35 @@
             return false;
         }
 
-        if (form_pn.length>11) {
-            alert("Phone number too long, should be within 11 characters! Please try again");
-            return false;
-        }
+        // if (form_pn.length>11) {
+        //     alert("Phone number too long, should be within 11 characters! Please try again");
+        //     return false;
+        // }
 
-        if (form_pw != form_cpw) {
-            alert("Password is not confirmed! Please try again");
-            return false;
-        }
+        // if (form_pw != form_cpw) {
+        //     alert("Password is not confirmed! Please try again");
+        //     return false;
+        // }
         
-        if (form_px < today) {
-            alert("Passport expiration date can not before today!");
-            return false;
-        }
+        // if (form_px < today) {
+        //     alert("Passport expiration date can not before today!");
+        //     return false;
+        // }
 
-        if ((form_dob >= today) || (form_dob < pastest)) {
-            alert("Date of birth invalid!");
-            return false;
-        }
+        // if ((form_dob >= today) || (form_dob < pastest)) {
+        //     alert("Date of birth invalid!");
+        //     return false;
+        // }
 
-        if (!moment(form_px, date_format, true).isValid()) {
-            alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
-            return false;
-        }
+        // if (!moment(form_px, date_format, true).isValid()) {
+        //     alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
+        //     return false;
+        // }
 
-        if (!moment(form_dob, date_format, true).isValid()) {
-            alert("Date of birth date is not valid. Support format: 'YYYY-MM-DD'");
-            return false;
-        }
+        // if (!moment(form_dob, date_format, true).isValid()) {
+        //     alert("Date of birth date is not valid. Support format: 'YYYY-MM-DD'");
+        //     return false;
+        // }
         
         return true;
         }

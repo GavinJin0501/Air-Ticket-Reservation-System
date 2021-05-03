@@ -72,6 +72,65 @@
                 <input type="submit" value = Search>
             </form>
         </div>
+        <div class="topbutton">
+            <div class="bar-container">
+                Airline / flight
+            </div>
+            <div class="bar-container">
+                Date
+            </div>
+            <div class="bar-container">
+                Status
+            </div>
+            <!-- <div class="bar-container">
+                Plane number
+            </div>
+            <div class="bar-container">
+                buy
+            </div> -->
+
+        </div>
+
+    <form>
+        {% for line in flights %}
+            <section class="button">
+                <div class="bluebutton">
+                    <!-- <section class="bluebutton"> -->
+                        <div class="flight-button-container">
+                            <div class="otherlabel">{{line[0]}}</div>
+                            <div class="otherlabel">{{line[1]}}</div>
+                        </div>
+                        <div class="flight-button-container">
+                            <section class="otherlabel"> {{line[4][:10]}} </br>     -> </br> {{line[7][:10]}}</section>
+                        </div> 
+                        <div class="flight-button-container1">
+                            <section class="otherlabel">{{line[2]}} {{line[3]}}</section>
+                            <section class="bigbutton">
+                                <section class="timelabel">{{line[4][10:]}}</section>
+                            </section>
+                        </div> 
+                        <div class="flight-button-container1">
+                            <section class="otherlabel">{{line[5]}} {{line[6]}}</section>
+                            <section class="bigbutton">
+                                <section class="timelabel">{{line[7][10:]}}</section>
+                            </section>
+                        </div>
+                        <div class="flight-button-container">
+                            <section class="otherlabel">${{line[8]}}</section>
+                        </div> 
+                        <div class="flight-button-container1">
+                            <section class="otherlabel">{{line[9]}}</section>
+                        </div>
+                        <div class="flight-button-container">
+                            <section class="otherlabel">{{line[10]}}</section>
+                        </div>
+
+
+
+
+
+
+
     </body>
     <script type="text/javascript">
         var flights_status = {{status_result | safe}}, date_format = 'YYYY-MM-DD';
@@ -101,6 +160,8 @@
             return true;
 
         }
+
+        
 
     </script>
 </html>

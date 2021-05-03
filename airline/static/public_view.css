@@ -104,6 +104,17 @@
     transition: all 0.3s ease;
   }
 
+  .navbar__links__middle {
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
   #links {
     height: 100%;
     width: 150px;
