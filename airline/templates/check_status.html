@@ -72,59 +72,55 @@
                 <input type="submit" value = Search>
             </form>
         </div>
-        <div class="topbutton">
-            <div class="bar-container">
-                Airline / flight
-            </div>
-            <div class="bar-container">
-                Date
-            </div>
-            <div class="bar-container">
-                Status
-            </div>
-            <!-- <div class="bar-container">
-                Plane number
-            </div>
-            <div class="bar-container">
-                buy
-            </div> -->
 
-        </div>
+        {% if status_result %}
+            <div class="topbutton">
+                <div class="statusbar-container">
+                    Airline / flight
+                </div>
+                <div class="statusbar-container">
+                    Date / depart time
+                </div>
+                <div class="statusbar-container">
+                    Status
+                </div>
+                <!-- <div class="bar-container">
+                    Plane number
+                </div>
+                <div class="bar-container">
+                    buy
+                </div> -->
+            </div>
+        {% endif%}
 
     <form>
-        {% for line in flights %}
+        {% for line in status_result %}
             <section class="button">
                 <div class="bluebutton">
-                    <!-- <section class="bluebutton"> -->
-                        <div class="flight-button-container">
+                    <section class="bluebutton">
+                        <div class="status-button-container1">
                             <div class="otherlabel">{{line[0]}}</div>
+                        </br>
                             <div class="otherlabel">{{line[1]}}</div>
                         </div>
-                        <div class="flight-button-container">
-                            <section class="otherlabel"> {{line[4][:10]}} </br>     -> </br> {{line[7][:10]}}</section>
-                        </div> 
-                        <div class="flight-button-container1">
-                            <section class="otherlabel">{{line[2]}} {{line[3]}}</section>
-                            <section class="bigbutton">
-                                <section class="timelabel">{{line[4][10:]}}</section>
-                            </section>
-                        </div> 
-                        <div class="flight-button-container1">
-                            <section class="otherlabel">{{line[5]}} {{line[6]}}</section>
-                            <section class="bigbutton">
-                                <section class="timelabel">{{line[7][10:]}}</section>
-                            </section>
+                        <div class="status-button-container">
+                            <section class="otherlabel">{{line[4]}}</section>
                         </div>
-                        <div class="flight-button-container">
-                            <section class="otherlabel">${{line[8]}}</section>
+                        <div class="status-button-container1">
+                            {% if line[2] == 'Upcoming' %}
+                                <section class="upcominglabel">{{line[2]}}</section>
+                            {% elif line[2] == 'In-progress' %}
+                                <section class="inprogresslabel">{{line[2]}}</section>
+                            {% elif line[2] == 'Delayed' %}
+                                <section class="delayedlabel">{{line[2]}}</section>
+                            {% elif line[2] == 'Canceled' %}
+                                <section class="canceledlabel">{{line[2]}}</section>
+                            {% endif%}
                         </div> 
-                        <div class="flight-button-container1">
-                            <section class="otherlabel">{{line[9]}}</section>
-                        </div>
-                        <div class="flight-button-container">
-                            <section class="otherlabel">{{line[10]}}</section>
-                        </div>
-
+                    </section>
+                </div>
+            </section>
+        {% endfor%}
 
 
 

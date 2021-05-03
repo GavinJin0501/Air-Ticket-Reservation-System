@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>B-Airline</title>
         <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     </head>
 
 
@@ -32,7 +36,7 @@
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                     {% if session.get("type", "guest") == "customer" %}
                   <li class="navbar__item">
-                    <a href="/ViewMyFlights/customer" class="navbar__links" id="links">View My Flights</a>
+                    <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
                   </li>
                   {% endif %}
                   {% if session["logged_in"] == True%}
@@ -49,27 +53,77 @@
                     {% endif %}
               </ul>
             </div>
+
         </nav>
-
-
-        <div class="search-container" id="search-container">
-            <form action="/CheckStatus" autocomplete="off" method="POST">
-                <label id="navbar__logo">Welcome! </br> You may view your flights here!</label> </br>
-                <label class="label">Flight Number</label>
-                <input type="text" list="flight-number" name = "flight_num" placeholder="flight number" required/> </br>
-<!--                <datalist id="flight-number">-->
-<!--                    {% for line in flight_number %}-->
-<!--                        <option value="{{line}}">-->
-<!--                    {% endfor %}-->
-<!--                </datalist>-->
-                <label class="label">Date</label>
-                <input type="date" name = "departure_date" placeholder="date" id = "date" required/> </br>
-                <input type="submit" value = Search>
-            </form>
-        </div>
+        <div class="table-container">  
+            <table id="example">
+                <!-- <thead style="display: table-header-group;"></thead> -->
+            </table>
+        </div>  
+        
     </body>
 
     <script>
-        var flights;
-        flights = {{flights | safe}};
+        let mountains = [
+        { name: {{flights | safe}}, height: 1658, place: "Parco Foreste Casentinesi" },
+        { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
+        { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
+        { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
+        { name: "Monte Amiata", height: 1738, place: "Siena" }
+        ];
+
+        function generateTableHead(table, data) {
+        let thead = table.createTHead();
+        let row = thead.insertRow();
+        for (let key of data) {
+            let th = document.createElement("th");
+            let text = document.createTextNode(key);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+        }
+
+        function generateTable(table, data) {
+        for (let element of data) {
+            let row = table.insertRow();
+            for (key in element) {
+            let cell = row.insertCell();
+            let text = document.createTextNode(element[key]);
+            cell.appendChild(text);
+            }
+        }
+        }
+
+        let table = document.querySelector("table");
+        let data = Object.keys(mountains[0]);
+        generateTable(table, mountains);
+        generateTableHead(table, data);
+    </script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+    </script>
+
+    <script>
+        $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example​ thead tr').clone(true).appendTo( '#example​ thead' );
+        $('#example​ thead tr:eq(1) th').each( function (i) {
+            var title = $(this).text();
+            $(this).html( 'input type="text" placeholder="Search '+title+'" ' );
+    
+            $( 'input', this ).on( 'keyup change', function () {
+                if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+
+        var table = $('#example​').DataTable( {
+            orderCellsTop: true,
+            fixedHeader: true
+        } );
+    } );
+
     </script>

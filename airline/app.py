@@ -92,8 +92,8 @@ def check_flight_status():
         return redirect(url_for())
 
     if request.method == "GET":
-        # today = datetime.now().strftime("%Y-%m-%d")
-        today = "2021-05-01"
+        today = datetime.now().strftime("%Y-%m-%d")
+        #today = "2021-05-01"
         recent_flight_status = db_utils.get_flight_status(conn, "", today, "")
         print(recent_flight_status)
         return render_template("check_status.html", status_result=recent_flight_status)
@@ -408,9 +408,9 @@ def logout():
 
 # Error page:
 # ======================================================================================
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("not_found.html"), 404
+# @app.errorhandler(404)
+# def not_found(e):
+#     return render_template("not_found.html"), 404
 
 
 
