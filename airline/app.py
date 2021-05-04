@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
-from datetime import datetime
+from datetime import datetime, timedelta
 import mysql.connector
 import re
 import db_utils
@@ -15,6 +15,9 @@ conn = mysql.connector.connect(host='localhost',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+MONTH_EN = {"01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+            "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+            "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"}
 
 
 # ======================================================================================
@@ -164,7 +167,7 @@ def purchase_confirm(airline_name, flight_num):
             return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name, flight_num=flight_num, error=error)
 
 
-@app.route('/TrackMySpending', methods=["GET"])
+@app.route('/TrackMySpending', methods=["GET", "POST"])
 def track_my_spending():
     if not session.get("logged_in", False):
         flash("Don't cheat! Login first!")
@@ -173,11 +176,21 @@ def track_my_spending():
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
+    TODAY = datetime.today()
+    PAST_YEAR = (TODAY - timedelta(days=365)).strftime("%Y-%m-%d")
+    total_amount = 0
+    my_spendings = db_utils.get_my_spendings(conn, email=session["email"])  # List of lists: [[purchase_date, price], .........]
+    print(my_spendings)
+
     if request.method == "GET":
-        # List of lists: [[purchase_date, price], .........]
-        my_spendings = db_utils.get_my_spendings(conn, email=session["email"])
-        print(my_spendings)
-        return render_template("track_my_spending.html", my_spendings=my_spendings)
+        for each in my_spendings:
+            if each[0] >= PAST_YEAR:
+                total_amount += each[1]
+        print(total_amount)
+
+        return render_template("track_my_spending.html", total_amount=total_amount, my_spendings=my_spendings)
+    elif request.method == "POST":
+        pass
 
 
 @app.route('/ViewMyCommission', methods=["GET"])
@@ -303,7 +316,7 @@ def view_all_booking_agent():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        tickets_past_month = db_utils.top_five_tickets_past_month(conn)
+        tickets_past_month = db_utils.view_booking_agents(conn)
 
 # ======================================================================================
 

@@ -434,5 +434,25 @@ def add_airport(conn, airport_name, airport_city):
     cursor.close()
     return True, ""
 
-def top_five_tickets_past_month(conn):
-    pass
+
+def view_booking_agents(conn):
+    cursor = conn.cursor()
+    query = """CREATE OR REPLACE VIEW top_customers AS (
+                    SELECT email, COUNT(ticket_id) AS num_of_ticket, SUM(price * 0.1) AS amount_of_commission, purchase_date
+                    FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
+                    GROUP BY email
+               )"""
+    PAST_MONTH = (datetime.today() - timedelta(days=31)).strftime("%Y-%m-%d")
+    PAST_YEAR = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
+    query = """SELECT email, COUNT(ticket_id) AS ticket_num
+               FROM booking_agent NATURAL JOIN purchases
+               WHERE purchase_date >= \'%s\'
+               GROUP BY email
+               ORDER BY ticket_num"""
+    cursor.execute(query % PAST_MONTH)
+    ticket_past_month = cursor.fetchall()
+    cursor.execute(query % PAST_YEAR)
+    ticket_past_year = cursor.fetchall()
+
+    cursor.close()
+    return ticket_past_month, ticket_past_year
