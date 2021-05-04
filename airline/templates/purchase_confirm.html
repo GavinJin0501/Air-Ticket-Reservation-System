@@ -498,7 +498,11 @@
              </br></br>
             <input type="submit" value = Confirm />
             {% if error %}
-                <p class="error"><strong>Error:</strong> {{error}}</p>
+                    <div class="topbutton">
+                        <div class='warning'>
+                            {{error}}
+                        </div>
+                    </div>
             {% endif %}
         </form>
     </div>
