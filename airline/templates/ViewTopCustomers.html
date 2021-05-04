@@ -31,12 +31,7 @@
               var data = new google.visualization.DataTable();
               data.addColumn('string', 'Month');
               data.addColumn('number', 'Spending');
-              data.addRows(
-              [info[0][0], info[0][1]],
-              [info[1][0], info[1][1]],
-              [info[2][0], info[2][1]],
-              [info[3][0], info[3][1]],
-              [info[4][0], info[4][1]]);
+              data.addRows(info);
               // data.clearChart();
       
       
@@ -46,7 +41,7 @@
                              'height':600};
       
               // Instantiate and draw our chart, passing in some options.
-              var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+              var chart = new google.visualization.BarChart(document.getElementById('chart_div1'));
               chart.draw(data, options);
             }
           </script>
@@ -106,6 +101,6 @@
             </div>
           </nav>
         <div class="table-container">
-            <div id="chart_div"></div>
+            <div id="chart_div1"></div>
         </br>
         </div>
