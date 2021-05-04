@@ -63,6 +63,13 @@
     top: 0;
     z-index: 999;
   }
+
+  #chart_div {
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    padding: auto;
+  }
   
   .navbar__container {
     display: flex;
@@ -592,20 +599,21 @@
   }
 
 
-/* @chart-width:650px;
-@chart-height:300px;
+  /* @chart-width:650px;
+  @chart-height:300px;
 
-@grid-color:#aaa;
-@bar-color:#F16335;
-@bar-thickness:50px;
-@bar-rounded: 3px;
-@bar-spacing:30px; */
+  @grid-color:#aaa;
+  @bar-color:#F16335;
+  @bar-thickness:50px;
+  @bar-rounded: 3px;
+  @bar-spacing:30px; */
 
 
 
-.chart-wrap{
-  margin-left:50px;
-  font-family:sans-serif;
+  /* .chart-wrap{
+    margin-left:50px;
+    font-family:sans-serif;}
+
   .title{
     font-weight:bold;
     font-size:1.62em;
@@ -613,7 +621,8 @@
     text-align:center;
     white-space:nowrap;
   }
-  &.vertical .grid{
+
+  .vertical .grid{
     transform:translateY(300px/2 - 650px/2) translateX(650px/2 - 300px/2) rotate(-90deg);
     
     
@@ -680,4 +689,4 @@
   
  
 }
-
+ */
