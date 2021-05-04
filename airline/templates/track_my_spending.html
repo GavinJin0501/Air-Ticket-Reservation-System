@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ]);
+
+        // Set chart options
+        var options = {'title':'My Total Spending',
+                       'width':800,
+                       'height':600};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+    </head>
+
+    <style>
+        tfoot {display: table-row-group;}
+    </style>
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+              <ul class="navbar__menu">
+                <li class="navbar__item">
+                  <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                </li>
+                <li class="navbar__item">
+                  <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                    {% if session.get("type", "guest") == "customer" %}
+                  <li class="navbar__item">
+                    <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                  </li>
+                  <li class="navbar__item">
+                    <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                  </li>
+                  {% endif %}
+                  {% if session["logged_in"] == True%}
+                        <li class="navbar__btn">
+                        <a href="/logout" class="button" id="logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="navbar__btn">
+                        <a href="/login" class="button" id="login">Login</a>
+                        </li>
+                        <li class="navbar__btn">
+                            <a href="/register" class="button" id="sign-up">Register</a>
+                        </li>
+                    {% endif %}
+              </ul>
+            </div>
+
+        </nav>
+        <div class="table-container">
+            <section>
+                <div class="bluebutton">
+                    <div class="smaller-date-container">
+                        <label class="label">Start date</label>             
+                        <input type="date" name = "start_date">
+                    </div>
+                    <div class="smaller-date-container">
+                        <label class="label">End date</label>             
+                        <input type="date" name = "end_date">
+                    </div>
+                    <div class="smaller-date-container">
+                        <button class="topbutton" onclick="submitdate()">Filter</button>
+                    </div>
+                </div>
+            </section>
+            <div id="chart_div"></div>
+        </div>
+
+
+        <!-- <h1>Bar Chart HTML</h1>
+
+        <div class="chart-wrap vertical">
+        <h2 class="title">Bar Chart HTML Example:  Using Only HTML And CSS</h2>
+        
+        <div class="grid">
+            <div class="bar" style="--bar-value:85%;" data-name="Your Blog" title="Your Blog 85%"></div>
+            <div class="bar" style="--bar-value:23%;" data-name="Medium" title="Medium 23%"></div>
+            <div class="bar" style="--bar-value:7%;" data-name="Tumblr" title="Tumblr 7%"></div>
+            <div class="bar" style="--bar-value:38%;" data-name="Facebook" title="Facebook 38%"></div>
+            <div class="bar" style="--bar-value:35%;" data-name="YouTube" title="YouTube 35%"></div>
+            <div class="bar" style="--bar-value:30%;" data-name="LinkedIn" title="LinkedIn 30%"></div>
+            <div class="bar" style="--bar-value:5%;" data-name="Twitter" title="Twitter 5%"></div>
+            <div class="bar" style="--bar-value:20%;" data-name="Other" title="Other 20%"></div>    
+        </div>
+        </div> -->
+
+
+
+    </body>
+</html>
