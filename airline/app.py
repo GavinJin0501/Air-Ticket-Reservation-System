@@ -115,7 +115,7 @@ def check_flight_status():
         return render_template("check_status.html", status=status, error=error, status_result=flight_status_ans)
 
 
-@app.route('/ViewMyFlights', methods=["GET"])
+@app.route('/ViewMyFlights', methods=["GET", "POST"])
 def view_my_flights():
     if not session.get("logged_in", False):
         return redirect(url_for("home"))
@@ -125,6 +125,10 @@ def view_my_flights():
         upcoming_flights = db_utils.get_upcoming_flights(conn, identity, session["email"])
         print(upcoming_flights)
         return render_template("view_my_flights.html", flights=upcoming_flights)
+    elif request.method == "POST":
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
+        pass
 
 
 @app.route('/purchase/<airline_name>/<flight_num>', methods=["GET"])
@@ -201,9 +205,9 @@ def track_my_spending():
 
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
     elif request.method == "POST":
-        start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d")
-        end_date = datetime.strptime(request.form.get("end_date", TODAY.strftime("%Y-%m-%d")), "%Y-%m-%d")
-        print(start_date, end_date)
+        start_date = datetime.strptime(request.form["start_date"]+" 00:00:00", "%Y-%m-%d %H:%M:%S")
+        end_date = datetime.strptime(request.form.get("end_date")+" 23:59:59", "%Y-%m-%d %H:%M:%S")
+        # print(start_date, end_date)
 
         while end_date - timedelta(days=31) > start_date:
             month_wise.append([(end_date - timedelta(days=31)).strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), 0])
@@ -211,7 +215,7 @@ def track_my_spending():
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = end_date.strftime("%Y-%m-%d")
         month_wise.append([start_date, end_date, 0])
-        print(month_wise)
+        # print(month_wise)
 
         my_spendings = db_utils.get_my_spendings(conn, session["email"], PAST_YEAR, TODAY.strftime("%Y-%m-%d"))
 

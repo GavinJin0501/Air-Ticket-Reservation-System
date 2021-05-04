@@ -161,9 +161,10 @@
                 return false;
             }
             if (!end_date) {
-                getElementsByName("end_date")[0].value = today;
+                document.getElementsByName("end_date")[0].value = today;
+                end_date = document.getElementsByName("end_date")[0].value;
             }
-            else if (start_date > end_date) {
+            if (start_date > end_date) {
                 alert("Start date should be before end date and today!");
                 return false;
             }

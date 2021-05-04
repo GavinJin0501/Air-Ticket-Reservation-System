@@ -295,39 +295,50 @@ def get_my_commission(conn, email, start_date="", end_date=""):
 
 
 def top_customers(conn, email):
+    six_month_before = (datetime.today() - timedelta(days=6*31)).strftime("%Y-%m-%d")
+    a_year_before = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
+
     cursor = conn.cursor()
-    query = """CREATE OR REPLACE VIEW top_customers AS (
-                    SELECT customer_email, COUNT(ticket_id) AS num_of_ticket, SUM(price * 0.1) AS amount_of_commission, purchase_date
-                    FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-                    WHERE email = \'%s\'
+    query = """CREATE OR REPLACE VIEW top_customers_ticket AS (
+                    SELECT customer_email, COUNT(ticket_id) AS num_of_ticket
+                    FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent
+                    WHERE email = \'%s\' and purchase_date >= \'%s\'
                     GROUP BY customer_email
-               )""" % email
+               )""" % (email, six_month_before)
     cursor.execute(query)
 
-    six_month_before = (datetime.today() - timedelta(days=6*31)).strftime("%Y-%m-%d")
-    query = """SELECT t1.customer_email, t1.num_of_ticket
-               FROM top_customers AS t1
-               WHERE t1.purchase_date >= \'%s\' AND 4 >= (
+    query = """SELECT *
+               FROM top_customers_ticket AS t1
+               WHERE 4 >= (
                     SELECT COUNT(DISTINCT t2.num_of_ticket)
                     FROM top_customers AS t2
                     WHERE t2.num_of_ticket >= t1.num_of_ticket
                )
                ORDER BY t1.num_of_ticket DESC
-            """ % six_month_before
+            """
     cursor.execute(query)
     most_tickets = cursor.fetchall()
 
-    a_year_before = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-    query = """SELECT t1.customer_email, t1.amount_of_commission
-               FROM top_customers AS t1
-               WHERE t1.purchase_date >= \'%s\' AND 4 >= (
+    query = """CREATE OR REPLACE VIEW top_customers_commission AS (
+                    SELECT customer_email, SUM(price) AS amount_of_commission
+                    FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
+                    WHERE email = \'%s\' and purchase_date >= \'%s\'
+                    GROUP BY customer_email
+            )""" % (email, six_month_before)
+    cursor.execute(query)
+
+    query = """SELECT *
+               FROM top_customers_commission AS t1
+               WHERE 4 >= (
                     SELECT COUNT(DISTINCT t2.amount_of_commission)
                     FROM top_customers AS t2
                     WHERE t1.amount_of_commission >= t1.amount_of_commission
                )
-             """ % a_year_before
+             """
     cursor.execute(query)
     most_commission = cursor.fetchall()
+
+    conn.commit()
     cursor.close()
 
     for i in range(len(most_tickets)):
