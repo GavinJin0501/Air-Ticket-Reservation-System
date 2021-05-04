@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+        <script type="text/javascript">
+
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
+      
+            // Set a callback to run when the Google Visualization API is loaded.
+            google.charts.setOnLoadCallback(drawChart);
+      
+            // Callback that creates and populates a data table,
+            // instantiates the pie chart, passes in the data and
+            // draws it.
+            function drawChart() {
+              var new_list = [];
+              for (let i of most_tickets.length){
+                new_list.push([most_tickets[i], i+1]);
+            };
+              var data = new google.visualization.DataTable();
+              data.addColumn('string', 'Month');
+              data.addColumn('number', 'Spending');
+              data.addRows(new_list);
+              // data.clearChart();
+      
+      
+              // Set chart options
+              var options = {'title':'My Total Spending',
+                             'width':800,
+                             'height':600};
+      
+              // Instantiate and draw our chart, passing in some options.
+              var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+              chart.draw(data, options);
+            }
+          </script>
+    </head>
+
+    <style>
+        tfoot {display: table-row-group;}
+    </style>
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+              <ul class="navbar__menu">
+                <li class="navbar__item">
+                  <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                </li>
+                <li class="navbar__item">
+                  <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                  {% if session["logged_in"] == True%}
+                  {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent"%}
+                    <li class="navbar__item">
+                      <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                    </li>
+                  {% endif %}
+                  {% if session.get("type", "guest") == "booking_agent"%}
+                    <li class="navbar__item">
+                      <a href="/ViewMyCommision" class="navbar__links" id="links">View My Commision</a>
+                    </li>
+                    <li class="navbar__item">
+                      <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                    </li>
+                  {% endif %}
+                      <li class="navbar__btn">
+                      <a href="/logout" class="button" id="logout">Logout</a>
+                      </li>
+                  {% else %}
+                      <li class="navbar__btn">
+                      <a href="/login" class="button" id="login">Login</a>
+                      </li>
+                      <li class="navbar__btn">
+                          <a href="/register" class="button" id="sign-up">Register</a>
+                      </li>
+                  {% endif%}
+              </ul>
+            </div>
+          </nav>
+        <div class="table-container">
+            <div id="chart_div"></div>
+        </br>
+        </div>

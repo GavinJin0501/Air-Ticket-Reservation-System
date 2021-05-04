@@ -110,12 +110,12 @@
   }
   
   .navbar__links {
-    font-size: 20px;
+    font-size: 18px;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 150px;
+    width: 170px;
     text-decoration: none;
     transition: all 0.3s ease;
   }
@@ -197,7 +197,7 @@
     padding: 8px 10px;
     border: none;
     margin: 10px;
-    width: 100px;
+    width: 100%;
     height: 50px;
     outline: none;
     border-radius: 4px;

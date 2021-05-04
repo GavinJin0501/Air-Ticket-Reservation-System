@@ -28,13 +28,16 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Spending');
-        data.addRows([
-          ['Mushrooms', 3],
-          ['Onions', 1],
-          ['Olives', 1],
-          ['Zucchini', 1],
-          ['Pepperoni', 2]
-        ]);
+        data.addRows(
+        //     [
+        //   ['Mushrooms', 3],
+        //   ['Onions', 1],
+        //   ['Olives', 1],
+        //   ['Zucchini', 1],
+        //   ['Pepperoni', 2]
+        // ]);
+        month_spending);
+        // data.clearChart();
 
 
         // Set chart options
@@ -102,6 +105,7 @@
         </nav>
         <div class="table-container">
             <section>
+                <form action="/TrackMySpending" autocomplete="off" onsubmit="return formValidation()" method="POST">
                 <div class="bluebutton">
                     <div class="smaller-date-container">
                         <label class="label">Start date</label>             
@@ -112,9 +116,11 @@
                         <input type="date" name = "end_date">
                     </div>
                     <div class="smaller-date-container">
-                        <button class="topbutton" onclick="submitdate()">Filter</button>
+                        <!-- <button class="topbutton" onclick="submitdate()">Filter</button> -->
+                        <input type="submit" value = Filter>
                     </div>
                 </div>
+                </form>
             </section>
             <div id="chart_div"></div>
         </br>
@@ -141,4 +147,25 @@
 
 
     </body>
+
+    <script>
+        function formValidation() {
+            var start_date, end_date, today;
+
+            start_date = document.getElementsByName("start_date")[0].value;
+            end_date = document.getElementsByName("end_date")[0].value;
+            today = new Date().toISOString().substr(0, 10);
+
+            if (!start_date && !end_date) {
+                alert("One of them have to be filled!");
+                return false;
+            }
+            if (start_date > end_date) {
+                alert("Start date should be before end date!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
 </html>
