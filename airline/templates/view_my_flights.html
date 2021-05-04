@@ -37,30 +37,36 @@
                 </li>
                 <li class="navbar__item">
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
-                    {% if session.get("type", "guest") == "customer" %}
-                  <li class="navbar__item">
-                    <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
-                  </li>
-                  <li class="navbar__item">
-                    <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
-                  </li>
-                  {% endif %}
                   {% if session["logged_in"] == True%}
-                        <li class="navbar__btn">
-                        <a href="/logout" class="button" id="logout">Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="navbar__btn">
-                        <a href="/login" class="button" id="login">Login</a>
-                        </li>
-                        <li class="navbar__btn">
-                            <a href="/register" class="button" id="sign-up">Register</a>
-                        </li>
-                    {% endif %}
+                  {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent"%}
+                    <li class="navbar__item">
+                      <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                    </li>
+                  {% endif %}
+                  {% if session.get("type", "guest") == "booking_agent"%}
+                    <li class="navbar__item">
+                      <a href="/ViewMyCommision" class="navbar__links" id="links">View My Commision</a>
+                    </li>
+                    <li class="navbar__item">
+                      <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                    </li>
+                  {% endif %}
+                      <li class="navbar__btn">
+                      <a href="/logout" class="button" id="logout">Logout</a>
+                      </li>
+                  {% else %}
+                      <li class="navbar__btn">
+                      <a href="/login" class="button" id="login">Login</a>
+                      </li>
+                      <li class="navbar__btn">
+                          <a href="/register" class="button" id="sign-up">Register</a>
+                      </li>
+                  {% endif%}
               </ul>
             </div>
+          </nav>
 
-        </nav>
+          
         <div class="table-container">
             <section>
                 <div class="bluebutton">

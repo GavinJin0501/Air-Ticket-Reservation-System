@@ -24,7 +24,7 @@
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart() {
-
+        let info = {{month_spending | safe}}
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Spending');
@@ -36,7 +36,7 @@
         //   ['Zucchini', 1],
         //   ['Pepperoni', 2]
         // ]);
-        month_spending);
+        info);
         // data.clearChart();
 
 
