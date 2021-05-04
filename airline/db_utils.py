@@ -254,12 +254,12 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     return True
 
 
-def get_my_spendings(conn, email):
+def get_my_spendings(conn, email, start_date, end_date):
     cursor = conn.cursor()
     query = """SELECT purchase_date, price
                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
-               WHERE customer_email = \'%s\'
-               ORDER BY purchase_date DESC""" % email
+               WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
+               ORDER BY purchase_date DESC""" % (email, start_date, end_date)
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()

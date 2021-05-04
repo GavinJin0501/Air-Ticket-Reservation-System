@@ -179,18 +179,54 @@ def track_my_spending():
     TODAY = datetime.today()
     PAST_YEAR = (TODAY - timedelta(days=365)).strftime("%Y-%m-%d")
     total_amount = 0
-    my_spendings = db_utils.get_my_spendings(conn, email=session["email"])  # List of lists: [[purchase_date, price], .........]
-    print(my_spendings)
+    month_wise = []     # List of lists: [[start_date, end_date, money], .......]
 
     if request.method == "GET":
+        for i in range(6):
+            month_wise.append([(TODAY-timedelta(days=31*(i+1))).strftime("%Y-%m-%d"), (TODAY-timedelta(days=31*i)).strftime("%Y-%m-%d"), 0])
+
+        my_spendings = db_utils.get_my_spendings(conn, session["email"], PAST_YEAR, TODAY.strftime("%Y-%m-%d"))  # List of lists: [[purchase_date, price], .........]
+        print(my_spendings)
         for each in my_spendings:
             if each[0] >= PAST_YEAR:
                 total_amount += each[1]
-        print(total_amount)
 
-        return render_template("track_my_spending.html", total_amount=total_amount, my_spendings=my_spendings)
+            for i in range(6):
+                if month_wise[i][0] < each[0] <= month_wise[i][1]:
+                    month_wise[i][2] += each[1]
+                    break
+
+        print(total_amount)
+        print(month_wise)
+
+        return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
     elif request.method == "POST":
-        pass
+        start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d")
+        end_date = datetime.strptime(request.form.get("end_date", TODAY.strftime("%Y-%m-%d")), "%Y-%m-%d")
+        print(start_date, end_date)
+
+        while end_date - timedelta(days=31) > start_date:
+            month_wise.append([(end_date - timedelta(days=31)).strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), 0])
+            end_date -= timedelta(days=31)
+        start_date = start_date.strftime("%Y-%m-%d")
+        end_date = end_date.strftime("%Y-%m-%d")
+        month_wise.append([start_date, end_date, 0])
+        print(month_wise)
+
+        my_spendings = db_utils.get_my_spendings(conn, session["email"], PAST_YEAR, TODAY.strftime("%Y-%m-%d"))
+
+        for each in my_spendings:
+            if each[0] >= start_date:
+                total_amount += each[1]
+
+            for i in range(len(month_wise)):
+                if month_wise[i][0] < each[0] <= month_wise[i][1]:
+                    month_wise[i][2] += each[1]
+                    break
+
+        print(total_amount)
+        print(month_wise)
+        return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
 
 @app.route('/ViewMyCommission', methods=["GET"])
