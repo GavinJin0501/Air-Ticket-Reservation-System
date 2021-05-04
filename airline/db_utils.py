@@ -272,26 +272,33 @@ def get_my_spendings(conn, email, start_date, end_date):
     return data
 
 
-def get_my_commission(conn, email, start_date="", end_date=""):
+def get_my_commission(conn, email, start_date, end_date):
     cursor = conn.cursor()
-    query = """SELECT purchase_date, price * 0.1
+    query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE email = \'%s\' """ % email
-    if start_date:
-        query += " AND purchase_date >= \'%s\'" % start_date
-    if end_date:
-        query += " AND purchase_date <= \'%s\'" % end_date
-    query += " ORDER BY purchase_date DESC"
+               WHERE email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
+            """ % (email, start_date, end_date)
     cursor.execute(query)
-    data = cursor.fetchall()
+    my_commission = cursor.fetchall()
+
+    query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
+               FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
+               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
+            """ % (start_date, end_date)
+    cursor.execute(query)
+    all_commission = cursor.fetchall()
     cursor.close()
 
-    for i in range(len(data)):
-        data[i] = list(data[i])
-        data[i][0] = data[i][0].strftime("%Y-%m-%d")
-        data[i][1] = int(data[i][1])
+    for i in range(len(my_commission)):
+        my_commission[i] = list(my_commission[i])
+        my_commission[i][0] = float(my_commission[i][0])
+        my_commission[i][1] = int(my_commission[i][1])
+        my_commission[i][2] = float(my_commission[i][2])
+        all_commission[i] = [int(my_commission[i][0]/float(all_commission[i][0])*100),
+                             int(my_commission[i][1]/int(all_commission[i][1])*100),
+                             int(my_commission[i][2]/float(all_commission[i][2])*100)]
 
-    return data
+    return my_commission, all_commission
 
 
 def top_customers(conn, email):

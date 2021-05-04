@@ -201,7 +201,7 @@ def track_my_spending():
                     break
 
         for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0]+" = "+month_wise[i][1], month_wise[i][2]]
+            month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
 
         print(total_amount)
         print(month_wise)
@@ -238,7 +238,7 @@ def track_my_spending():
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
 
-@app.route('/ViewMyCommission', methods=["GET"])
+@app.route('/ViewMyCommission', methods=["GET", "POST"])
 def view_my_commission():
     if not session.get("logged_in", False):
         flash("Don't cheat! Login first!")
@@ -247,10 +247,19 @@ def view_my_commission():
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
+    TODAY = datetime.today()
     if request.method == "GET":
-        my_commission = db_utils.get_my_commission(conn, session["email"], "", "")
-        print(my_commission)
-        return render_template("ViewMyCommission.html", my_commission=my_commission)
+        start_date = (TODAY - timedelta(days=30)).strftime("%Y-%m-%d")
+        end_date = TODAY.strftime("%Y-%m-%d")
+        my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
+        print(my_commission, all_commission)
+        return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
+    elif request.method == "POST":
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
+        my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
+        print(my_commission, all_commission)
+        return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
 
 
 @app.route('/ViewTopCustomers', methods=["GET"])
