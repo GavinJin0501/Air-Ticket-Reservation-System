@@ -156,12 +156,15 @@
             end_date = document.getElementsByName("end_date")[0].value;
             today = new Date().toISOString().substr(0, 10);
 
-            if (!start_date && !end_date) {
-                alert("One of them have to be filled!");
+            if (!start_date) {
+                alert("Start date cannot be empty!");
                 return false;
             }
-            if (start_date > end_date) {
-                alert("Start date should be before end date!");
+            if (!end_date) {
+                getElementsByName("end_date")[0].value = today;
+            }
+            else if (start_date > end_date) {
+                alert("Start date should be before end date and today!");
                 return false;
             }
             return true;
