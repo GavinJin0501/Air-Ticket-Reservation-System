@@ -24,7 +24,7 @@
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart() {
-        let info = {{month_spending | safe}}
+        let info = {{month_wise | safe}}
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Spending');
@@ -41,7 +41,7 @@
 
 
         // Set chart options
-        var options = {'title':'My Total Spending',
+        var options = {'title':'My Total Spending: '+total_amount,
                        'width':800,
                        'height':600};
 
