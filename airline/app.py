@@ -200,9 +200,11 @@ def track_my_spending():
                     month_wise[i][2] += each[1]
                     break
 
+        for i in range(len(month_wise)):
+            month_wise[i] = [month_wise[i][0]+" = "+month_wise[i][1], month_wise[i][2]]
+
         print(total_amount)
         print(month_wise)
-
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
     elif request.method == "POST":
         start_date = datetime.strptime(request.form["start_date"]+" 00:00:00", "%Y-%m-%d %H:%M:%S")
@@ -227,6 +229,9 @@ def track_my_spending():
                 if month_wise[i][0] < each[0] <= month_wise[i][1]:
                     month_wise[i][2] += each[1]
                     break
+
+        for i in range(len(month_wise)):
+            month_wise[i] = [month_wise[i][0] + " = " + month_wise[i][1], month_wise[i][2]]
 
         print(total_amount)
         print(month_wise)
