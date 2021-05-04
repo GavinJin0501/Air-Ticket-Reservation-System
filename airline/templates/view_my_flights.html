@@ -58,7 +58,22 @@
             </div>
 
         </nav>
-        <div class="table-container">  
+        <div class="table-container">
+            <section>
+                <div class="bluebutton">
+                    <div class="smaller-date-container">
+                        <label class="label">Start date</label>             
+                        <input type="date" name = "start_date">
+                    </div>
+                    <div class="smaller-date-container">
+                        <label class="label">End date</label>             
+                        <input type="date" name = "end_date">
+                    </div>
+                    <div class="smaller-date-container">
+                        <button class="topbutton" onclick="submitdate()">Filter</button>
+                    </div>
+                </div>
+            </section>
 <!-- <<<<<<< Updated upstream -->
             <table id="example" class="display">
                 <!-- <thead style="display: table-header-group;"></thead> -->
@@ -67,12 +82,13 @@
                 <thead style="display: table-header-group;"></tfoot       >
 <!-- >>>>>>> Stashed changes -->
             </table>
+        </br>
         </div>  
         
     </body>
 
     <script>
-        let mountains = {{flights | safe}}
+        let info = {{flights | safe}}
 
         function generateTableHead(table, data) {
             let thead = table.createTHead();
@@ -109,7 +125,7 @@
 
         let table = document.querySelector("table");
         let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
-        generateTable(table, mountains);
+        generateTable(table, info);
         generateTableFoot(table, data);
         generateTableHead(table, data);
         
@@ -140,5 +156,59 @@
             });
         
         } );
+
+        function submitdate() {
+            var start_date, end_date;
+            start_date = document.getElementsByName("start_date")[0].value;
+            end_date = document.getElementsByName("end_date")[0].value;
+
+            if ((!start_date) && (!end_date)) {
+                alert("At least one of start/end date should be filled!");
+                return false;
+            }
+
+            else {
+                var old_body = document.getElementsByTagName("tbody")[0];
+                var new_body = document.createElement("tbody");
+                generateDateTable(new_body, info);
+                old_body.parentNode.replaceChild(new_body, old_body);
+            }
+
+
+        }
+
+        function generateDateTable(table, info) {
+            for (let element of info) {
+                if ((document.getElementsByName("start_date")[0]) && (document.getElementsByName("end_date")[0])) {
+                    if ((element[4].slice(0,10) >= document.getElementsByName("start_date")[0]) && (element[4].slice(0,10) <= document.getElementsByName("end_date")[0])) {
+                        let row = table.insertRow();
+                        for (key in element) {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                        }
+                    }
+                } else if (document.getElementsByName("start_date")[0]) {
+                    if (element[4].slice(0,10) >= document.getElementsByName("start_date")[0]) {
+                        let row = table.insertRow();
+                        for (key in element) {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                        }
+                    }
+                } else if (document.getElementsByName("end_date")[0]) {
+                    if (element[4].slice(0,10) <= document.getElementsByName("end_date")[0]) {
+                        let row = table.insertRow();
+                        for (key in element) {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                        }
+                    }
+                }
+            }
+        }
+
     </script>
     

@@ -93,10 +93,14 @@
             </div>
         {% endif%}
         
-        {% if error %}
-            <div class='warning'>
-                {{error}}
-            </div>
+        {% if not status %}
+            {% if error %}
+                    <div class="topbutton">
+                        <div class='warning'>
+                            {{error}}
+                        </div>
+                    </div>
+            {% endif %}
         {% else %}
             {% for line in status_result %}
                 <section class="button">
