@@ -285,7 +285,7 @@ def view_my_commission():
         if my_commission[0][0] == None:
             my_commission = [[0, 0, 0]]
         if all_commission[0][0] == None:
-            all_commission = [[0, 0, 01]]
+            all_commission = [[0, 0, 0]]
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
 
 
