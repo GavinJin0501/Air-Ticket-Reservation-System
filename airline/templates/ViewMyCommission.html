@@ -50,20 +50,20 @@
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart1() {
-
-        let info = {{all_commission | safe}}
-        var other = 100-info[0][0]
+        let info = {{my_commission | safe}}
+        let info2 = {{all_commission | safe}}
+        var other = info2[0][0]-info[0][0]
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
           ['my', info[0][0]],
-          ['other', other]]
+          ['other booking agent', other]]
         );
 
 
         // Set chart options
         var options = {
-            title: 'Commission percentage: ',
+            title: 'Commission percentage of all booking agents: ',
           };
 
         // Instantiate and draw our chart, passing in some options.
@@ -74,19 +74,20 @@
 
       function drawChart2() {
 
-        let info = {{all_commission | safe}}
-        var other = 100-info[0][1]
+        let info = {{my_commission | safe}}
+        let info2 = {{all_commission | safe}}
+        var other = info2[0][1]-info[0][1]
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
           ['my', info[0][1]],
-          ['other', other]]
+          ['other booking agent', other]]
         );
 
 
         // Set chart options
         var options = {
-            title: 'Ticket percentage: ',
+            title: 'Ticket percentage of all booking agents: ',
           };
 
         // Instantiate and draw our chart, passing in some options.
@@ -97,19 +98,20 @@
 
         function drawChart3() {
 
-          let info = {{all_commission | safe}}
-          var other = 100-info[0][2]
+          let info = {{my_commission | safe}}
+        let info2 = {{all_commission | safe}}
+        var other = info2[0][2]-info[0][2]
 
           var data = google.visualization.arrayToDataTable([
             ['string', 'number'],
             ['my', info[0][2]],
-            ['other', other]]
+            ['other booking agent', other]]
           );
 
 
           // Set chart options
           var options = {
-              title: 'Commission/ticket percentage: ',
+              title: 'Commission/ticket percentage of all booking agents: ',
             };
 
           // Instantiate and draw our chart, passing in some options.
@@ -180,8 +182,10 @@
             </div>
         </nav>
 
+
         <div class="table-container">
           <section>
+            <form action="/ViewMyCommission" onsubmit="return formValidation()" autocomplete="off" method="POST">
               <div class="bluebutton">
                   <div class="smaller-date-container">
                       <label class="label">Start date</label>             
@@ -192,9 +196,11 @@
                       <input type="date" name = "end_date">
                   </div>
                   <div class="smaller-date-container">
-                      <button class="datebutton" onclick="submitdate()">Filter</button>
+                    <input type="submit" value = Filter>
+                      <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
                   </div>
               </div>
+            </form>
           </section>
 <!-- <<<<<<< Updated upstream -->
           <table id="exa">
@@ -284,7 +290,7 @@
       
       // } );
 
-      function submitdate() {
+      function formValidation() {
           var start_date, end_date;
           start_date = document.getElementsByName("start_date")[0].value;
           end_date = document.getElementsByName("end_date")[0].value;

@@ -301,6 +301,7 @@ def get_my_commission(conn, email, start_date, end_date):
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
                WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
             """ % (start_date, end_date)
+    print(query)
     cursor.execute(query)
     all_commission = cursor.fetchall()
     cursor.close()
