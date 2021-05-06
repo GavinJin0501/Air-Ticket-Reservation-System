@@ -593,6 +593,11 @@
     font-size: 25px;
   }
 
+  .warning1{
+    color:#384375;
+    font-size: 25px;
+  }
+
   input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
     background-color: #636fa4;
   }

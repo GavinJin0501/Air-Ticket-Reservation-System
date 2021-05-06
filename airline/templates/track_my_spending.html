@@ -12,6 +12,27 @@
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+        <!-- let info = {{month_wise | safe}}
+        <style>
+
+.table-containerauto {
+    /* display: flex; */
+    justify-content: space-between;
+    height: 600 * info.length / 7 + 200;
+    border-top: 30px solid #a8b2dd;
+    background-color: #a8b2dd;
+    z-index: 1;
+    /* width: 35%; */
+    width: 1400px;
+    max-width: 2000px;
+    margin: 50px auto;
+    padding: 0 50px;
+  }
+
+
+        </style> -->
     <script type="text/javascript">
 
       // Load the Visualization API and the corechart package.
@@ -35,11 +56,21 @@
 
 
         // Set chart options
+        // if (){
+        // var options = {
+        //     title: 'My Spending in the last six months: ',
+        //     width: 1000,
+        //     height: 600 * info.length / 7}
+        //   };
+
+        // in the specified range of months
+
+        // if (){
         var options = {
-            title: 'My Total Spending: '+n,
+            title: 'My Spending: ',
             width: 1000,
-            height: 600 * info.length / 7
-          };
+            height: 600 * info.length / 7};
+        //   };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
@@ -100,7 +131,7 @@
             </div>
 
         </nav>
-        <div class="table-container">
+        <div class="table-container" style="height: 600 * {{month_wise | safe}}.length / 7 + 300">
             <section>
                 <form action="/TrackMySpending" autocomplete="off" onsubmit="return formValidation()" method="POST">
                 <div class="bluebutton">
@@ -119,7 +150,8 @@
                 </div>
                 </form>
             </section>
-
+            <div class="warning1">My total spending in the past year: {{total_amount}}</div>
+        </br>
             <div id="chart_div"></div>
 
         </br>
@@ -137,6 +169,10 @@
 
             if (!start_date) {
                 alert("Start date cannot be empty!");
+                return false;
+            }
+            if (end_date > today) {
+                alert("End date cannot be after today!");
                 return false;
             }
             if (!end_date) {
