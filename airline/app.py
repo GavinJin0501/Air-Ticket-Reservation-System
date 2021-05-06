@@ -256,11 +256,8 @@ def track_my_spending():
                     break
 
         for i in range(len(month_wise)):
-<<<<<<< Updated upstream
-            month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
-=======
             month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
->>>>>>> Stashed changes
+
 
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
