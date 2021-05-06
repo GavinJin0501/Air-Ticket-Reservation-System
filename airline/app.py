@@ -221,26 +221,29 @@ def track_my_spending():
         end_year, end_month = int(end_date[:4]), int(end_date[5:7])
         # print(start_year, start_month, end_year, end_month)
 
-        if start_month == 12:
-            start_year += 1
-            start_month = 0
-        month_wise.append([start_date, "%d-%02d-01" % (start_year, start_month+1), 0])
-        start_month += 1
-        while start_year <= end_year:
-            if start_year == end_year:
-                if start_month >= end_month:
-                    break
-                else:
-                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
-            else:
-                if start_month == 12:
-                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year+1, 1), 0])
-                    start_year += 1
-                    start_month = 0
-                else:
-                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
+        if start_year == end_year and start_month == end_month:
+            month_wise.append(["%d-%02d-01" % (start_year, start_month), end_date, 0])
+        else:
+            if start_month == 12:
+                start_year += 1
+                start_month = 0
+            month_wise.append([start_date, "%d-%02d-01" % (start_year, start_month+1), 0])
             start_month += 1
-        month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
+            while start_year <= end_year:
+                if start_year == end_year:
+                    if start_month >= end_month:
+                        break
+                    else:
+                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
+                else:
+                    if start_month == 12:
+                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year+1, 1), 0])
+                        start_year += 1
+                        start_month = 0
+                    else:
+                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
+                start_month += 1
+            month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
         print(month_wise)
 
         total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], start_date, end_date)
