@@ -185,8 +185,8 @@ def track_my_spending():
 
     if request.method == "GET":
         TODAY = datetime.today()
-        THIS_YEAR, PAST_YEAR, THIS_MONTH = TODAY.year, TODAY.year - 1, TODAY.month
-        month_wise.append(["%d-%02d-01" % (THIS_YEAR, THIS_MONTH), TODAY.strftime("%Y-%m-%d"), 0])
+        PAST_YEAR = (TODAY-timedelta(days=365))
+        month_wise.append([PAST_YEAR.strftime("%Y-%m-%d"), TODAY.strftime("%Y-%m-%d"), 0])
         for i in range(1, 6):
             if THIS_MONTH - i > 0:
                 temp = ["%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i+1), 0]
