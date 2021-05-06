@@ -18,6 +18,7 @@
       
             // Set a callback to run when the Google Visualization API is loaded.
             google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawChart2);
       
             // Callback that creates and populates a data table,
             // instantiates the pie chart, passes in the data and
@@ -29,19 +30,38 @@
             //     new_list.push([info[i], i+1]);
             // };
               var data = new google.visualization.DataTable();
-              data.addColumn('string', 'Month');
+              data.addColumn('string', 'Customer');
               data.addColumn('number', 'Spending');
               data.addRows(info);
               // data.clearChart();
       
       
               // Set chart options
-              var options = {'title':'My Total Spending',
-                             'width':800,
-                             'height':600};
+              var options = {'title':'Top 5 Spending Customer',};
       
               // Instantiate and draw our chart, passing in some options.
-              var chart = new google.visualization.BarChart(document.getElementById('chart_div1'));
+              var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+              chart.draw(data, options);
+            }
+
+            function drawChart2() {
+              var new_list = [];
+              let info = {{most_commission | safe}}
+            //   for (let i of info.length){
+            //     new_list.push([info[i], i+1]);
+            // };
+              var data = new google.visualization.DataTable();
+              data.addColumn('string', 'Customer');
+              data.addColumn('number', 'Commision');
+              data.addRows(info);
+              // data.clearChart();
+      
+      
+              // Set chart options
+              var options = {'title':'Top 5 Commision Customer',};
+      
+              // Instantiate and draw our chart, passing in some options.
+              var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
               chart.draw(data, options);
             }
           </script>
@@ -80,7 +100,7 @@
                   {% endif %}
                   {% if session.get("type", "guest") == "booking_agent"%}
                     <li class="navbar__item">
-                      <a href="/ViewMyCommision" class="navbar__links" id="links">View My Commision</a>
+                      <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
                     </li>
                     <li class="navbar__item">
                       <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
@@ -100,7 +120,21 @@
               </ul>
             </div>
           </nav>
-        <div class="table-container">
-            <div id="chart_div1"></div>
-        </br>
+        <!-- <section> -->
+          <div class="table-container">
+            <!-- <div class="chart-container">
+              <label class="label">Chart1</label> </br> -->
+              <div id="chart_div" style="width: 800px; height: 600px;"></div>
+            </br>
+              <div id="chart_div2" style="width: 800px; height: 600px;"></div>
+            </br>
+            <!-- </br>
+            </div>
+            <div class="chart-container">
+              <label class="label">Chart2</label> </br> -->
+              <!-- <div id="chart_div2" style="width: 800px; height: 600px;"></div> -->
+            <!-- </br>
+            </div> -->
+          </div>
+        <!-- </section> -->
         </div>
