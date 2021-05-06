@@ -249,8 +249,6 @@ def track_my_spending():
 
         for i in my_spendings:
             for j in month_wise:
-                if j[2] == 0:
-                    j[2] = 1000
                 if j[0] < i[0] <= j[1]:
                     j[2] += i[1]
                     break
@@ -276,20 +274,12 @@ def view_my_commission():
         end_date = TODAY.strftime("%Y-%m-%d")
         my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
         print(my_commission, all_commission)
-        if my_commission[0][0] == None:
-            my_commission = [[0, 0, 0]]
-        if all_commission[0][0] == None:
-            all_commission = [[0, 0, 0]]
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
         my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
         print(my_commission, all_commission)
-        if my_commission[0][0] == None:
-            my_commission = [[0, 0, 0]]
-        if all_commission[0][0] == None:
-            all_commission = [[0, 0, 0]]
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
 
 

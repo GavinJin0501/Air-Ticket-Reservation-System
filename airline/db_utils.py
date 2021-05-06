@@ -305,6 +305,11 @@ def get_my_commission(conn, email, start_date, end_date):
     all_commission = cursor.fetchall()
     cursor.close()
 
+    if my_commission[0][0] == None:
+        my_commission = [(0, 0, 0)]
+    if all_commission[0][0] == None:
+        all_commission = [(0, 0, 0)]
+
     for i in range(len(my_commission)):
         my_commission[i] = list(my_commission[i])
         my_commission[i][0] = float(my_commission[i][0])
