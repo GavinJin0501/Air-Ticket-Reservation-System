@@ -256,11 +256,7 @@ def track_my_spending():
                     break
 
         for i in range(len(month_wise)):
-<<<<<<< Updated upstream
-            month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
-=======
             month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
->>>>>>> Stashed changes
 
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
@@ -286,6 +282,10 @@ def view_my_commission():
         end_date = request.form["end_date"]
         my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
         print(my_commission, all_commission)
+        if my_commission[0][0] == None:
+            my_commission = [[0, 0, 0]]
+        if all_commission[0][0] == None:
+            all_commission = [[0, 0, 01]]
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
 
 
