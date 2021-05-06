@@ -315,9 +315,10 @@ def get_my_commission(conn, email, start_date, end_date):
         my_commission[i][0] = float(my_commission[i][0])
         my_commission[i][1] = int(my_commission[i][1])
         my_commission[i][2] = float(my_commission[i][2])
-        all_commission[i] = [int(my_commission[i][0]/float(all_commission[i][0])*100),
-                             int(my_commission[i][1]/int(all_commission[i][1])*100),
-                             int(my_commission[i][2]/float(all_commission[i][2])*100)]
+        all_commission[i] = list(all_commission[i])
+        all_commission[i][0] = float(all_commission[i][0])
+        all_commission[i][1] = int(all_commission[i][1])
+        all_commission[i][2] = float(all_commission[i][2])
 
     return my_commission, all_commission
 
