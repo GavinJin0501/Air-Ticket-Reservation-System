@@ -22,7 +22,7 @@ def get_airport_and_city(conn):
         data2[i] = data2[i][0]
     data2 += data1
     data2.sort()
-    print(data2)
+    # print(data2)
     return data2
 
 
@@ -254,21 +254,37 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     return True
 
 
-def get_my_spendings(conn, email, start_date, end_date):
+def get_my_spendings_total_amount(conn, email, start_date, end_date):
     cursor = conn.cursor()
-    query = """SELECT purchase_date, price
+    query = """SELECT SUM(price)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
                WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
-               ORDER BY purchase_date DESC""" % (email, start_date, end_date)
+            """ % (email, start_date, end_date)
+    # print(query)
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
 
+    if data[0][0] == None:
+        return 0
+    else:
+        return data[0][0]
+
+
+def get_my_spendings_certain_range(conn, email, start_date, end_date):
+    cursor = conn.cursor()
+    query = """SELECT purchase_date, price
+                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
+                WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
+            """ % (email, start_date, end_date)
+    # print(query)
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
     for i in range(len(data)):
         data[i] = list(data[i])
         data[i][0] = data[i][0].strftime("%Y-%m-%d")
         data[i][1] = int(data[i][1])
-
     return data
 
 

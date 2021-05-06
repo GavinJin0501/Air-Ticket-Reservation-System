@@ -180,61 +180,84 @@ def track_my_spending():
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
-    TODAY = datetime.today()
-    PAST_YEAR = (TODAY - timedelta(days=365)).strftime("%Y-%m-%d")
     total_amount = 0
     month_wise = []     # List of lists: [[start_date, end_date, money], .......]
 
     if request.method == "GET":
-        for i in range(6):
-            month_wise.append([(TODAY-timedelta(days=31*(i+1))).strftime("%Y-%m-%d"), (TODAY-timedelta(days=31*i)).strftime("%Y-%m-%d"), 0])
+        TODAY = datetime.today()
+        THIS_YEAR, PAST_YEAR, THIS_MONTH = TODAY.year, TODAY.year - 1, TODAY.month
+        month_wise.append(["%d-%02d-01" % (THIS_YEAR, THIS_MONTH), TODAY.strftime("%Y-%m-%d"), 0])
+        for i in range(1, 6):
+            if THIS_MONTH - i > 0:
+                temp = ["%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i+1), 0]
+            elif THIS_MONTH - i + 1 > 0:
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
+            else:
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)), "%d-%02d-01" % (THIS_YEAR, 12 + (THIS_MONTH - i + 1)), 0]
+            month_wise.append(temp)
 
-        my_spendings = db_utils.get_my_spendings(conn, session["email"], PAST_YEAR, TODAY.strftime("%Y-%m-%d"))  # List of lists: [[purchase_date, price], .........]
+        total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], "%d-01-01" % PAST_YEAR, "%d-01-01" % THIS_YEAR)
+        my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], month_wise[-1][0], month_wise[0][1])
         print(my_spendings)
-        for each in my_spendings:
-            if each[0] >= PAST_YEAR:
-                total_amount += each[1]
+        print(total_amount)
+        print(month_wise)
 
-            for i in range(6):
-                if month_wise[i][0] < each[0] <= month_wise[i][1]:
-                    month_wise[i][2] += each[1]
+        for i in my_spendings:
+            for j in month_wise:
+                if j[0] < i[0] <= j[1]:
+                    j[2] += i[1]
                     break
 
         for i in range(len(month_wise)):
             month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
 
-        print(total_amount)
-        print(month_wise)
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
+
     elif request.method == "POST":
-        start_date = datetime.strptime(request.form["start_date"]+" 00:00:00", "%Y-%m-%d %H:%M:%S")
-        end_date = datetime.strptime(request.form.get("end_date")+" 23:59:59", "%Y-%m-%d %H:%M:%S")
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
         # print(start_date, end_date)
+        start_year, start_month = int(start_date[:4]), int(start_date[5:7])
+        end_year, end_month = int(end_date[:4]), int(end_date[5:7])
+        # print(start_year, start_month, end_year, end_month)
 
-        while end_date - timedelta(days=31) > start_date:
-            month_wise.append([(end_date - timedelta(days=31)).strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), 0])
-            end_date -= timedelta(days=31)
-        start_date = start_date.strftime("%Y-%m-%d")
-        end_date = end_date.strftime("%Y-%m-%d")
-        month_wise.append([start_date, end_date, 0])
-        # print(month_wise)
+        if start_month == 12:
+            start_year += 1
+            start_month = 0
+        month_wise.append([start_date, "%d-%02d-01" % (start_year, start_month+1), 0])
+        start_month += 1
+        while start_year <= end_year:
+            if start_year == end_year:
+                if start_month >= end_month:
+                    break
+                else:
+                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
+            else:
+                if start_month == 12:
+                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year+1, 1), 0])
+                    start_year += 1
+                    start_month = 0
+                else:
+                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
+            start_month += 1
+        month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
+        print(month_wise)
 
-        my_spendings = db_utils.get_my_spendings(conn, session["email"], PAST_YEAR, TODAY.strftime("%Y-%m-%d"))
+        total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], start_date, end_date)
+        my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], start_date, end_date)
+        print(total_amount)
 
-        for each in my_spendings:
-            if each[0] >= start_date:
-                total_amount += each[1]
-
-            for i in range(len(month_wise)):
-                if month_wise[i][0] < each[0] <= month_wise[i][1]:
-                    month_wise[i][2] += each[1]
+        for i in my_spendings:
+            for j in month_wise:
+                if j[2] == 0:
+                    j[2] = 1000
+                if j[0] < i[0] <= j[1]:
+                    j[2] += i[1]
                     break
 
         for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0] + " = " + month_wise[i][1], month_wise[i][2]]
+            month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
 
-        print(total_amount)
-        print(month_wise)
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
 
