@@ -300,6 +300,11 @@
               return false;
           }
 
+          if (end_date > today) {
+                alert("End date cannot be after today!");
+                return false;
+            }
+
           else {
               var old_body = document.getElementsByTagName("tbody")[0];
               var new_body = document.createElement("tbody");
