@@ -492,7 +492,8 @@ def view_booking_agents(conn):
                     SELECT COUNT(DISTINCT t2.num_of_ticket)
                     FROM top_agents_ticket AS t2
                     WHERE t2.num_of_ticket > t1.num_of_ticket
-               )"""
+               )
+               ORDER BY t1.num_of_ticket DESC"""
     cursor.execute(query)
     ticket_month = cursor.fetchall()
 
@@ -513,8 +514,19 @@ def view_booking_agents(conn):
                     SELECT COUNT(DISTINCT t2.amount_of_commission)
                     FROM top_agents_commission AS t2
                     WHERE t2.amount_of_commission > t1.amount_of_commission
-               )"""
+               )
+               ORDER BY t1.amount_of_commission DESC"""
     cursor.execute(query)
     commission_year = cursor.fetchall()
     cursor.close()
+    for i in range(len(ticket_month)):
+        ticket_month[i] = list(ticket_month[i])
+        ticket_month[i][1] = int(ticket_month[i][1])
+    for i in range(len(ticket_year)):
+        ticket_year[i] = list(ticket_month[i])
+        ticket_year[i][1] = int(ticket_year[i][1])
+    for i in range(len(commission_year)):
+        commission_year[i] = list(commission_year[i])
+        commission_year[i][1] = int(commission_year[i][1])
+
     return ticket_month, ticket_year, commission_year
