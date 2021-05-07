@@ -438,7 +438,7 @@ def change_flight_status(conn, flight_num, status):
 
     query = """ALTER TABLE flight
                SET status = \'%s\'
-               WHERE flight_num = \'%s\'""" % (flight_num, status)
+               WHERE flight_num = \'%s\'""" % (status, flight_num)
     cursor.execute(query)
     conn.commit()
     cursor.close()
