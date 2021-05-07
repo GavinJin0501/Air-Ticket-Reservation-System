@@ -39,11 +39,11 @@
                 <li class="navbar__item">
                   <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                   {% if session["logged_in"] == True%}
-                  {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent"%}
-                    <li class="navbar__item">
-                      <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
-                    </li>
-                  {% endif %}
+                  {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
+                          <li class="navbar__item">
+                            <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                          </li>
+                {% endif %}
                   {% if session.get("type", "guest") == "customer"%}
                     <li class="navbar__item">
                       <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
@@ -57,6 +57,23 @@
                       <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
                     </li>
                   {% endif %}
+
+                  {% if session.get("type", "guest") == "airline_staff"%}
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Management 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/CreateNewFlights">Create New Flights</a>
+                          <a href="/ChangeFlightStatus">Change Flights Status</a>
+                          <a href="/AddAirplane">Add Airplane</a>
+                          <a href="/AddAirport">Add Airport</a>
+                        </div>
+                      </div> 
+
+                    {% endif %}
+                    
                       <li class="navbar__btn">
                       <a href="/logout" class="button" id="logout">Logout</a>
                       </li>

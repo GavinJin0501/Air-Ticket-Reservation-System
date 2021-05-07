@@ -51,6 +51,24 @@
                         <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
                       </li>
                     {% endif %}
+
+                    {% if session.get("type", "guest") == "airline_staff"%}
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Management 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/CreateNewFlights">Create New Flights</a>
+                          <a href="/ChangeFlightStatus">Change Flights Status</a>
+                          <a href="/AddAirplane">Add Airplane</a>
+                          <a href="/AddAirport">Add Airport</a>
+                        </div>
+                      </div> 
+
+                    {% endif %}
+
+                    
                         <li class="navbar__btn">
                         <a href="/logout" class="button" id="logout">Logout</a>
                         </li>

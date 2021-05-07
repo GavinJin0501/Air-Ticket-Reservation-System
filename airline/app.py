@@ -51,8 +51,8 @@ def home():
 # ======================================================================================
 @app.route('/SearchFlight', methods=['GET', 'POST'])
 def search_flight():
-    if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        return redirect(url_for("view_my_flights"))
+    # if session.get("logged_in", False) and session.get("type") == "airline_staff":
+    #     return redirect(url_for("view_my_flights"))
 
     # results for autocomplete in the client side
     airport_city = db_utils.get_airport_and_city(conn)
@@ -91,8 +91,8 @@ def search_flight():
 
 @app.route('/CheckStatus', methods=['GET', 'POST'])
 def check_flight_status():
-    if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        return redirect(url_for("view_my_flights"))
+    # if session.get("logged_in", False) and session.get("type") == "airline_staff":
+    #     return redirect(url_for("view_my_flights"))
 
     if request.method == "GET":
         today = datetime.now().strftime("%Y-%m-%d")

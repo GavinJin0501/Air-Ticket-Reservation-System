@@ -27,14 +27,12 @@
                 {% endif%}
 
                 <ul class="navbar__menu">
-                {% if session.get("type", "guest") != "airline_staff" %}
                         <li class="navbar__item">
                         <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                         </li>
                         <li class="navbar__item">
                         <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
                         </li>
-                {% endif%}
                   {% if session["logged_in"] == True%}
                     {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
                       <li class="navbar__item">
@@ -55,16 +53,6 @@
                       </li>
                     {% endif %}
                     {% if session.get("type", "guest") == "airline_staff"%}
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Staff operations
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                          <a class="dropdown-item" href="/CreateNewFlights">Create New Flights</a>
-                          <a class="dropdown-item" href="/ChangeFlightStatus">Change Flights Status</a>
-                          <a class="dropdown-item" href="/AddAirplane">Add Airplane</a>
-                        </div>
-                      </li> -->
 
                       <div class="dropdown">
                         <button class="dropbtn">Staff Management 
@@ -78,15 +66,6 @@
                         </div>
                       </div> 
 
-                      <!-- <li class="navbar__item">
-                        <a href="/CreateNewFlights" class="navbar__links" id="links">Create New Flights</a>
-                      </li>
-                      <li class="navbar__item">
-                        <a href="/ChangeFlightStatus" class="navbar__links" id="links">Change Flights Status</a>
-                      </li>
-                      <li class="navbar__item">
-                        <a href="/AddAirplane" class="navbar__links" id="links">Add Airplane</a>
-                      </li> -->
                     {% endif %}
                         <li class="navbar__btn">
                         <a href="/logout" class="button" id="logout">Logout</a>
