@@ -90,10 +90,16 @@
                 <input type="text" name = "flight_number" placeholder="flight number" required/> </br>
                 <label class="label">New status</label> </br>
                 <!-- <div class="upcomingbutton">Upcoming</div> -->
-                <input type="button" id= "upcomingbutton" value="Upcoming">
+                <select name="Updated status" id="status" style="font-size: 18px; height: 40px; width: 150px">
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="In-progress">In-progress</option>
+                    <option value="Delayed">Delayed</option>
+                    <option value="Canceled">Canceled</option>
+                  </select>
+                <!-- <input type="button" id= "upcomingbutton" value="Upcoming">
                 <input type="button" id= "inprogressbutton" value="In-progress">
                 <input type="button" id= "delayedbutton" value="Delayed">
-                <input type="button" id= "canceledbutton" value="Canceled">
+                <input type="button" id= "canceledbutton" value="Canceled"> -->
                 <input type="submit" value = Change />
                 <label class="label"> </label> </br>
                 <!-- <a href="/" class="button" id="go-back">Go back</a> -->
