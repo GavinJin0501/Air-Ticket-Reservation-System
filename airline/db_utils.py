@@ -123,16 +123,9 @@ def register_to_database(conn, info, identity):
                                     info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
     elif identity == "booking_agent":
         query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\')"
-        print()
-        print(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
-        print()
         cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
     else:
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
-        print()
-        print(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
-                                    info["date_of_birth"], info["airline_name"]))
-        print()
         cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"].replace("\'", "\'\'"), info["last_name"].replace("\'", "\'\'"),
                                     info["date_of_birth"], info["airline_name"]))
     conn.commit()
@@ -212,7 +205,7 @@ def get_upcoming_flights(conn, identity, email):
 
 
 def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT COUNT(ticket_id) 
                FROM ticket 
                WHERE flight_num = \'%s\'""" % flight_num
@@ -233,14 +226,16 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
 
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")
+    t = (ticket_id, airline_name, flight_num)
     query = """INSERT INTO ticket
-               VALUES (\'%s\', \'%s\', \'%s\')""" % (ticket_id, airline_name, flight_num)
-    cursor.execute(query)
+               VALUES (%s, %s, %s)"""
+    cursor.execute(query, t)
     # conn.commit()
 
     if identity == "customer":
         query = """INSERT INTO purchases
-                   VALUES (\'%s\', \'%s\', NULL, \'%s\')""" % (ticket_id, customer_email, today)
+                   VALUES (%s, %s, NULL, %s)"""
+        t = (ticket_id, customer_email, today)
     else:
         query = """SELECT booking_agent_id
                    FROM booking_agent
@@ -248,8 +243,9 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
         cursor.execute(query)
         agent_id = cursor.fetchall()[0][0]
         query = """INSERT INTO purchases
-                   VALUES (\'%s\', \'%s\', \'%s\', \'%s\')""" % (ticket_id, customer_email, agent_id, today)
-    cursor.execute(query)
+                   VALUES (%s, %s, %s, %s)"""
+        t = (ticket_id, customer_email, agent_id, today)
+    cursor.execute(query, t)
     conn.commit()
     cursor.close()
     return True
@@ -408,7 +404,7 @@ def create_new_flight(conn, info):
         return False, "Arrival airport does not exist in the database!"
 
     # Check plane id
-    query = """SELECT plane_id FROM airplane WHERE plane_id = \'%s\'""" % info["plane_id"]
+    query = """SELECT airplane_id FROM airplane WHERE airplane_id = \'%s\'""" % info["plane_id"]
     cursor.execute(query)
     data = cursor.fetchall()
     if not data:
@@ -455,7 +451,7 @@ def add_airplane(conn, airline_name, airplane_id, seats):
         cursor.close()
         return False, "You can not add an existing airplane!"
     query = """INSERT INTO airplane
-               VALUES (\'%s\', \'%s\', \'%d\')""" % (airline_name, airplane_id, seats)
+               VALUES (\'%s\', \'%s\', \'%s\')""" % (airline_name, airplane_id, seats)
     cursor.execute(query)
     conn.commit()
     cursor.close()
