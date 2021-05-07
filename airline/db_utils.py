@@ -408,7 +408,7 @@ def create_new_flight(conn, info):
         return False, "Arrival airport does not exist in the database!"
 
     # Check plane id
-    query = """SELECT plane_id FROM airplane WHERE departure_airport = \'%s\'""" % info["plane_id"]
+    query = """SELECT plane_id FROM airplane WHERE plane_id = \'%s\'""" % info["plane_id"]
     cursor.execute(query)
     data = cursor.fetchall()
     if not data:

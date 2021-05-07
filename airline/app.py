@@ -321,7 +321,7 @@ def create_new_flights():
                 "arrival_airport": request.form["arrival_airport"],  # have check
                 "arrival_time": request.form["arrival_time"],
                 "price": request.form["price"],
-                "status": request.form["status"],
+                "status": request.form.get("status"),
                 "plane_id": request.form["plane_id"],  # have check
                 }
         status, error = db_utils.create_new_flight(conn, info)
