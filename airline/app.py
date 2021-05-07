@@ -366,7 +366,7 @@ def add_airplane():
         return render_template("AddAirplane.html", status=status, error=error)
 
 
-@app.route('/AddAirport')
+@app.route('/AddAirport', methods=["GET", "POST"])
 def add_airport():
     if not session.get("logged_in", False):
         flash("Don't cheat! Login first!")
