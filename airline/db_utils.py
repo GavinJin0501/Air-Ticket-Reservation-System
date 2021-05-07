@@ -78,7 +78,7 @@ def login_check(conn, username, password, identity):
 
 def airline_staff_initialization(conn, email):
     cursor = conn.cursor()
-    query = """SELECT airline_name FROM airline_staff WHERE email = \'%s\'""" % email
+    query = """SELECT airline_name FROM airline_staff WHERE username = \'%s\'""" % email
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
