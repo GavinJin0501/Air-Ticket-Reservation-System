@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <script src="../static/lib/moment.js"></script>
+    </head>
+
+
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+
+                <ul class="navbar__menu">
+                {% if session.get("type", "guest") != "airline_staff" %}
+                        <li class="navbar__item">
+                        <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                        </li>
+                        <li class="navbar__item">
+                        <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                        </li>
+                {% endif%}
+                  {% if session["logged_in"] == True%}
+                    {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
+                      <li class="navbar__item">
+                        <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "customer"%}
+                      <li class="navbar__item">
+                        <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "booking_agent"%}
+                      <li class="navbar__item">
+                        <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
+                      </li>
+                      <li class="navbar__item">
+                        <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "airline_staff"%}
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Staff operations
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="/CreateNewFlights">Create New Flights</a>
+                          <a class="dropdown-item" href="/ChangeFlightStatus">Change Flights Status</a>
+                          <a class="dropdown-item" href="/AddAirplane">Add Airplane</a>
+                        </div>
+                      </li> -->
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Management 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/CreateNewFlights">Create New Flights</a>
+                          <a href="/ChangeFlightStatus">Change Flights Status</a>
+                          <a href="/AddAirplane">Add Airplane</a>
+                          <a href="/AddAirport">Add Airport</a>
+                        </div>
+                      </div> 
+
+                      <!-- <li class="navbar__item">
+                        <a href="/CreateNewFlights" class="navbar__links" id="links">Create New Flights</a>
+                      </li>
+                      <li class="navbar__item">
+                        <a href="/ChangeFlightStatus" class="navbar__links" id="links">Change Flights Status</a>
+                      </li>
+                      <li class="navbar__item">
+                        <a href="/AddAirplane" class="navbar__links" id="links">Add Airplane</a>
+                      </li> -->
+                    {% endif %}
+                        <li class="navbar__btn">
+                        <a href="/logout" class="button" id="logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="navbar__btn">
+                        <a href="/login" class="button" id="login">Login</a>
+                        </li>
+                        <li class="navbar__btn">
+                            <a href="/register" class="button" id="sign-up">Register</a>
+                        </li>
+                    {% endif%}
+
+              </ul>
+            </div>
+        </nav>
+
+        <div class="search-container">
+            <form action="/AddAirplane" autocomplete="off" method="POST">
+                <label id="navbar__logo"> Add airplane here</label>
+                <label class="label"> </label> </br>
+                <label class="label">Airport Name</label> </br>
+                <input type="text" name = "airport_name" placeholder="airport name" required/> </br>
+                <label class="label">Airport City</label> </br>
+                <input type="text" name = "airport_city" placeholder="airport city" required/> </br>              
+                <input type="submit" value = Add />
+                <label class="label"> </label> </br>
+                <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+            </form>
+        </div>
+        {% if error %}
+        <div class="topbutton">
+            <div class='warning'>
+                {{error}}
+            </div>
+        </div>
+    {% endif %}
+    
+    </body>

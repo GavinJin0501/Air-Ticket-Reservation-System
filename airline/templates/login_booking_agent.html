@@ -45,16 +45,16 @@
             <input type="submit" value = Login />
 			<a href="/register/booking_agent" class="navbar__links__middle" id="register-booking-agent">Don't have an account? Register</a>
 			<label class="label"> </label> </br>
-            {% if error %}
+            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+        </form>
+    </div>
+	{% if error %}
 				<div class="topbutton">
 					<div class='warning'>
 						{{error}}
 					</div>
 				</div>
             {% endif %}
-            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
-        </form>
-    </div>
 
 </body>
 <script type="text/javascript">

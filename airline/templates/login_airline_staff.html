@@ -37,7 +37,7 @@
         <form action="/login/airline_staff" onsubmit="return formValidation()" autocomplete="off" method="POST">
             <label id="navbar__logo">Welcome to B-Air, airline staff!</label>
             <label class="label"> </label> </br>
-            <label class="label">Email</label> </br>
+            <label class="label">Username</label> </br>
             <input type="text" name = "username" placeholder="email" required/> </br>
             <label class="label">Password</label> </br>
             <input type="text" name = "password" placeholder="password" required/> </br>
@@ -45,16 +45,16 @@
             <input type="submit" value = Login />
 			<a href="/register/airline_staff" class="navbar__links__middle" id="register-customer">Don't have an account? Register</a>
 			<label class="label"> </label> </br>
-            {% if error %}
+        </form>
+    </div>
+
+	{% if error %}
 				<div class="topbutton">
 					<div class='warning'>
 						{{error}}
 					</div>
 				</div>
             {% endif %}
-            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
-        </form>
-    </div>
 
 </body>
 
