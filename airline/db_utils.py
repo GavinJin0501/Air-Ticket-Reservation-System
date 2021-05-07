@@ -89,6 +89,7 @@ def register_check(conn, info, identity):
     cursor = conn.cursor()
     if identity == "airline_staff":
         query = """SELECT airline_name FROM airline WHERE airline_name = \'%s\'""" % info["airline_name"]
+        print(query)
         cursor.execute(query)
         data = cursor.fetchall()
         if not data:
