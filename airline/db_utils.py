@@ -343,7 +343,7 @@ def top_customers(conn, email):
                WHERE 4 >= (
                     SELECT COUNT(DISTINCT t2.num_of_ticket)
                     FROM top_customers_ticket AS t2
-                    WHERE t2.num_of_ticket >= t1.num_of_ticket
+                    WHERE t2.num_of_ticket > t1.num_of_ticket
                )
                ORDER BY t1.num_of_ticket DESC
             """
@@ -363,7 +363,7 @@ def top_customers(conn, email):
                WHERE 4 >= (
                     SELECT COUNT(DISTINCT t2.amount_of_commission)
                     FROM top_customers_commission AS t2
-                    WHERE t1.amount_of_commission >= t1.amount_of_commission
+                    WHERE t1.amount_of_commission > t1.amount_of_commission
                )
              """
     cursor.execute(query)
@@ -478,23 +478,46 @@ def add_airport(conn, airport_name, airport_city):
 
 
 def view_booking_agents(conn):
-    cursor = conn.cursor()
-    query = """CREATE OR REPLACE VIEW top_customers AS (
-                    SELECT email, COUNT(ticket_id) AS num_of_ticket, SUM(price * 0.1) AS amount_of_commission, purchase_date
-                    FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
-                    GROUP BY email
-               )"""
     PAST_MONTH = (datetime.today() - timedelta(days=31)).strftime("%Y-%m-%d")
     PAST_YEAR = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-    query = """SELECT email, COUNT(ticket_id) AS ticket_num
-               FROM booking_agent NATURAL JOIN purchases
-               WHERE purchase_date >= \'%s\'
-               GROUP BY email
-               ORDER BY ticket_num"""
-    cursor.execute(query % PAST_MONTH)
-    ticket_past_month = cursor.fetchall()
-    cursor.execute(query % PAST_YEAR)
-    ticket_past_year = cursor.fetchall()
 
+    cursor = conn.cursor()
+    view_query1 = """CREATE OR REPLACE VIEW top_agents_ticket AS (
+                        SELECT email, COUNT(ticket_id) AS num_of_ticket
+                        FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
+                        WHERE purchase_date >= \'%s\'
+                        GROUP BY email
+                   )"""
+    cursor.execute(view_query1 % PAST_MONTH)
+    query = """SELECT *
+               FROM top_agents_ticket AS t1
+               WHERE 4 >= (
+                    SELECT COUNT(DISTINCT t2.num_of_ticket)
+                    FROM top_agents_ticket AS t2
+                    WHERE t2.num_of_ticket > t1.num_of_ticket
+               )"""
+    cursor.execute(query)
+    ticket_month = cursor.fetchall()
+
+    cursor.execute(view_query1 % PAST_YEAR)
+    cursor.execute(query)
+    ticket_year = cursor.fetchall()
+
+    view_query2 = """CREATE OR REPLACE VIEW top_agents_commission AS (
+                        SELECT email, SUM(price * 0.1) AS amount_of_commission
+                        FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
+                        WHERE purchase_date >= \'%s\'
+                        GROUP BY email
+                   )"""
+    cursor.execute(view_query2 % PAST_YEAR)
+    query = """SELECT *
+               FROM top_agents_commission AS t1
+               WHERE 4 >= (
+                    SELECT COUNT(DISTINCT t2.amount_of_commission)
+                    FROM top_agents_comission AS t2
+                    WHERE t2.amount_of_commission > t1.amount_of_commission
+               )"""
+    cursor.execute(query)
+    commission_year = cursor.fetchall()
     cursor.close()
-    return ticket_past_month, ticket_past_year
+    return ticket_month, ticket_year, commission_year

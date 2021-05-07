@@ -395,7 +395,8 @@ def view_all_booking_agent():
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        tickets_past_month = db_utils.view_booking_agents(conn)
+        ticket_month, ticket_year, commission_year = db_utils.view_booking_agents(conn)
+        return render_template("view_all_booking_agent", ticket_month=ticket_month, ticket_year=ticket_year, commission_year=commission_year)
 
 # ======================================================================================
 

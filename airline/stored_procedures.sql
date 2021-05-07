@@ -17,3 +17,20 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE GetTopAgentTicket()
+BEGIN
+	CREATE OR REPLACE VIEW top_agents_ticket AS (
+	    SELECT email, COUNT(ticket_id) AS num_of_ticket
+        FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
+        WHERE purchase_date >= \'%s\'
+        GROUP BY email
+    );
+
+END //
+
+DELIMITER ;
