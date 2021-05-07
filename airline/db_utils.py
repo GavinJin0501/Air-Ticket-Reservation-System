@@ -130,10 +130,10 @@ def register_to_database(conn, info, identity):
     else:
         query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
         print()
-        print(query.format(info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
+        print(query.format(identity, info["email"], generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"], info["last_name"],
                                     info["date_of_birth"], info["airline_name"]))
         print()
-        cursor.execute(query.format(info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"].replace("\'", "\'\'"), info["last_name"].replace("\'", "\'\'"),
+        cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"].replace("\'", "\'\'"), info["last_name"].replace("\'", "\'\'"),
                                     info["date_of_birth"], info["airline_name"]))
     conn.commit()
     cursor.close()

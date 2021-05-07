@@ -31,7 +31,7 @@ def is_match(stdin, pattern):
 
 def logged_in_redirect():
     if session["type"] == "airline_staff":
-        return redirect(url_for())
+        return redirect(url_for("view_my_flights"))
     else:
         return redirect(url_for("search_flight"))
 
@@ -52,7 +52,7 @@ def home():
 @app.route('/SearchFlight', methods=['GET', 'POST'])
 def search_flight():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        return redirect(url_for())
+        return redirect(url_for("view_my_flights"))
 
     # results for autocomplete in the client side
     airport_city = db_utils.get_airport_and_city(conn)
@@ -92,7 +92,7 @@ def search_flight():
 @app.route('/CheckStatus', methods=['GET', 'POST'])
 def check_flight_status():
     if session.get("logged_in", False) and session.get("type") == "airline_staff":
-        return redirect(url_for())
+        return redirect(url_for("view_my_flights"))
 
     if request.method == "GET":
         today = datetime.now().strftime("%Y-%m-%d")
@@ -136,7 +136,7 @@ def purchase(airline_name, flight_num):
     if not session.get("logged_in", False):
         return redirect(url_for("home"))
     elif session.get("type", "guest") == "airline_staff":
-        return redirect(url_for())
+        return redirect(url_for("view_my_flights"))
 
     if request.method == "GET":
         return redirect(url_for("purchase_confirm", airline_name=airline_name, flight_num=flight_num))
@@ -147,7 +147,7 @@ def purchase_confirm(airline_name, flight_num):
     if not session.get("logged_in", False):
         return redirect(url_for("home"))
     elif session.get("type", "guest") == "airline_staff":
-        return redirect(url_for())
+        return redirect(url_for("view_my_flights"))
 
     if request.method == "GET":
         # print(airline_name, flight_num)
