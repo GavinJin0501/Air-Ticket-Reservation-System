@@ -64,6 +64,16 @@
               var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
               chart.draw(data, options);
             }
+
+            var header = document.getElementById("myDIV");
+        var btns = header.getElementsByClassName("navbar__links");
+        for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+        });
+        }
           </script>
     </head>
 
@@ -103,7 +113,7 @@
                       <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
                     </li>
                     <li class="navbar__item">
-                      <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                      <a href="/ViewTopCustomers" class="navbar__links active" id="links">View Top Customers</a>
                     </li>
                   {% endif %}
                       <li class="navbar__btn">

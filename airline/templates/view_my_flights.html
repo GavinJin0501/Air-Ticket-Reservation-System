@@ -32,7 +32,7 @@
                             <span class="bar"></span>
                         </div>
                     {% endif%}
-                    <ul class="navbar__menu">
+                    <ul class="navbar__menu" id="myDIV">
                                 <li class="navbar__item">
                                 <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                                 </li>
@@ -42,7 +42,7 @@
                       {% if session["logged_in"] == True%}
                         {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
                           <li class="navbar__item">
-                            <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                            <a href="/ViewMyFlights" class="navbar__links active" id="links">View My Flights</a>
                           </li>
                         {% endif %}
                         {% if session.get("type", "guest") == "customer"%}
@@ -69,6 +69,19 @@
                           <a href="/ChangeFlightStatus">Change Flights Status</a>
                           <a href="/AddAirplane">Add Airplane</a>
                           <a href="/AddAirport">Add Airport</a>
+                        </div>
+                      </div> 
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Views 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/ViewAllBookingAgent">View Booking Agent</a>
+                          <a href="ViewFrequentCustomers">View Reports</a>
+                          <a href="ViewReports">View Frequent Customers</a>
+                          <a href="/ComparisonOfRevenueEarned">View Reports</a>
+                          <a href="/ViewTopDestinations">View Top Destinations</a>
                         </div>
                       </div> 
 
@@ -283,6 +296,14 @@
                 }
             }
         }
-
+        var header = document.getElementById("myDIV");
+        var btns = header.getElementsByClassName("navbar__links");
+        for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+        });
+        }
     </script>
     

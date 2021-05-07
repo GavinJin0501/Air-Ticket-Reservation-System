@@ -30,7 +30,7 @@
                   <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
                 </li>
                 <li class="navbar__item">
-                  <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                  <a href="/CheckStatus" class="navbar__links active" id="links">Check Status</a>
 
                   {% if session["logged_in"] == True%}
                     {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
@@ -84,27 +84,82 @@
               </ul>
             </div>
         </nav>
+        <section>
+            <div class="full-container"> 
+                <div class="half-container"> 
+                    <div class="search-container" id="search-container">
+                        <form action="/CheckStatus" onsubmit="return formValidation()" autocomplete="off" method="POST">
+                            <label id="navbar__logo">Welcome! </br> You may check flight status here!</label> </br>
+                            <label class="label">Flight Number</label>    </br>         
+                            <input type="text" name = "flight_num" placeholder="flight number" required/> </br>
+                            <label class="label">Departure Date</label>
+                            <input type="date" name = "departure_date" placeholder="date" id = "date"/>
+                            <label class="label">Arrival Date</label>
+                            <input type="date" name = "arrival_date" placeholder="date" id = "date"/> </br>
+                            <input type="submit" value = Search>
+                        </form>
+                    </div>
+                </div>
+                <div class="half-container"> 
+                    {% if error %}
+                                <div class="topbutton">
+                                    <div class='warning'>
+                                        {{error}}
+                                    </div>
+                                </div>
+                    {% else %}
+                        {% if not status %}
+                                        <div class='warning'>
+                                            Today's flights status
+                                        </div>
+                                    </br>
+                        {% endif %}
+                        {% if status_result %}
+                            <div class="topbutton">
+                                <div class="statusbar-container">
+                                    Airline / flight
+                                </div>
+                                <div class="statusbar-container">
+                                    Date / depart time
+                                </div>
+                                <div class="statusbar-container">
+                                    Status
+                                </div>
+                            </div>
+                        {% endif%}
+                            {% for line in status_result %}
+                                <section>
+                                    <div class="bluebutton">
+                                        <section class="bluebutton">
+                                            <div class="status-button-container1">
+                                                <div class="otherlabel">{{line[0]}}</div>
+                                            </br>
+                                                <div class="otherlabel">{{line[1]}}</div>
+                                            </div>
+                                            <div class="status-button-container">
+                                                <section class="otherlabel">{{line[4]}}</section>
+                                            </div>
+                                            <div class="status-button-container1">
+                                                {% if line[2] == 'Upcoming' %}
+                                                    <section class="upcominglabel">{{line[2]}}</section>
+                                                {% elif line[2] == 'In-progress' %}
+                                                    <section class="inprogresslabel">{{line[2]}}</section>
+                                                {% elif line[2] == 'Delayed' %}
+                                                    <section class="delayedlabel">{{line[2]}}</section>
+                                                {% elif line[2] == 'Canceled' %}
+                                                    <section class="canceledlabel">{{line[2]}}</section>
+                                                {% endif%}
+                                            </div> 
+                                        </section>
+                                    </div>
+                                </section>
+                            {% endfor%}
+                    {% endif %}
 
-
-        <div class="search-container" id="search-container">
-            <form action="/CheckStatus" onsubmit="return formValidation()" autocomplete="off" method="POST">
-                <label id="navbar__logo">Welcome! </br> You may check flight status here!</label> </br>
-                <label class="label">Flight Number</label>    </br>         
-                <input type="text" name = "flight_number" placeholder="flight number" required/> </br>
-<!--                <datalist id="flight-number">-->
-<!--                    {% for line in flight_number %}-->
-<!--                        <option value="{{line}}">-->
-<!--                    {% endfor %}-->
-<!--                </datalist>-->
-                <label class="label">Departure Date</label>
-                <input type="date" name = "departure_date" placeholder="date" id = "date"/>
-                <label class="label">Arrival Date</label>
-                <input type="date" name = "arrival_date" placeholder="date" id = "date"/> </br>
-                <input type="submit" value = Search>
-            </form>
-        </div>
-
-        {% if status_result %}
+                </div>
+            </div>
+        </section>
+        <!-- {% if status_result %}
             <div class="topbutton">
                 <div class="statusbar-container">
                     Airline / flight
@@ -115,12 +170,6 @@
                 <div class="statusbar-container">
                     Status
                 </div>
-                <!-- <div class="bar-container">
-                    Plane number
-                </div>
-                <div class="bar-container">
-                    buy
-                </div> -->
             </div>
         {% endif%}
         
@@ -161,7 +210,7 @@
                 </section>
             {% endfor%}
         {% endif %}
-
+ -->
 
 
 
@@ -188,7 +237,7 @@
                 return false;
             }
 
-            if (form_arrival_date && (!moment(form_departure_date, date_format, true).isValid())) {
+            if (form_arrival_date && (!moment(form_arrival_date, date_format, true).isValid())) {
                 alert("Arrival date is not valid. Support format: 'YYYY-MM-DD'");
                 return false;
             }
@@ -197,7 +246,15 @@
 
         }
 
-        
+        var header = document.getElementById("myDIV");
+        var btns = header.getElementsByClassName("navbar__links");
+        for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+        });
+        }
 
     </script>
 </html>

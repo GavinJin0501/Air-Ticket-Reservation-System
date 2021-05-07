@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript"></script>
+    </head>
+
+    <style>
+        tfoot {display: table-row-group;}
+    </style>
+    
+        <body>
+            <nav class="navbar">
+                <div class="navbar__container">
+                  {% if session["logged_in"] == True%}
+                        <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                        <div class="navbar__toggle" id="mobile-menu">
+                            <span class="bar"></span> <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                    {% else %}
+                        <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                        <div class="navbar__toggle" id="mobile-menu">
+                            <span class="bar"></span> <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                    {% endif%}
+                    <ul class="navbar__menu" id="myDIV">
+                                <li class="navbar__item">
+                                <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                                </li>
+                                <li class="navbar__item">
+                                <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                                </li>
+                      {% if session["logged_in"] == True%}
+                        {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
+                          <li class="navbar__item">
+                            <a href="/ViewMyFlights" class="navbar__links active" id="links">View My Flights</a>
+                          </li>
+                        {% endif %}
+                        {% if session.get("type", "guest") == "customer"%}
+                          <li class="navbar__item">
+                            <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                          </li>
+                        {% endif %}
+                        {% if session.get("type", "guest") == "booking_agent"%}
+                          <li class="navbar__item">
+                            <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
+                          </li>
+                          <li class="navbar__item">
+                            <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                          </li>
+                        {% endif %}
+                        {% if session.get("type", "guest") == "airline_staff"%}
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Management 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/CreateNewFlights">Create New Flights</a>
+                          <a href="/ChangeFlightStatus">Change Flights Status</a>
+                          <a href="/AddAirplane">Add Airplane</a>
+                          <a href="/AddAirport">Add Airport</a>
+                        </div>
+                      </div> 
+
+                      <div class="dropdown">
+                        <button class="dropbtn">Staff Views 
+                          <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                          <a href="/ViewAllBookingAgent">View Booking Agent</a>
+                          <a href="ViewFrequentCustomers">View Reports</a>
+                          <a href="ViewReports">View Frequent Customers</a>
+                          <a href="/ComparisonOfRevenueEarned">View Reports</a>
+                          <a href="/ViewTopDestinations">View Top Destinations</a>
+                        </div>
+                      </div> 
+
+                        {% endif %}
+                            <li class="navbar__btn">
+                            <a href="/logout" class="button" id="logout">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="navbar__btn">
+                            <a href="/login" class="button" id="login">Login</a>
+                            </li>
+                            <li class="navbar__btn">
+                                <a href="/register" class="button" id="sign-up">Register</a>
+                            </li>
+                        {% endif%}
+    
+                  </ul>
+                </div>
+            </nav>
+        </body>
+
+
+            <script>
+                
+                let info1 = {{ticket_month | safe}};
+                let info2 = {{ticket_year | safe}};
+                let info3 = {{commission_year | safe}};
+                let info = [];
+                for (i = 0; i < 5; i++) { 
+                var element = [];
+                element += [i];
+                element += info1[i];
+                element += info2[i];
+                element += info3[i];
+                info += [element]
+                }
+          
+                function generateTableHead(table, data) {
+                    let thead = table.createTHead();
+                    let row = thead.insertRow();
+                    for (let key of data) {
+                        let th = document.createElement("th");
+                        let text = document.createTextNode(key);
+                        th.appendChild(text);
+                        row.appendChild(th);
+                    }
+                }
+          
+                function generateTable(table, data) {
+                    for (let element of data) {
+                        let row = table.insertRow();
+                        for (key in element) {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                        }
+                    }
+                }
+          
+                function generateTableFoot(table, data) {
+                    let tfoot = table.createTFoot();
+                    let frow = tfoot.insertRow(0);
+                    for (let key of data) {
+                        let fth = document.createElement("th");
+                        let ftext = document.createTextNode(key);
+                        fth.appendChild(ftext);
+                        frow.appendChild(fth);
+                    }
+                }
+          
+                let table = document.querySelector("table");
+                let data = ["","Top tickets last month", "Top tickets last year", "Top commission last year"];
+                generateTable(table, info);
+                generateTableHead(table, data);
+            </script>

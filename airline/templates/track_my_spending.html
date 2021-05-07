@@ -112,7 +112,7 @@
                     <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
                   </li>
                   <li class="navbar__item">
-                    <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                    <a href="/TrackMySpending" class="navbar__links active" id="links">Track My Spending</a>
                   </li>
                   {% endif %}
                   {% if session["logged_in"] == True%}
@@ -184,6 +184,15 @@
                 return false;
             }
             return true;
+        }
+        var header = document.getElementById("myDIV");
+        var btns = header.getElementsByClassName("navbar__links");
+        for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        this.className += " active";
+        });
         }
     </script>
 

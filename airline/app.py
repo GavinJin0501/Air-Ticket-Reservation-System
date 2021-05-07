@@ -104,6 +104,7 @@ def check_flight_status():
         flight_num = request.form.get("flight_num", "")
         departure_date = request.form.get("departure_date", "")
         arrival_date = request.form.get("arrival_date", "")
+        print(flight_num, departure_date, arrival_date)
 
         flight_status_ans = db_utils.get_flight_status(conn, flight_num, departure_date, arrival_date)
         error = ""
@@ -111,7 +112,7 @@ def check_flight_status():
         if not flight_status_ans:
             error = "No such a flight at the given time!"
             status = False
-        print(flight_status_ans)
+        # print(flight_status_ans)
         return render_template("check_status.html", status=status, error=error, status_result=flight_status_ans)
 
 
@@ -396,7 +397,7 @@ def view_all_booking_agent():
 
     if request.method == "GET":
         ticket_month, ticket_year, commission_year = db_utils.view_booking_agents(conn)
-        return render_template("view_all_booking_agent", ticket_month=ticket_month, ticket_year=ticket_year, commission_year=commission_year)
+        return render_template("view_all_booking_agent.html", ticket_month=ticket_month, ticket_year=ticket_year, commission_year=commission_year)
 
 # ======================================================================================
 

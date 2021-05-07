@@ -149,6 +149,7 @@
     color: #fff;
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: center;
     width: 170px;
     text-decoration: none;
@@ -232,7 +233,7 @@
     text-decoration: none;
     padding: 8px 10px;
     border: none;
-    margin: 10px;
+    margin: 0;
     width: 100%;
     height: 50px;
     outline: none;
@@ -419,8 +420,8 @@
   }
 
 
-  .navbar__item:active {
-    color: #a8b2dd;
+  .active {
+    background-color: #a8b2dd;
     transition: all 0.3s ease;
   } 
 
@@ -479,6 +480,33 @@
     width: 350px;
     max-width: 2000px;
     margin: 50px auto;
+    padding: 0 50px;
+  }
+
+  .half-container {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    z-index: 1;
+    /* width: 35%; */
+    width: 600px;
+    max-width: 2000px;
+    margin: 0;
+    padding: 0 50px;
+  }
+
+  .full-container {
+    /* display: flex; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    z-index: 1;
+    /* width: 35%; */
+    width: 1500px;
+    max-width: 2000px;
+    margin: 0;
     padding: 0 50px;
   }
 
@@ -762,7 +790,7 @@
     border: none;
     outline: none;
     color: white;
-    padding: 14px 16px;
+    padding: 14px 30px;
     background-color: inherit;
     font-family: inherit;
     margin: 0;
