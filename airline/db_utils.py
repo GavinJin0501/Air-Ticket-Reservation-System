@@ -511,7 +511,7 @@ def view_booking_agents(conn):
                FROM top_agents_commission AS t1
                WHERE 4 >= (
                     SELECT COUNT(DISTINCT t2.amount_of_commission)
-                    FROM top_agents_comission AS t2
+                    FROM top_agents_commission AS t2
                     WHERE t2.amount_of_commission > t1.amount_of_commission
                )"""
     cursor.execute(query)
