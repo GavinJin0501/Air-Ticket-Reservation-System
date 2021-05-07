@@ -341,7 +341,7 @@ def change_status_of_flight():
         return render_template("ChangeFlightStatus.html", status=False, error="")
     elif request.method == "POST":
         flight_num = request.form["flight_num"]
-        new_status = request.form["status"]
+        new_status = request.form.get("status")
         status, error = db_utils.change_flight_status(conn, flight_num, new_status)
         return render_template("ChangeFlightStatus.html", status=status, error=error)
 
