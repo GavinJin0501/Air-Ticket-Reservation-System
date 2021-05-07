@@ -129,6 +129,32 @@
             }
         }
 
+        function generateStaffTable(table, data) {
+            for (let element of data) {
+                let row = table.insertRow();
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[0]);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(element[1]);
+                a.appendChild(linkText);
+                // a.title = "my title text";
+                a.href = "http://baidu.com";
+                cell.appendChild(a);
+
+                // let text = document.createTextNode(data[1][key]);
+                // cell.appendChild(text);
+                for (let i=2; i<element.length;i++) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(element[i]);
+                    cell.appendChild(text);
+                }
+            }
+        }
+
+
         function generateTableFoot(table, data) {
             let tfoot = table.createTFoot();
             let frow = tfoot.insertRow(0);
@@ -142,7 +168,13 @@
 
         let table = document.querySelector("table");
         let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
-        generateTable(table, info);
+        let sessions = "{{session['type']}}"
+        if (sessions == "airline_staff") {
+            generateStaffTable(table, info);
+        } 
+        else {
+            generateTable(table, info);
+        }
         generateTableFoot(table, data);
         generateTableHead(table, data);
         

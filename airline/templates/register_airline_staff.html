@@ -34,13 +34,13 @@
 
 
     <div class="register-container" id="register-container">
-        <form action="/register/booking_agent" autocomplete="off" onsubmit="return formValidation()" method="POST">
+        <form action="/register/airline_staff" autocomplete="off" onsubmit="return formValidation()" method="POST">
             <label id="navbar__logo">Welcome to B-Air, ariline staff!</label>
             <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Username</label> </br>
-                        <input type="text" id = "em" name = "username" placeholder="username" required/> </br>
+                        <input type="text" id = "em" name = "username" placeholder="email" required/> </br>
                         <label class="label"> Password</label> </br>
                         <input type="text" id = "pword" name = "password" placeholder="password" required/> </br>
                     </div>
@@ -61,7 +61,7 @@
                     <div class="smaller-container">
                         </br>
                         <input type="submit" value = Register />
-                        <a href="/login/booking_agent" class="navbar__links__long" id="register-booking_agent">Already have an account? Login</a></br>
+                        <a href="/login/airline_staff" class="navbar__links__long" id="register-airline_staff">Already have an account? Login</a></br>
                         <!-- </div> -->
                         <!-- <label class="label">Confirm Password</label> </br>
                         <input type="text" id = "cpword" name = "confirm_password" placeholder="confirm password" required/> </br> -->
@@ -129,6 +129,14 @@
 
 <!-- if account already exist -->
             <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+
+            {% if error %}
+				<div class="topbutton">
+					<div class='warning'>
+						{{error}}
+					</div>
+				</div>
+            {% endif %}
         </form>
     </div>
 
@@ -154,10 +162,10 @@
         var form_usn, form_pn, form_pw, form_cpw;
 
         form_usn = document.getElementsByName("username")[0].value;
-        form_pn = document.getElementsByName("phone_number")[0].value;
-        form_pw = document.getElementsByName("password")[0].value;
-        form_cpw = document.getElementsByName("confirm_password")[0].value;
-        form_px = document.getElementsByName("passport_expiration")[0].value;
+        // form_pn = document.getElementsByName("phone_number")[0].value;
+        // form_pw = document.getElementsByName("password")[0].value;
+        // form_cpw = document.getElementsByName("confirm_password")[0].value;
+        // form_px = document.getElementsByName("passport_expiration")[0].value;
         form_dob = document.getElementsByName("date_of_birth")[0].value;
 
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -181,10 +189,10 @@
         //     return false;
         // }
 
-        // if ((form_dob >= today) || (form_dob < pastest)) {
-        //     alert("Date of birth invalid!");
-        //     return false;
-        // }
+        if ((form_dob >= today) || (form_dob < pastest)) {
+            alert("Date of birth invalid!");
+            return false;
+        }
 
         // if (!moment(form_px, date_format, true).isValid()) {
         //     alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
