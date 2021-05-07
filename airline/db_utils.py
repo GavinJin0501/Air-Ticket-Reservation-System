@@ -434,11 +434,12 @@ def change_flight_status(conn, flight_num, status):
         return False, "Flight %s does not exist!" % flight_num
     elif data[0][1] == status:
         cursor.close()
-        return False, "Flight %s has the status \'%s\'. Don't need to change" % flight_num, status
+        return False, "Flight %s has the status \'%s\'. Don't need to change" % (flight_num, status)
 
-    query = """ALTER TABLE flight
+    query = """UPDATE flight
                SET status = \'%s\'
                WHERE flight_num = \'%s\'""" % (status, flight_num)
+    print(query)
     cursor.execute(query)
     conn.commit()
     cursor.close()
