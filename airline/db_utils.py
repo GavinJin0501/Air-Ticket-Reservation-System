@@ -413,7 +413,7 @@ def create_new_flight(conn, info):
 
     query = """INSERT INTO flight
                VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %d, \'%s\')
-            """ % (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"], info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["airplane_id"])
+            """ % (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"], info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["plane_id"])
     cursor.execute(query)
     conn.commit()
     cursor.close()
