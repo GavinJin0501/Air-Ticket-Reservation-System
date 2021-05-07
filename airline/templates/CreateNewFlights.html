@@ -85,7 +85,7 @@
 
 
         <div class="register-container" id="register-container">
-          <form action="/register/customer" autocomplete="off" onsubmit="return formValidation()" method="POST">
+          <form action="/CreateNewFlights" autocomplete="off" onsubmit="return formValidation()" method="POST">
               <label id="navbar__logo">Create new flights here</label>
               <section>
                   <div class="bluebutton">
@@ -99,7 +99,7 @@
                           <label class="label"> Flight Num</label> </br>
                           <input type="text" id = "pword" name = "flight_num" placeholder="flight num" required/> </br>
                           <label class="label">Departure Time</label> </br>
-                          <input type="text" id = "cpword" name = "departure_time" placeholder="departure time" required/> </br>
+                          <input type="time" id = "cpword" name = "departure_time" style = "height: 50px; margin: 10px; width: 260px; font-size:25px; text-align: center;" placeholder="departure time" required/> </br>
                       </div>
                   </div>
               </section>
@@ -114,9 +114,15 @@
                       </div>
                       <div class="smaller-container">
                           <label class="label">Arrival Time</label> </br>
-                          <input type="text" id = "ct" name = "arrival_time" placeholder="arrival time" required/> </br>
+                          <input type="time" id = "ct" name = "arrival_time" placeholder="arrival time" style = "height: 50px; margin: 10px; width: 260px; font-size:25px; text-align: center;" required/> </br>
                           <label class="label">Status</label> </br>
-                          <input type="text" id = "sta" name = "status" placeholder="status" required/> </br>
+                          <!-- <input type="text" id = "sta" name = "status" placeholder="status" required/> </br> -->
+                          <select name="status" id="status" style="font-size: 18px; height: 50px; width: 260px; margin: 10px;">
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="In-progress">In-progress</option>
+                            <option value="Delayed">Delayed</option>
+                            <option value="Canceled">Canceled</option>
+                          </select>
                       </div>
                   </div>
               </section>

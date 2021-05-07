@@ -497,15 +497,16 @@
             {% endif %}
              </br></br>
             <input type="submit" value = Confirm />
-            {% if error %}
-                    <div class="topbutton">
-                        <div class='warning'>
-                            {{error}}
-                        </div>
-                    </div>
-            {% endif %}
         </form>
     </div>
+    
+    {% if error %}
+    <div class="topbutton">
+        <div class='warning'>
+            {{error}}
+        </div>
+    </div>
+{% endif %}
 
 </body>
 <script type="text/javascript">
