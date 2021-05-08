@@ -419,10 +419,10 @@ def create_new_flight(conn, info):
     return True, ""
 
 
-def change_flight_status(conn, flight_num, status):
-    cursor = conn.cursor()
-    query = """SELECT flight_num, status FROM flight WHERE flight_num = \'%s\'""" % flight_num
-    cursor.execute(query)
+def change_flight_status(conn, flight_num, status, airline_name):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT flight_num, status FROM flight WHERE flight_num = %s AND airline_name = %s"""
+    cursor.execute(query, (flight_num, airline_name))
     data = cursor.fetchall()
     if not data:
         cursor.close()
@@ -432,10 +432,10 @@ def change_flight_status(conn, flight_num, status):
         return False, "Flight %s has the status \'%s\'. Don't need to change" % (flight_num, status)
 
     query = """UPDATE flight
-               SET status = \'%s\'
-               WHERE flight_num = \'%s\'""" % (status, flight_num)
-    print(query)
-    cursor.execute(query)
+               SET status = %s
+               WHERE flight_num = %s AND airline_name = %s"""
+    # print(query)
+    cursor.execute(query, (status, flight_num, airline_name))
     conn.commit()
     cursor.close()
     return True, ""
@@ -546,3 +546,20 @@ def view_most_frequent_customer(conn, start_date, end_date):
 
     return most_customer
 
+
+def get_customer_flight(conn, customer_email, airline_name):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
+               FROM purchases NATURAL JOIN ticket NATURAL JOIN flight
+               WHERE customer_email = %s AND airline_name = %s"""
+    print(query)
+    cursor.execute(query, (customer_email, airline_name))
+    data = cursor.fetchall()
+    cursor.close()
+    for i in range(len(data)):
+        data[i] = list(data[i])
+    return data
+
+def view_reports(conn, airline_name, start_date, end_date):
+    cursor = conn.cursor()
+    pass

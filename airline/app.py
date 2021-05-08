@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'some key that you will never guess'
 conn = mysql.connector.connect(host='localhost',
                                user='root',
-                               password='bbbb',
+                               password='',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
@@ -62,7 +62,6 @@ def get_each_month(month_wise, start_year, start_month, end_year, end_month, sta
                         ["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month + 1), 0])
             start_month += 1
         month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
-
 
 # ======================================================================================
 
@@ -354,7 +353,7 @@ def change_status_of_flight():
     elif request.method == "POST":
         flight_num = request.form["flight_num"]
         new_status = request.form.get("status")
-        status, error = db_utils.change_flight_status(conn, flight_num, new_status)
+        status, error = db_utils.change_flight_status(conn, flight_num, new_status, session["airline"])
         return render_template("ChangeFlightStatus.html", status=status, error=error)
 
 
@@ -421,17 +420,46 @@ def view_frequent_customers():
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
+    start_date = datetime.today().strftime("%Y-%m-%d")
+    end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
+    most_customer = db_utils.view_most_frequent_customer(conn, end_date, start_date)
     if request.method == "GET":
-        start_date = datetime.today().strftime("%Y-%m-%d")
-        end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-        most_customer = db_utils.view_most_frequent_customer(conn, end_date, start_date)
         print(most_customer)
         return render_template("ViewFrequentCustomers.html", most_customer=most_customer)
     elif request.method == "POST":
-        pass
+        customer_email = request.form["customer_email"]
+        customer_flights = db_utils.get_customer_flight(conn, customer_email, session["airline"])
+        return render_template("ViewFrequentCustomers.html", most_customer=most_customer, customer_flights=customer_flights)
 
 
 @app.route('/ViewReports', methods=["GET", "POST"])
+def view_reports():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    month_wise = []
+
+    if request.method == "GET":
+        TODAY = datetime.today()
+        THIS_YEAR, PAST_YEAR, THIS_MONTH = TODAY.year, TODAY.year - 1, TODAY.month
+        month_wise.append(["%d-%02d-01" % (THIS_YEAR, THIS_MONTH), TODAY.strftime("%Y-%m-%d"), 0])
+        for i in range(1, 6):
+            if THIS_MONTH - i > 0:
+                temp = ["%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
+            elif THIS_MONTH - i + 1 > 0:
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)),
+                        "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
+            else:
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)),
+                        "%d-%02d-01" % (THIS_YEAR, 12 + (THIS_MONTH - i + 1)), 0]
+            month_wise.append(temp)
+        print(month_wise)
+        reports = db_utils.view_reports(conn, session["airline"], month_wise[-1][0], TODAY.strftime("%Y-%m-%d"))
+
 # ======================================================================================
 
 # Login functions:
