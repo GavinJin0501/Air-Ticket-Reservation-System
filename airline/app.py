@@ -63,6 +63,7 @@ def get_each_month(month_wise, start_year, start_month, end_year, end_month, sta
             start_month += 1
         month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
 
+
 # ======================================================================================
 
 
@@ -422,14 +423,15 @@ def view_frequent_customers():
 
     start_date = datetime.today().strftime("%Y-%m-%d")
     end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-    most_customer = db_utils.view_most_frequent_customer(conn, end_date, start_date)
+    most_customer, others = db_utils.view_most_frequent_customer(conn, end_date, start_date, session["airline"])
+    print(most_customer, others)
     if request.method == "GET":
-        print(most_customer)
-        return render_template("ViewFrequentCustomers.html", most_customer=most_customer)
+        return render_template("ViewFrequentCustomers.html", most_customer=most_customer, others=others)
     elif request.method == "POST":
         customer_email = request.form["customer_email"]
         customer_flights = db_utils.get_customer_flight(conn, customer_email, session["airline"])
-        return render_template("ViewFrequentCustomers.html", most_customer=most_customer, customer_flights=customer_flights)
+        return render_template("ViewFrequentCustomers.html", most_customer=most_customer, others=others,
+                               customer_flights=customer_flights)
 
 
 @app.route('/ViewReports', methods=["GET", "POST"])
@@ -459,6 +461,7 @@ def view_reports():
             month_wise.append(temp)
         print(month_wise)
         reports = db_utils.view_reports(conn, session["airline"], month_wise[-1][0], TODAY.strftime("%Y-%m-%d"))
+
 
 # ======================================================================================
 

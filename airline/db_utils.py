@@ -525,23 +525,48 @@ def view_booking_agents(conn):
     return ticket_month, ticket_year, commission_year
 
 
-def view_most_frequent_customer(conn, start_date, end_date):
-    cursor = conn.cursor()
+def view_most_frequent_customer(conn, start_date, end_date, airline_name):
+    cursor = conn.cursor(prepared=True)
     query = """SELECT customer_email, COUNT(ticket_id)
-               FROM purchases
-               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
+               FROM purchases NATURAL JOIN ticket
+               WHERE purchase_date BETWEEN %s AND %s AND airline_name = %s
                GROUP BY customer_email
                HAVING COUNT(ticket_id) >= ALL (SELECT COUNT(ticket_id)
                                                FROM purchases
-                                               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
+                                               WHERE purchase_date BETWEEN %s AND %s
                                                GROUP BY customer_email)
-            """ % (start_date, end_date, start_date, end_date)
-    print(query)
-    cursor.execute(query)
+            """
+
+    cursor.execute(query, (start_date, end_date, airline_name, start_date, end_date))
     most_customer = cursor.fetchall()
+
+    query = """SELECT COUNT(ticket_id)
+               FROM purchases NATURAL JOIN ticket
+               WHERE purchase_date BETWEEN %s AND %s AND airline_name = %s"""
+    cursor.execute(query, (start_date, end_date, airline_name))
+    others = cursor.fetchall()
     cursor.close()
 
     for i in range(len(most_customer)):
         most_customer[i] = list(most_customer[i])
+    others[0] = list(others[0])
+    return most_customer, others
 
-    return most_customer
+
+def get_customer_flight(conn, customer_email, airline_name):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
+               FROM purchases NATURAL JOIN ticket NATURAL JOIN flight
+               WHERE customer_email = %s AND airline_name = %s"""
+    print(query)
+    cursor.execute(query, (customer_email, airline_name))
+    data = cursor.fetchall()
+    cursor.close()
+    for i in range(len(data)):
+        data[i] = list(data[i])
+    return data
+
+
+def view_reports(conn, airline_name, start_date, end_date):
+    cursor = conn.cursor()
+    pass
