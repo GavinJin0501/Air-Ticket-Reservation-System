@@ -46,11 +46,9 @@
       // draws it.
       function drawChart() {
         let info = {{month_wise | safe}}
-        let amount = {{total_amount}}
-        var n = amount.toString()
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
-        data.addColumn('number', 'Spending');
+        data.addColumn('number', 'Tickets');
         data.addRows(info);
         // data.clearChart();
 

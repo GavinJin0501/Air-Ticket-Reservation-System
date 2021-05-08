@@ -468,6 +468,9 @@ def view_reports():
                     break
         print(reports)
         print(month_wise)
+        for i in range(len(month_wise)):
+            month_wise[i] = [month_wise[i][0]+" -> "+month_wise[i][1], month_wise[i][2]]
+
         return render_template("ViewReports.html", month_wise=month_wise)
 
     elif request.method == "POST":
@@ -486,6 +489,8 @@ def view_reports():
                     break
         print(reports)
         print(month_wise)
+        for i in range(len(month_wise)):
+            month_wise[i] = [month_wise[i][0]+" -> "+month_wise[i][1], month_wise[i][2]]
         return render_template("ViewReports.html", month_wise=month_wise)
 
 
