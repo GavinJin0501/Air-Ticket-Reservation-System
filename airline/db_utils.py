@@ -208,16 +208,16 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     cursor = conn.cursor(prepared=True)
     query = """SELECT COUNT(ticket_id) 
                FROM ticket 
-               WHERE flight_num = \'%s\'""" % flight_num
+               WHERE flight_num = %s"""
     # print(query)
-    cursor.execute(query)
+    cursor.execute(query, (flight_num, ))
     ticket_num = cursor.fetchall()
     ticket_num = ticket_num[0][0] if ticket_num else 0
     query = """SELECT seats 
                FROM airplane NATURAL JOIN flight 
-               WHERE flight_num = \'%s\'""" % flight_num
+               WHERE flight_num = %s"""
     # print(query)
-    cursor.execute(query)
+    cursor.execute(query, (flight_num, ))
     seat_num = cursor.fetchall()
     seat_num = seat_num[0][0] if seat_num else 0
     # print(ticket_num, seat_num)
@@ -226,10 +226,9 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
 
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")
-    t = (ticket_id, airline_name, flight_num)
     query = """INSERT INTO ticket
                VALUES (%s, %s, %s)"""
-    cursor.execute(query, t)
+    cursor.execute(query, (ticket_id, airline_name, flight_num))
     # conn.commit()
 
     if identity == "customer":
@@ -239,8 +238,8 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     else:
         query = """SELECT booking_agent_id
                    FROM booking_agent
-                   WHERE email = \'%s\'""" % agent_email
-        cursor.execute(query)
+                   WHERE email = %s"""
+        cursor.execute(query, (agent_email,))
         agent_id = cursor.fetchall()[0][0]
         query = """INSERT INTO purchases
                    VALUES (%s, %s, %s, %s)"""
@@ -486,20 +485,16 @@ def view_booking_agents(conn):
                         GROUP BY email
                    )"""
     cursor.execute(view_query1 % PAST_MONTH)
-    query = """SELECT *
-               FROM top_agents_ticket AS t1
-               WHERE 4 >= (
-                    SELECT COUNT(DISTINCT t2.num_of_ticket)
-                    FROM top_agents_ticket AS t2
-                    WHERE t2.num_of_ticket > t1.num_of_ticket
-               )
-               ORDER BY t1.num_of_ticket DESC"""
-    cursor.execute(query)
-    ticket_month = cursor.fetchall()
+    cursor.callproc("GetTopAgentsTicket")
+    ticket_month = []
+    for result in cursor.stored_results():
+        ticket_month = result.fetchall()
 
     cursor.execute(view_query1 % PAST_YEAR)
-    cursor.execute(query)
-    ticket_year = cursor.fetchall()
+    cursor.callproc("GetTopAgentsTicket")
+    ticket_year = []
+    for result in cursor.stored_results():
+        ticket_year = result.fetchall()
 
     view_query2 = """CREATE OR REPLACE VIEW top_agents_commission AS (
                         SELECT email, SUM(price * 0.1) AS amount_of_commission
@@ -508,17 +503,12 @@ def view_booking_agents(conn):
                         GROUP BY email
                    )"""
     cursor.execute(view_query2 % PAST_YEAR)
-    query = """SELECT *
-               FROM top_agents_commission AS t1
-               WHERE 4 >= (
-                    SELECT COUNT(DISTINCT t2.amount_of_commission)
-                    FROM top_agents_commission AS t2
-                    WHERE t2.amount_of_commission > t1.amount_of_commission
-               )
-               ORDER BY t1.amount_of_commission DESC"""
-    cursor.execute(query)
-    commission_year = cursor.fetchall()
+    cursor.callproc("GetTopAgentsCommission")
+    commission_year = []
+    for result in cursor.stored_results():
+        commission_year = result.fetchall()
     cursor.close()
+
     for i in range(len(ticket_month)):
         ticket_month[i] = list(ticket_month[i])
         ticket_month[i][1] = int(ticket_month[i][1])
@@ -527,6 +517,31 @@ def view_booking_agents(conn):
         ticket_year[i][1] = int(ticket_year[i][1])
     for i in range(len(commission_year)):
         commission_year[i] = list(commission_year[i])
-        commission_year[i][1] = int(commission_year[i][1])
+        if commission_year[i][1]:
+            commission_year[i][1] = float(commission_year[i][1])
+        else:
+            commission_year[i][1] = 0
 
     return ticket_month, ticket_year, commission_year
+
+
+def view_most_frequent_customer(conn, start_date, end_date):
+    cursor = conn.cursor()
+    query = """SELECT customer_email, COUNT(ticket_id)
+               FROM purchases
+               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
+               GROUP BY customer_email
+               HAVING COUNT(ticket_id) >= ALL (SELECT COUNT(ticket_id)
+                                               FROM purchases
+                                               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
+                                               GROUP BY customer_email)
+            """ % (start_date, end_date, start_date, end_date)
+    cursor.execute(query)
+    most_customer = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(most_customer)):
+        most_customer[i] = list(most_customer[i])
+
+    return most_customer
+

@@ -36,6 +36,34 @@ def logged_in_redirect():
         return redirect(url_for("search_flight"))
 
 
+def get_each_month(month_wise, start_year, start_month, end_year, end_month, start_date, end_date):
+    if start_year == end_year and start_month == end_month:
+        month_wise.append([start_date, end_date, 0])
+    else:
+        if start_month == 12:
+            start_year += 1
+            start_month = 0
+        month_wise.append([start_date, "%d-%02d-01" % (start_year, start_month + 1), 0])
+        start_month += 1
+        while start_year <= end_year:
+            if start_year == end_year:
+                if start_month >= end_month:
+                    break
+                else:
+                    month_wise.append(
+                        ["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month + 1), 0])
+            else:
+                if start_month == 12:
+                    month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year + 1, 1), 0])
+                    start_year += 1
+                    start_month = 0
+                else:
+                    month_wise.append(
+                        ["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month + 1), 0])
+            start_month += 1
+        month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
+
+
 # ======================================================================================
 
 
@@ -96,7 +124,7 @@ def check_flight_status():
 
     if request.method == "GET":
         today = datetime.now().strftime("%Y-%m-%d")
-        #today = "2021-05-01"
+        # today = "2021-05-01"
         recent_flight_status = db_utils.get_flight_status(conn, "", today, "")
         print(recent_flight_status)
         return render_template("check_status.html", status=False, error="", status_result=recent_flight_status)
@@ -152,7 +180,8 @@ def purchase_confirm(airline_name, flight_num):
 
     if request.method == "GET":
         # print(airline_name, flight_num)
-        return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name, flight_num=flight_num)
+        return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name,
+                               flight_num=flight_num)
     elif request.method == "POST":
         # print(airline_name, flight_num)
         identity = session["type"]
@@ -169,7 +198,8 @@ def purchase_confirm(airline_name, flight_num):
         else:
             print("purchase fail")
             error = "No ticket! This flight is full!"
-            return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name, flight_num=flight_num, error=error)
+            return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name,
+                                   flight_num=flight_num, error=error)
 
 
 @app.route('/TrackMySpending', methods=["GET", "POST"])
@@ -182,7 +212,7 @@ def track_my_spending():
         return redirect(url_for("home"))
 
     total_amount = 0
-    month_wise = []     # List of lists: [[start_date, end_date, money], .......]
+    month_wise = []  # List of lists: [[start_date, end_date, money], .......]
 
     if request.method == "GET":
         TODAY = datetime.today()
@@ -191,15 +221,19 @@ def track_my_spending():
         month_wise.append(["%d-%02d-01" % (THIS_YEAR, THIS_MONTH), TODAY.strftime("%Y-%m-%d"), 0])
         for i in range(1, 6):
             if THIS_MONTH - i > 0:
-                temp = ["%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH-i+1), 0]
+                temp = ["%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
             elif THIS_MONTH - i + 1 > 0:
-                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)), "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)),
+                        "%d-%02d-01" % (THIS_YEAR, THIS_MONTH - i + 1), 0]
             else:
-                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)), "%d-%02d-01" % (THIS_YEAR, 12 + (THIS_MONTH - i + 1)), 0]
+                temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)),
+                        "%d-%02d-01" % (THIS_YEAR, 12 + (THIS_MONTH - i + 1)), 0]
             month_wise.append(temp)
 
-        total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], PAST.strftime("%Y-%m-%d"), TODAY.strftime("%Y-%m-%d"))
-        my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], month_wise[-1][0], month_wise[0][1])
+        total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], PAST.strftime("%Y-%m-%d"),
+                                                              TODAY.strftime("%Y-%m-%d"))
+        my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], month_wise[-1][0],
+                                                               month_wise[0][1])
         print(my_spendings)
         print(total_amount)
         print(month_wise)
@@ -211,7 +245,7 @@ def track_my_spending():
                     break
 
         for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0]+" - "+month_wise[i][1], month_wise[i][2]]
+            month_wise[i] = [month_wise[i][0] + " - " + month_wise[i][1], month_wise[i][2]]
 
         return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
 
@@ -221,31 +255,8 @@ def track_my_spending():
         # print(start_date, end_date)
         start_year, start_month = int(start_date[:4]), int(start_date[5:7])
         end_year, end_month = int(end_date[:4]), int(end_date[5:7])
-        # print(start_year, start_month, end_year, end_month)
 
-        if start_year == end_year and start_month == end_month:
-            month_wise.append(["%d-%02d-01" % (start_year, start_month), end_date, 0])
-        else:
-            if start_month == 12:
-                start_year += 1
-                start_month = 0
-            month_wise.append([start_date, "%d-%02d-01" % (start_year, start_month+1), 0])
-            start_month += 1
-            while start_year <= end_year:
-                if start_year == end_year:
-                    if start_month >= end_month:
-                        break
-                    else:
-                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
-                else:
-                    if start_month == 12:
-                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year+1, 1), 0])
-                        start_year += 1
-                        start_month = 0
-                    else:
-                        month_wise.append(["%d-%02d-01" % (start_year, start_month), "%d-%02d-01" % (start_year, start_month+1), 0])
-                start_month += 1
-            month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
+        get_each_month(month_wise, start_year, start_month, end_year, end_month, start_date, end_date)
         print(month_wise)
 
         total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], start_date, end_date)
@@ -397,10 +408,30 @@ def view_all_booking_agent():
 
     if request.method == "GET":
         ticket_month, ticket_year, commission_year = db_utils.view_booking_agents(conn)
-        return render_template("view_all_booking_agent.html", ticket_month=ticket_month, ticket_year=ticket_year, commission_year=commission_year)
+        return render_template("view_all_booking_agent.html", ticket_month=ticket_month, ticket_year=ticket_year,
+                               commission_year=commission_year)
 
+
+@app.route('/ViewFrequentCustomers', methods=["GET", "POST"])
+def view_frequent_customers():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        start_date = datetime.today().strftime("%Y-%m-%d")
+        end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
+        most_customer = db_utils.view_most_frequent_customer(conn, start_date, end_date)
+        return render_template("ViewFrequentCustomers.html", most_customer=most_customer)
+    elif request.method == "POST":
+        pass
+
+
+@app.route('/ViewReports', methods=["GET", "POST"])
 # ======================================================================================
-
 
 # Login functions:
 # ======================================================================================
@@ -518,7 +549,6 @@ def logout():
 # @app.errorhandler(404)
 # def not_found(e):
 #     return render_template("not_found.html"), 404
-
 
 
 # ======================================================================================
