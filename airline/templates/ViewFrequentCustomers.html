@@ -177,20 +177,3 @@
 
 
 
-def get_customer_flight(conn, customer_email, airline_name):
-    cursor = conn.cursor(prepared=True)
-    query = """SELECT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
-               FROM purchases NATURAL JOIN ticket NATURAL JOIN flight
-               WHERE customer_email = %s AND airline_name = %s"""
-    print(query)
-    cursor.execute(query, (customer_email, airline_name))
-    data = cursor.fetchall()
-    cursor.close()
-    for i in range(len(data)):
-        data[i] = list(data[i])
-    return data
-
-
-def view_reports(conn, airline_name, start_date, end_date):
-    cursor = conn.cursor()
-    pass
