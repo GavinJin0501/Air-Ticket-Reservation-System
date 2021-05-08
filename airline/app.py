@@ -459,9 +459,34 @@ def view_reports():
                 temp = ["%d-%02d-01" % (PAST_YEAR, 12 + (THIS_MONTH - i)),
                         "%d-%02d-01" % (THIS_YEAR, 12 + (THIS_MONTH - i + 1)), 0]
             month_wise.append(temp)
-        print(month_wise)
-        reports = db_utils.view_reports(conn, session["airline"], month_wise[-1][0], TODAY.strftime("%Y-%m-%d"))
 
+        reports = db_utils.view_reports(conn, session["airline"], month_wise[-1][0], TODAY.strftime("%Y-%m-%d"))
+        for i in reports:
+            for j in month_wise:
+                if j[0] < i[1] <= j[1]:
+                    j[2] += 1
+                    break
+        print(reports)
+        print(month_wise)
+        return render_template("ViewReports.html", month_wise=month_wise)
+    
+    elif request.method == "POST":
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
+        start_year, start_month = int(start_date[:4]), int(start_date[5:7])
+        end_year, end_month = int(end_date[:4]), int(end_date[5:7])
+
+        get_each_month(month_wise, start_year, start_month, end_year, end_month, start_date, end_date)
+
+        reports = db_utils.view_reports(conn, session["airline"], start_date, end_date)
+        for i in reports:
+            for j in month_wise:
+                if j[0] < i[1] <= j[1]:
+                    j[2] += 1
+                    break
+        print(reports)
+        print(month_wise)
+        return render_template("ViewReports.html", month_wise=month_wise)
 
 # ======================================================================================
 

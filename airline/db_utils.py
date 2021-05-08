@@ -273,7 +273,7 @@ def get_my_spendings_certain_range(conn, email, start_date, end_date):
                 FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
                 WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
             """ % (email, start_date, end_date)
-    # print(query)
+    print(query)
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
@@ -570,5 +570,15 @@ def get_customer_flight(conn, customer_email, airline_name):
 
 
 def view_reports(conn, airline_name, start_date, end_date):
-    cursor = conn.cursor()
-    pass
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT ticket_id, purchase_date
+               FROM purchases NATURAL JOIN ticket
+               WHERE airline_name = %s AND purchase_date BETWEEN %s AND %s"""
+    cursor.execute(query, (airline_name, start_date, end_date))
+    data = cursor.fetchall()
+    cursor.close()
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i][1] = data[i][1].strftime("%Y-%m-%d")
+    return data
+
