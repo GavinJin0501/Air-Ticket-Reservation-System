@@ -68,7 +68,7 @@
   #exa {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 500px;
+    width: 800px;
     justify-content: center;
     align-items: center;
     margin: auto;
@@ -81,6 +81,8 @@
   }
   
   #exa tr:nth-child(odd){background-color: #f2f2f2;}
+
+  #exa tr:nth-child(even){background-color: #fff;}
   
   /* #exa tr:hover {background-color: #ddd;} */
   
@@ -508,13 +510,13 @@
     /* display: flex; */
     justify-content: center;
     align-items: center;
-    height: 600px;
+    height: 500px;
     background-color: #a8b2dd;
     z-index: 1;
     /* width: 35%; */
     width: 50%;
     max-width: 2000px;
-    margin: 100px;
+    margin: 50px;
     padding: 0;
     overflow: scroll;
   }
@@ -529,7 +531,7 @@
     width: 450px;
     max-width: 2000px;
     margin: 30px auto;
-    padding: 0 50px;
+    padding: 0 10px;
   }
 
   .full-container {
@@ -537,7 +539,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 700px;
+    height: auto;
     z-index: 1;
     /* width: 35%; */
     width: 100%;
