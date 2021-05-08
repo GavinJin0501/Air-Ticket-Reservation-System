@@ -816,6 +816,7 @@
     font-family: inherit;
     margin: 0;
     width: 150px;
+    height: 80px;
   }
   
   .dropdown:hover .dropbtn {
