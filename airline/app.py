@@ -469,7 +469,7 @@ def view_reports():
         print(reports)
         print(month_wise)
         return render_template("ViewReports.html", month_wise=month_wise)
-    
+
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
@@ -487,6 +487,7 @@ def view_reports():
         print(reports)
         print(month_wise)
         return render_template("ViewReports.html", month_wise=month_wise)
+
 
 # ======================================================================================
 
