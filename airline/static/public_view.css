@@ -498,9 +498,9 @@
     background-color: #a8b2dd;
     z-index: 1;
     /* width: 35%; */
-    width: 450px;
+    width: 50%;
     max-width: 2000px;
-    margin: 50px;
+    margin: 100px;
     padding: 0;
   }
 
@@ -525,7 +525,7 @@
     height: 700px;
     z-index: 1;
     /* width: 35%; */
-    width: 1400px;
+    width: 100%;
     max-width: 2000px;
     margin: 0;
     padding: 0 50px;
