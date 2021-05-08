@@ -1,0 +1,364 @@
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>B-Airline</title>
+                <link rel="stylesheet" href="../static/public_view.css" />
+                <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+                <script src="../static/lib/jquery-1.12.4.js"></script>
+                <script src="../static/lib/jquery-ui.js"></script>
+                <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+                <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+        
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+        
+              // Load the Visualization API and the corechart package.
+              google.charts.load('current', {'packages':['corechart']});
+        
+              // Set a callback to run when the Google Visualization API is loaded.
+              google.charts.setOnLoadCallback(drawChart1);
+              google.charts.setOnLoadCallback(drawChart2);
+              google.charts.setOnLoadCallback(drawChart3);
+        
+              // Callback that creates and populates a data table,
+              // instantiates the pie chart, passes in the data and
+              // draws it.
+              function drawChart1() {
+
+                let info = {{top_three_month | safe}}
+        
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Destination');
+                data.addColumn('number', 'Tickets');
+                data.addRows(info);
+        
+        
+                // Set chart options
+                var options = {
+                    title: 'Top three popular destinations last 3 months: ',
+                  };
+        
+                // Instantiate and draw our chart, passing in some options.
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+              }
+        
+        
+              function drawChart2() {
+        
+
+                let info = {{top_last_year | safe}}
+        
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Destination');
+                data.addColumn('number', 'Tickets');
+                data.addRows(info);
+        
+                // Set chart options
+                var options = {
+                    title: 'Top three popular destinations last year: ',
+                  };
+        
+                // Instantiate and draw our chart, passing in some options.
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
+                chart.draw(data, options);
+                }
+              
+        
+                function drawChart3() {
+        
+                    let info = {{top_specified | safe}}
+                    
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Destination');
+                    data.addColumn('number', 'Tickets');
+                    data.addRows(info);
+
+
+                    // Set chart options
+                    var options = {
+                        title: 'Top three popular destinations in the specified period: ',
+                    };
+                    
+                  // Instantiate and draw our chart, passing in some options.
+                  var chart = new google.visualization.BarChart(document.getElementById('chart_div3'));
+                  chart.draw(data, options);
+                  }
+        
+            </script>
+        
+        
+            </head>
+        
+            <body>
+                <nav class="navbar">
+                    <div class="navbar__container">
+                      {% if session["logged_in"] == True%}
+                            <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                            <div class="navbar__toggle" id="mobile-menu">
+                                <span class="bar"></span> <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                        {% else %}
+                            <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                            <div class="navbar__toggle" id="mobile-menu">
+                                <span class="bar"></span> <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                        {% endif%}
+                        <ul class="navbar__menu" id="myDIV">
+                                    <li class="navbar__item">
+                                    <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                                    </li>
+                                    <li class="navbar__item">
+                                    <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                                    </li>
+                          {% if session["logged_in"] == True%}
+                            {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
+                              <li class="navbar__item">
+                                <a href="/ViewMyFlights" class="navbar__links active" id="links">View My Flights</a>
+                              </li>
+                            {% endif %}
+                            {% if session.get("type", "guest") == "customer"%}
+                              <li class="navbar__item">
+                                <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                              </li>
+                            {% endif %}
+                            {% if session.get("type", "guest") == "booking_agent"%}
+                              <li class="navbar__item">
+                                <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
+                              </li>
+                              <li class="navbar__item">
+                                <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                              </li>
+                            {% endif %}
+                            {% if session.get("type", "guest") == "airline_staff"%}
+    
+                          <div class="dropdown">
+                            <button class="dropbtn">Staff Management 
+                              <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                              <a href="/CreateNewFlights">Create New Flights</a>
+                              <a href="/ChangeFlightStatus">Change Flights Status</a>
+                              <a href="/AddAirplane">Add Airplane</a>
+                              <a href="/AddAirport">Add Airport</a>
+                            </div>
+                          </div> 
+    
+                          <div class="dropdown">
+                            <button class="dropbtn">Staff Views 
+                              <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                              <a href="/ViewAllBookingAgent">View Booking Agent</a>
+                              <a href="/ViewFrequentCustomers">View Frequent Customers</a>
+                              <a href="/ViewReports">View Reports</a>
+                              <a href="/ComparisonOfRevenueEarned">View Camparison of Revenue Earned</a>
+                              <a href="/ViewTopDestinations">View Top Destinations</a>
+                            </div>
+                          </div> 
+    
+                            {% endif %}
+                                <li class="navbar__btn">
+                                <a href="/logout" class="button" id="logout">Logout</a>
+                                </li>
+                            {% else %}
+                                <li class="navbar__btn">
+                                <a href="/login" class="button" id="login">Login</a>
+                                </li>
+                                <li class="navbar__btn">
+                                    <a href="/register" class="button" id="sign-up">Register</a>
+                                </li>
+                            {% endif%}
+        
+                      </ul>
+                    </div>
+                </nav>
+        
+        
+                <div class="table-container">
+                  <section>
+                    <form action="ViewTopDestinations" onsubmit="return formValidation()" autocomplete="off" method="POST">
+                      <div class="bluebutton">
+                          <div class="smaller-date-container">
+                              <label class="label">Start date</label>             
+                              <input type="date" name = "start_date">
+                          </div>
+                          <div class="smaller-date-container">
+                              <label class="label">End date</label>             
+                              <input type="date" name = "end_date">
+                          </div>
+                          <div class="smaller-date-container">
+                            <input type="submit" value = Filter>
+                              <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
+                          </div>
+                      </div>
+                    </form>
+                  </section>
+        <!-- <<<<<<< Updated upstream -->
+                  <!-- <table id="exa"> -->
+                      <!-- <thead style="display: table-header-group;"></thead> -->
+        <!-- ======= -->
+                  <!-- <table id="exa" class="table">
+                      <thead style="display: table-header-group;"></tfoot       > -->
+        <!-- >>>>>>> Stashed changes -->
+                  </table>
+                </br>
+                {%if not {{top_specified}}%}
+                <div id="chart_div1"></div>
+                <div id="chart_div2"></div>
+            {%else%}
+                <div id="chart_div3"></div>
+            {%endif%}
+              </br>
+              </div>  
+              
+          </body>
+        
+          <script>
+              let info = {{my_commission | safe}}
+        
+              function generateTableHead(table, data) {
+                  let thead = table.createTHead();
+                  let row = thead.insertRow();
+                  for (let key of data) {
+                      let th = document.createElement("th");
+                      let text = document.createTextNode(key);
+                      th.appendChild(text);
+                      row.appendChild(th);
+                  }
+              }
+        
+              function generateTable(table, data) {
+                  for (let element of data) {
+                      let row = table.insertRow();
+                      for (key in element) {
+                      let cell = row.insertCell();
+                      let text = document.createTextNode(element[key]);
+                      cell.appendChild(text);
+                      }
+                  }
+              }
+        
+              function generateTableFoot(table, data) {
+                  let tfoot = table.createTFoot();
+                  let frow = tfoot.insertRow(0);
+                  for (let key of data) {
+                      let fth = document.createElement("th");
+                      let ftext = document.createTextNode(key);
+                      fth.appendChild(ftext);
+                      frow.appendChild(fth);
+                  }
+              }
+        
+              let table = document.querySelector("table");
+              let data = ["total commission", "total tickets", "commission/ticket"];
+              generateTable(table, info);
+              // generateTable(table, info2);
+              // generateTableFoot(table, data);
+              generateTableHead(table, data);
+              
+        
+              // $(document).ready(function() {
+              //     // Setup - add a text input to each footer cell
+              //     $('#exa tfoot th').each( function () {
+              //         var title = $(this).text();
+              //         $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
+              //     } );
+              
+              //     // DataTable
+              //     var table = $('#example').DataTable({
+              //         initComplete: function () {
+              //             // Apply the search
+              //             this.api().columns().every( function () {
+              //                 var that = this;
+              
+              //                 $( 'input', this.footer() ).on( 'keyup change clear', function () {
+              //                     if ( that.search() !== this.value ) {
+              //                         that
+              //                             .search( this.value )
+              //                             .draw();
+              //                     }
+              //                 } );
+              //             } );
+              //         }
+              //     });
+              
+              // } );
+        
+              function formValidation() {
+                  var start_date, end_date;
+                  start_date = document.getElementsByName("start_date")[0].value;
+                  end_date = document.getElementsByName("end_date")[0].value;
+        
+                  if ((!start_date) && (!end_date)) {
+                      alert("At least one of start/end date should be filled!");
+                      return false;
+                  }
+        
+                  if (end_date > today) {
+                        alert("End date cannot be after today!");
+                        return false;
+                    }
+        
+                  else {
+                      var old_body = document.getElementsByTagName("tbody")[0];
+                      var new_body = document.createElement("tbody");
+                      generateDateTable(new_body, info);
+                      old_body.parentNode.replaceChild(new_body, old_body);
+                  }
+        
+        
+              };
+        
+              function generateDateTable(table, info) {
+                  var start_date, end_date;
+                  start_date = document.getElementsByName("start_date")[0].value;
+                  end_date = document.getElementsByName("end_date")[0].value;
+        
+                  for (let element of info) {
+                      if (start_date && end_date) {
+                          if ((element[4].slice(0,10) >= start_date) && (element[4].slice(0,10) <= end_date)) {
+                              let row = table.insertRow();
+                              for (key in element) {
+                              let cell = row.insertCell();
+                              let text = document.createTextNode(element[key]);
+                              cell.appendChild(text);
+                              }
+                          }
+                      } else if (start_date) {
+                          if (element[4].slice(0,10) >= start_date) {
+                              let row = table.insertRow();
+                              for (key in element) {
+                              let cell = row.insertCell();
+                              let text = document.createTextNode(element[key]);
+                              cell.appendChild(text);
+                              }
+                          }
+                      } else if (end_date) {
+                          if (element[4].slice(0,10) <= end_date) {
+                              let row = table.insertRow();
+                              for (key in element) {
+                              let cell = row.insertCell();
+                              let text = document.createTextNode(element[key]);
+                              cell.appendChild(text);
+                              }
+                          }
+                      }
+                  }
+              }
+              var header = document.getElementById("myDIV");
+                var btns = header.getElementsByClassName("navbar__links");
+                for (var i = 0; i < btns.length; i++) {
+                btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+                });
+                }
+          </script>
+          
+        </html>

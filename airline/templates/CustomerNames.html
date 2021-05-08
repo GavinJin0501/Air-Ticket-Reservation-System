@@ -60,72 +60,11 @@
       }
 
       let table = document.querySelector("table");
-      let data = ["total commission", "total tickets", "commission/ticket"];
+      let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
       generateTable(table, info);
       generateTableHead(table, data);
       
 
-      function formValidation() {
-          var start_date, end_date;
-          start_date = document.getElementsByName("start_date")[0].value;
-          end_date = document.getElementsByName("end_date")[0].value;
-
-          if ((!start_date) && (!end_date)) {
-              alert("At least one of start/end date should be filled!");
-              return false;
-          }
-
-          if (end_date > today) {
-                alert("End date cannot be after today!");
-                return false;
-            }
-
-          else {
-              var old_body = document.getElementsByTagName("tbody")[0];
-              var new_body = document.createElement("tbody");
-              generateDateTable(new_body, info);
-              old_body.parentNode.replaceChild(new_body, old_body);
-          }
-
-
-      };
-
-      function generateDateTable(table, info) {
-          var start_date, end_date;
-          start_date = document.getElementsByName("start_date")[0].value;
-          end_date = document.getElementsByName("end_date")[0].value;
-
-          for (let element of info) {
-              if (start_date && end_date) {
-                  if ((element[4].slice(0,10) >= start_date) && (element[4].slice(0,10) <= end_date)) {
-                      let row = table.insertRow();
-                      for (key in element) {
-                      let cell = row.insertCell();
-                      let text = document.createTextNode(element[key]);
-                      cell.appendChild(text);
-                      }
-                  }
-              } else if (start_date) {
-                  if (element[4].slice(0,10) >= start_date) {
-                      let row = table.insertRow();
-                      for (key in element) {
-                      let cell = row.insertCell();
-                      let text = document.createTextNode(element[key]);
-                      cell.appendChild(text);
-                      }
-                  }
-              } else if (end_date) {
-                  if (element[4].slice(0,10) <= end_date) {
-                      let row = table.insertRow();
-                      for (key in element) {
-                      let cell = row.insertCell();
-                      let text = document.createTextNode(element[key]);
-                      cell.appendChild(text);
-                      }
-                  }
-              }
-          }
-      }
       var header = document.getElementById("myDIV");
         var btns = header.getElementsByClassName("navbar__links");
         for (var i = 0; i < btns.length; i++) {
@@ -138,18 +77,13 @@
 
 
 
-
-        let table = document.querySelector("table");
-        let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
+        let info1 = {{customer_info | safe}};
+        let table1 = document.querySelector("table");
+        let data1 = ["Customer email", "Customer name", "Phone number", "passport number", "date of birth"];
         let sessions = "{{session['type']}}"
-        if (sessions == "airline_staff") {
-            generateStaffTable(table, info);
-        } 
-        else {
-            generateTable(table, info);
-        }
-        generateTableFoot(table, data);
-        generateTableHead(table, data);
+            generateTable(table1, info1);
+        generateTableFoot(table1, data1);
+        generateTableHead(table1, data1);
         
 
         $(document).ready(function() {

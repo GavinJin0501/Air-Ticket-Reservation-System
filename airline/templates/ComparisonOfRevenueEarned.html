@@ -26,8 +26,8 @@
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart1() {
-        let info = {{direct_sales | safe}}
-        let info2 = {{indirect_sales | safe}}
+        let info = {{direct_sales_month | safe}}
+        let info2 = {{indirect_sales_month | safe}}
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
@@ -38,13 +38,56 @@
 
         // Set chart options
         var options = {
-            title: 'Commission percentage of all booking agents: ',
+            title: 'Comparison of revenue earned last month: ',
           };
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div1'));
         chart.draw(data, options);
       }
+
+      function drawChart2() {
+        let info = {{direct_sales_year | safe}}
+        let info2 = {{indirect_sales_year | safe}}
+
+        var data = google.visualization.arrayToDataTable([
+          ['string', 'number'],
+          ['direct sales without booking agent', info],
+          ['indirect sales with booking agent', info2]]
+        );
+
+
+        // Set chart options
+        var options = {
+            title: 'Comparison of revenue earned last year: ',
+          };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
+        chart.draw(data, options);
+      }
+
+      function drawChart3() {
+        let info = {{direct_sales_specific | safe}}
+        let info2 = {{indirect_sales_specific | safe}}
+
+        var data = google.visualization.arrayToDataTable([
+          ['string', 'number'],
+          ['direct sales without booking agent', info],
+          ['indirect sales with booking agent', info2]]
+        );
+
+
+        // Set chart options
+        var options = {
+            title: 'Comparison of revenue earned in this period: ',
+          };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div3'));
+        chart.draw(data, options);
+      }
+
     </script>
 
 
@@ -131,5 +174,31 @@
               </ul>
             </div>
         </nav>
+
+        <section>
+            <form action="/ComparisonOfRevenueEarned" autocomplete="off" onsubmit="return formValidation()" method="POST">
+            <div class="bluebutton">
+                <div class="smaller-date-container">
+                    <label class="label">Start date</label>             
+                    <input type="date" name = "start_date">
+                </div>
+                <div class="smaller-date-container">
+                    <label class="label">End date</label>             
+                    <input type="date" name = "end_date">
+                </div>
+                <div class="smaller-date-container">
+                    <!-- <button class="topbutton" onclick="submitdate()">Filter</button> -->
+                    <input type="submit" value = Filter>
+                </div>
+            </div>
+            </form>
+        </section>
+
+        {%if not {{direct_sales_specific}}%}
+            <div id="chart_div1"></div>
+            <div id="chart_div2"></div>
+        {%else%}
+            <div id="chart_div3"></div>
+        {%endif%}
 
         
