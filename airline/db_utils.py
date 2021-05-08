@@ -555,7 +555,7 @@ def view_most_frequent_customer(conn, start_date, end_date, airline_name):
 
 def get_customer_flight(conn, customer_email, airline_name):
     cursor = conn.cursor(prepared=True)
-    query = """SELECT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
+    query = """SELECT DISTINCT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
                FROM purchases NATURAL JOIN ticket NATURAL JOIN flight
                WHERE customer_email = %s AND airline_name = %s"""
     print(query)
