@@ -564,6 +564,8 @@ def get_customer_flight(conn, customer_email, airline_name):
     cursor.close()
     for i in range(len(data)):
         data[i] = list(data[i])
+        data[i][2] = data[i][2].strftime("%Y-%m-%d")
+        data[i][4] = data[i][4].strftime("%Y-%m-%d")
     return data
 
 
