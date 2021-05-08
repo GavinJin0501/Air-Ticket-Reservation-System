@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'some key that you will never guess'
 conn = mysql.connector.connect(host='localhost',
                                user='root',
-                               password='',
+                               password='bbbb',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
@@ -424,7 +424,8 @@ def view_frequent_customers():
     if request.method == "GET":
         start_date = datetime.today().strftime("%Y-%m-%d")
         end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
-        most_customer = db_utils.view_most_frequent_customer(conn, start_date, end_date)
+        most_customer = db_utils.view_most_frequent_customer(conn, end_date, start_date)
+        print(most_customer)
         return render_template("ViewFrequentCustomers.html", most_customer=most_customer)
     elif request.method == "POST":
         pass

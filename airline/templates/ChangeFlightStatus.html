@@ -99,6 +99,8 @@
                 <label class="label"> </label> </br>
                 <label class="label">Flight number</label> </br>
                 <input type="text" name = "flight_num" placeholder="flight number" required/> </br>
+                <label class="label">Airline name</label> </br>
+                <input type="text" name = "airline_name" value="{{session['airline']}}" readonly/> </br>
                 <label class="label">Updated status</label> </br>
                 <!-- <div class="upcomingbutton">Upcoming</div> -->
                 <select name="status" id="status" style="font-size: 18px; height: 40px; width: 150px; text-align: center;">
@@ -106,7 +108,7 @@
                     <option value="In-progress">In-progress</option>
                     <option value="Delayed">Delayed</option>
                     <option value="Canceled">Canceled</option>
-                </select>
+                </select> </br>
                 <!-- <input type="button" id= "upcomingbutton" value="Upcoming">
                 <input type="button" id= "inprogressbutton" value="In-progress">
                 <input type="button" id= "delayedbutton" value="Delayed">

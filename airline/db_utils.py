@@ -536,6 +536,7 @@ def view_most_frequent_customer(conn, start_date, end_date):
                                                WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
                                                GROUP BY customer_email)
             """ % (start_date, end_date, start_date, end_date)
+    print(query)
     cursor.execute(query)
     most_customer = cursor.fetchall()
     cursor.close()

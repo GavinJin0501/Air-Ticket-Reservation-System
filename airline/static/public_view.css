@@ -502,6 +502,7 @@
     max-width: 2000px;
     margin: 100px;
     padding: 0;
+    overflow: scroll;
   }
 
   .half-smaller-container {
@@ -515,6 +516,7 @@
     max-width: 2000px;
     margin: 30px auto;
     padding: 0 50px;
+    overflow: scroll;
   }
 
   .full-container {

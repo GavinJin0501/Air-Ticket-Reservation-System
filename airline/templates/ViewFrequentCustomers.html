@@ -81,9 +81,9 @@
                         </button>
                         <div class="dropdown-content">
                           <a href="/ViewAllBookingAgent">View Booking Agent</a>
-                          <a href="ViewFrequentCustomers">View Reports</a>
-                          <a href="ViewReports">View Frequent Customers</a>
-                          <a href="/ComparisonOfRevenueEarned">View Reports</a>
+                          <a href="/ViewFrequentCustomers">View Frequent Customers</a>
+                          <a href="/ViewReports">View Reports</a>
+                          <a href="/ComparisonOfRevenueEarned">View Camparison of Revenue Earned</a>
                           <a href="/ViewTopDestinations">View Top Destinations</a>
                         </div>
                       </div> 
@@ -104,7 +104,72 @@
                   </ul>
                 </div>
             </nav>
-        </body>
 
+    </br>
+    <div class="search-container">
+        <div class="warning1">The most frequent customer: {{most_customer[0][0]}}</div> </br>
+        <form action="/AddAirplane" autocomplete="off" method="POST">
+            <label id="navbar__logo"> Search customer flights</label>
+            <label class="label"> </label> </br>
+            <label class="label">Customer email</label> </br>
+            <input type="text" name = "customer_email" placeholder="customer email" required/> </br>
+            <input type="submit" value = Search />
+            <label class="label"> </label> </br>
+            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
+        </form>
+    </div>
+    {% if customer_flights %}
+        <!-- {% if flights[0] == "No flights"%}
+            <div class="topbutton">
+                <div class='warning'>
+                    Sorry. {{flights[0]}}. Please search again.
+                </div>
+            </div>
+        {% else %} -->
+        <table id="exa"></table>
 
-        <div class="warning1">My total spending in the past year: {{most_customer}}</div>
+    </body>
+
+    <script>
+        let info = {{customer_flights | safe}}
+  
+        function generateTableHead(table, data) {
+            let thead = table.createTHead();
+            let row = thead.insertRow();
+            for (let key of data) {
+                let th = document.createElement("th");
+                let text = document.createTextNode(key);
+                th.appendChild(text);
+                row.appendChild(th);
+            }
+        }
+  
+        function generateTable(table, data) {
+            for (let element of data) {
+                let row = table.insertRow();
+                for (key in element) {
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[key]);
+                cell.appendChild(text);
+                }
+            }
+        }
+  
+        function generateTableFoot(table, data) {
+            let tfoot = table.createTFoot();
+            let frow = tfoot.insertRow(0);
+            for (let key of data) {
+                let fth = document.createElement("th");
+                let ftext = document.createTextNode(key);
+                fth.appendChild(ftext);
+                frow.appendChild(fth);
+            }
+        }
+  
+        let table = document.querySelector("table");
+        let data = ["total commission", "total tickets", "commission/ticket"];
+        generateTable(table, info);
+        // generateTable(table, info2);
+        // generateTableFoot(table, data);
+        generateTableHead(table, data);
+    </script>
