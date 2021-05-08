@@ -502,6 +502,20 @@
     max-width: 2000px;
     margin: 100px;
     padding: 0;
+  }
+
+  .half-container1 {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    background-color: #a8b2dd;
+    z-index: 1;
+    /* width: 35%; */
+    width: 50%;
+    max-width: 2000px;
+    margin: 100px;
+    padding: 0;
     overflow: scroll;
   }
 
@@ -516,7 +530,6 @@
     max-width: 2000px;
     margin: 30px auto;
     padding: 0 50px;
-    overflow: scroll;
   }
 
   .full-container {
