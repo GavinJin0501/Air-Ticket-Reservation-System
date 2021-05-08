@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart1);
+      google.charts.setOnLoadCallback(drawChart2);
+      google.charts.setOnLoadCallback(drawChart3);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart1() {
+        let info = {{direct_sales | safe}}
+        let info2 = {{indirect_sales | safe}}
+
+        var data = google.visualization.arrayToDataTable([
+          ['string', 'number'],
+          ['direct sales without booking agent', info],
+          ['indirect sales with booking agent', info2]]
+        );
+
+
+        // Set chart options
+        var options = {
+            title: 'Commission percentage of all booking agents: ',
+          };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+              {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+                <ul class="navbar__menu">
+                    <li class="navbar__item">
+                    <a href="/SearchFlight" class="navbar__links" id="links">Search Flight</a>
+                    </li>
+                    <li class="navbar__item">
+                    <a href="/CheckStatus" class="navbar__links" id="links">Check Status</a>
+                    </li>
+                  {% if session["logged_in"] == True%}
+                    {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
+                      <li class="navbar__item">
+                        <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "customer"%}
+                      <li class="navbar__item">
+                        <a href="/TrackMySpending" class="navbar__links" id="links">Track My Spending</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "booking_agent"%}
+                      <li class="navbar__item">
+                        <a href="/ViewMyCommission" class="navbar__links" id="links">View My Commision</a>
+                      </li>
+                      <li class="navbar__item">
+                        <a href="/ViewTopCustomers" class="navbar__links" id="links">View Top Customers</a>
+                      </li>
+                    {% endif %}
+                    {% if session.get("type", "guest") == "airline_staff"%}
+                      <div class="dropdown">
+                      <button class="dropbtn">Staff Management 
+                        <i class="fa fa-caret-down"></i>
+                      </button>
+                      <div class="dropdown-content">
+                        <a href="/CreateNewFlights">Create New Flights</a>
+                        <a href="/ChangeFlightStatus">Change Flights Status</a>
+                        <a href="/AddAirplane">Add Airplane</a>
+                        <a href="/AddAirport">Add Airport</a>
+                      </div>
+                    </div> 
+
+                    <div class="dropdown">
+                      <button class="dropbtn">Staff Views 
+                        <i class="fa fa-caret-down"></i>
+                      </button>
+                      <div class="dropdown-content">
+                        <a href="/ViewAllBookingAgent">View Booking Agent</a>
+                        <a href="/ViewFrequentCustomers">View Frequent Customers</a>
+                        <a href="/ViewReports">View Reports</a>
+                        <a href="/ComparisonOfRevenueEarned">View Camparison of Revenue Earned</a>
+                        <a href="/ViewTopDestinations">View Top Destinations</a>
+                      </div>
+                    </div> 
+                    {% endif %}
+                        <li class="navbar__btn">
+                        <a href="/logout" class="button" id="logout">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="navbar__btn">
+                        <a href="/login" class="button" id="login">Login</a>
+                        </li>
+                        <li class="navbar__btn">
+                            <a href="/register" class="button" id="sign-up">Register</a>
+                        </li>
+                    {% endif%}
+
+              </ul>
+            </div>
+        </nav>
+
+        
