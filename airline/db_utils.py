@@ -547,6 +547,7 @@ def view_most_frequent_customer(conn, start_date, end_date):
     return most_customer
 
 
+
 def get_customer_flight(conn, customer_email, airline_name):
     cursor = conn.cursor(prepared=True)
     query = """SELECT flight_num, departure_airport, departure_time, arrival_airport, arrival_time, status, airplane_id
@@ -563,3 +564,4 @@ def get_customer_flight(conn, customer_email, airline_name):
 def view_reports(conn, airline_name, start_date, end_date):
     cursor = conn.cursor()
     pass
+
