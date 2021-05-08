@@ -547,3 +547,8 @@ def view_most_frequent_customer(conn, start_date, end_date):
     return most_customer
 
 
+<<<<<<< Updated upstream
+=======
+def view_reports(conn, airline_name, start_date, end_date):
+    cursor = conn.cursor()
+>>>>>>> Stashed changes
