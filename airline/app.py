@@ -518,10 +518,19 @@ def compare_of_revenue_earned():
         indirect_sales_year = db_utils.get_airline_sales(conn, LAST_YEAR.strftime("%Y-%m-%d"),
                                                          TODAY.strftime("%Y-%m-%d"), session["airline"], "indirect")
 
-        return render_template("ComparisonOfRevenueEarned.html", direct_sales_month=direct_sales_month, indirect_sales_month=indirect_sales_month, direct_sales_year=direct_sales_year, indirect_sales_year=indirect_sales_year)
+        return render_template("ComparisonOfRevenueEarned.html", status="GET", direct_sales_month=direct_sales_month, indirect_sales_month=indirect_sales_month, direct_sales_year=direct_sales_year, indirect_sales_year=indirect_sales_year, direct_sales_specific=[[0]], indirect_sales_specific=[[0]])
 
     elif request.method == "POST":
-        pass
+        start_date = request.form["start_date"]
+        end_date = request.form.get("end_date", datetime.today().strftime("%Y-%m-%d"))
+
+        print(start_date, end_date)
+        direct_sales_specific = db_utils.get_airline_sales(conn, start_date, end_date, session["airline"], "direct")
+        indirect_sales_specific = db_utils.get_airline_sales(conn, start_date, end_date, session["airline"], "indirect")
+
+        print(direct_sales_specific, indirect_sales_specific)
+
+        return render_template("ComparisonOfRevenueEarned.html", status="POST", direct_sales_month=[[0]], indirect_sales_month=[[0]], direct_sales_year=[[0]], indirect_sales_year=[[0]], direct_sales_specific=direct_sales_specific, indirect_sales_specific=indirect_sales_specific)
 
 
 # ======================================================================================

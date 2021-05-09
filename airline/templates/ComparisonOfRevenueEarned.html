@@ -31,8 +31,8 @@
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
-          ['direct sales without booking agent', info],
-          ['indirect sales with booking agent', info2]]
+          ['direct sales without booking agent', info[0][0]],
+          ['indirect sales with booking agent', info2[0][0]]]
         );
 
 
@@ -52,8 +52,8 @@
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
-          ['direct sales without booking agent', info],
-          ['indirect sales with booking agent', info2]]
+          ['direct sales without booking agent', info[0][0]],
+          ['indirect sales with booking agent', info2[0][0]]]
         );
 
 
@@ -73,8 +73,8 @@
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
-          ['direct sales without booking agent', info],
-          ['indirect sales with booking agent', info2]]
+          ['direct sales without booking agent', info[0][0]],
+          ['indirect sales with booking agent', info2[0][0]]]
         );
 
 
@@ -194,11 +194,37 @@
             </form>
         </section>
 
-        {%if not direct_sales_specific %}
+        {%if status == "GET" %}
             <div id="chart_div1"></div>
             <div id="chart_div2"></div>
         {%else%}
             <div id="chart_div3"></div>
         {%endif%}
+</body>
+<script>
+  function formValidation() {
+      var start_date, end_date, today;
 
+      start_date = document.getElementsByName("start_date")[0].value;
+      end_date = document.getElementsByName("end_date")[0].value;
+      today = new Date().toISOString().substr(0, 10);
+
+      if (!start_date) {
+          alert("Start date cannot be empty!");
+          return false;
+      }
+      if (end_date > today) {
+          alert("End date cannot be after today!");
+          return false;
+      }
+      if (!end_date) {
+          document.getElementsByName("end_date")[0].value = today;
+          end_date = document.getElementsByName("end_date")[0].value;
+      }
+      if (start_date > end_date) {
+          alert("Start date should be before end date and today!");
+          return false;
+      }
+      return true;
+  }
         

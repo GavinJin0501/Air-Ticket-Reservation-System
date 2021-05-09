@@ -601,5 +601,5 @@ def get_airline_sales(conn, start_date, end_date, airline_name, t):
         return [[0]]
     data[0] = list(data[0])
     data[0][0] = int(data[0][0])
-    print(data)
+    # print(data)
     return data
