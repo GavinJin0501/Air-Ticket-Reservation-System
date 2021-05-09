@@ -12,9 +12,9 @@
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     </head>
 
-    <style>
+    <!-- <style>
         tfoot {display: table-row-group;}
-    </style>
+    </style> -->
     
         <body>
             <nav class="navbar">
@@ -123,8 +123,8 @@
             <table id="example" class="display">
                 <!-- <thead style="display: table-header-group;"></thead> -->
 <!-- ======= -->
-            <table id="example" class="table table-bordered table-striped">
-                <thead style="display: table-header-group;"></tfoot       >
+            <!-- <table id="example" class="table table-bordered table-striped"> -->
+                <!-- <thead style="display: table-header-group;"></tfoot       > -->
 <!-- >>>>>>> Stashed changes -->
             </table>
         </br>
@@ -209,36 +209,59 @@
         else {
             generateTable(table, info);
         }
-        generateTableFoot(table, data);
+        // generateTableFoot(table, data);
         generateTableHead(table, data);
         
 
+        // $(document).ready(function() {
+        //     // Setup - add a text input to each footer cell
+        //     $('#example tfoot th').each( function () {
+        //         var title = $(this).text();
+        //         $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
+        //     } );
+        
+        //     // DataTable
+        //     var table = $('#example').DataTable({
+        //         initComplete: function () {
+        //             // Apply the search
+        //             this.api().columns().every( function () {
+        //                 var that = this;
+        
+        //                 $( 'input', this.footer() ).on( 'keyup change clear', function () {
+        //                     if ( that.search() !== this.value ) {
+        //                         that
+        //                             .search( this.value )
+        //                             .draw();
+        //                     }
+        //                 } );
+        //             } );
+        //         }
+        //     });
+        
+        // } );
+
         $(document).ready(function() {
-            // Setup - add a text input to each footer cell
-            $('#example tfoot th').each( function () {
-                var title = $(this).text();
-                $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
-            } );
-        
-            // DataTable
-            var table = $('#example').DataTable({
-                initComplete: function () {
-                    // Apply the search
-                    this.api().columns().every( function () {
-                        var that = this;
-        
-                        $( 'input', this.footer() ).on( 'keyup change clear', function () {
-                            if ( that.search() !== this.value ) {
-                                that
-                                    .search( this.value )
-                                    .draw();
-                            }
-                        } );
-                    } );
-                }
-            });
-        
+    // Setup - add a text input to each footer cell
+    $('#example thead tr').clone(true).appendTo( '#example thead' );
+    $('#example thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
         } );
+    } );
+ 
+    var table = $('#example').DataTable( {
+        orderCellsTop: true,
+        fixedHeader: true
+    } );
+} );
 
         function submitdate() {
             var start_date, end_date;
@@ -269,30 +292,76 @@
                 if (start_date && end_date) {
                     if ((element[4].slice(0,10) >= start_date) && (element[4].slice(0,10) <= end_date)) {
                         let row = table.insertRow();
-                        for (key in element) {
-                        let cell = row.insertCell();
-                        let text = document.createTextNode(element[key]);
-                        cell.appendChild(text);
-                        }
-                    }
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[0]);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(element[1]);
+                a.appendChild(linkText);
+                // a.title = "my title text";
+                a.href = "/CustomerNames/"+element[1]
+                // a.onclick = "test();return false";
+                cell.appendChild(a);
+
+                // let text = document.createTextNode(data[1][key]);
+                // cell.appendChild(text);
+                for (let i=2; i<element.length;i++) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(element[i]);
+                    cell.appendChild(text);
+                }
+            }
+            
                 } else if (start_date) {
                     if (element[4].slice(0,10) >= start_date) {
                         let row = table.insertRow();
-                        for (key in element) {
-                        let cell = row.insertCell();
-                        let text = document.createTextNode(element[key]);
-                        cell.appendChild(text);
-                        }
-                    }
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[0]);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(element[1]);
+                a.appendChild(linkText);
+                // a.title = "my title text";
+                a.href = "/CustomerNames/"+element[1]
+                // a.onclick = "test();return false";
+                cell.appendChild(a);
+
+                // let text = document.createTextNode(data[1][key]);
+                // cell.appendChild(text);
+                for (let i=2; i<element.length;i++) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(element[i]);
+                    cell.appendChild(text);
+                }
+            }
                 } else if (end_date) {
                     if (element[4].slice(0,10) <= end_date) {
                         let row = table.insertRow();
-                        for (key in element) {
-                        let cell = row.insertCell();
-                        let text = document.createTextNode(element[key]);
-                        cell.appendChild(text);
-                        }
-                    }
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[0]);
+                cell.appendChild(text);
+
+                cell = row.insertCell();
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(element[1]);
+                a.appendChild(linkText);
+                // a.title = "my title text";
+                a.href = "/CustomerNames/"+element[1]
+                // a.onclick = "test();return false";
+                cell.appendChild(a);
+
+                // let text = document.createTextNode(data[1][key]);
+                // cell.appendChild(text);
+                for (let i=2; i<element.length;i++) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(element[i]);
+                    cell.appendChild(text);
+                }
+            }
                 }
             }
         }
