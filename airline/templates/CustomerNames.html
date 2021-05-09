@@ -17,9 +17,29 @@
     </style>
 
 
-    <body>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+          {% if session["logged_in"] == True%}
+                <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                <div class="navbar__toggle" id="mobile-menu">
+                    <span class="bar"></span> <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            {% endif%}
+        </div>
+        <ul class="navbar__menu">
+			<li class="navbar__btn">
+				<a href="/ViewMyFlights" class="button" id="sign-up">Back to View My Flights</a>
+			</li>
+		  </ul>
+    </nav>
+        <div class="table-container">
         <table id="exa"></table>
+        </br></br>
         <table id="example" class="display"></table>
+        </br>
+        </div>
     </body>
 
 
@@ -59,7 +79,7 @@
           }
       }
 
-      let table = document.querySelector("table");
+      let table = document.getElementById("exa");
       let data = ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
       generateTable(table, info);
       generateTableHead(table, data);
@@ -78,7 +98,7 @@
 
 
         let info1 = {{customer_info | safe}};
-        let table1 = document.querySelector("table");
+        let table1 = document.getElementById("example");
         let data1 = ["Customer email", "Customer name", "Phone number", "passport number", "date of birth"];
         let sessions = "{{session['type']}}";
         generateTable(table1, info1);
