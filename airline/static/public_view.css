@@ -511,6 +511,7 @@
     justify-content: center;
     align-items: center;
     height: 500px;
+    background-color: #a8b2dd;
     border-top: 20px;
     z-index: 1;
     /* width: 35%; */
