@@ -121,7 +121,7 @@
                           {% if session["logged_in"] == True%}
                             {% if session.get("type", "guest") == "customer" or session.get("type", "guest") == "booking_agent" or session.get("type", "guest") == "airline_staff"%}
                               <li class="navbar__item">
-                                <a href="/ViewMyFlights" class="navbar__links active" id="links">View My Flights</a>
+                                <a href="/ViewMyFlights" class="navbar__links" id="links">View My Flights</a>
                               </li>
                             {% endif %}
                             {% if session.get("type", "guest") == "customer"%}
