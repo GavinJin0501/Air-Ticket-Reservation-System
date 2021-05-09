@@ -469,7 +469,7 @@ def view_reports():
         print(reports)
         print(month_wise)
         for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0]+" -> "+month_wise[i][1], month_wise[i][2]]
+            month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
 
         return render_template("ViewReports.html", month_wise=month_wise)
 
@@ -490,8 +490,38 @@ def view_reports():
         print(reports)
         print(month_wise)
         for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0]+" -> "+month_wise[i][1], month_wise[i][2]]
+            month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
         return render_template("ViewReports.html", month_wise=month_wise)
+
+
+@app.route('/ComparisonOfRevenueEarned', methods=["GET", "POST"])
+def compare_of_revenue_earned():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        TODAY = datetime.today()
+        LAST_MONTH = TODAY - timedelta(days=30)
+        LAST_YEAR = TODAY - timedelta(days=365)
+
+        direct_sales_month = db_utils.get_airline_sales(conn, LAST_MONTH.strftime("%Y-%m-%d"),
+                                                        TODAY.strftime("%Y-%m-%d"), session["airline"], "direct")
+        indirect_sales_month = db_utils.get_airline_sales(conn, LAST_MONTH.strftime("%Y-%m-%d"),
+                                                          TODAY.strftime("%Y-%m-%d"), session["airline"], "indirect")
+
+        direct_sales_year = db_utils.get_airline_sales(conn, LAST_YEAR.strftime("%Y-%m-%d"),
+                                                       TODAY.strftime("%Y-%m-%d"), session["airline"], "direct")
+        indirect_sales_year = db_utils.get_airline_sales(conn, LAST_YEAR.strftime("%Y-%m-%d"),
+                                                         TODAY.strftime("%Y-%m-%d"), session["airline"], "indirect")
+
+        return render_template("ComparisonOfRevenueEarned.html", direct_sales_month=direct_sales_month, indirect_sales_month=indirect_sales_month, direct_sales_year=direct_sales_year, indirect_sales_year=indirect_sales_year)
+
+    elif request.method == "POST":
+        pass
 
 
 # ======================================================================================

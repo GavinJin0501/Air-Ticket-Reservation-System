@@ -582,3 +582,24 @@ def view_reports(conn, airline_name, start_date, end_date):
         data[i][1] = data[i][1].strftime("%Y-%m-%d")
     return data
 
+
+def get_airline_sales(conn, start_date, end_date, airline_name, t):
+    cursor = conn.cursor()
+    query = """SELECT SUM(price)
+               FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
+               WHERE airline_name = %s AND purchase_date BETWEEN %s AND %s
+            """
+    if t == "direct":
+        query += """ AND booking_agent_id IS NULL"""
+    else:
+        query += """ AND booking_agent_id IS NOT NULL"""
+    cursor.execute(query, (airline_name, start_date, end_date))
+    data = cursor.fetchall()
+    cursor.close()
+
+    if data[0][0] == None:
+        return [[0]]
+    data[0] = list(data[0])
+    data[0][0] = int(data[0][0])
+    print(data)
+    return data
