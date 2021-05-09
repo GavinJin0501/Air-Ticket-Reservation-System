@@ -219,6 +219,28 @@ def purchase_confirm(airline_name, flight_num):
                                    flight_num=flight_num, error=error)
 
 
+@app.route('/purchase/login/<airline_name>/<flight_num>', methods=["GET", "POST"])
+def login_purchase(airline_name, flight_num):
+    if session.get("logged_in", False):
+        return redirect(url_for("home"))
+
+    error = ""
+    if request.method == "GET":
+        return render_template("login_purchase.html", error=error, airline_name=airline_name, flight_num=flight_num)
+    elif request.method == "POST":
+        email = request.form["username"]
+        password = request.form["password"]
+        identity = "customer"
+        if not db_utils.login_check(conn, email, password, identity):
+            error = "Email address or password invalid"
+            return render_template("login_purchase.html", error=error, airline_name=airline_name, flight_num=flight_num)
+        else:
+            session["logged_in"] = True
+            session["type"] = identity
+            session["email"] = email
+            return redirect(url_for("purchase_confirm", airline_name=airline_name, flight_num=flight_num))
+
+
 @app.route('/TrackMySpending', methods=["GET", "POST"])
 def track_my_spending():
     if not session.get("logged_in", False):
