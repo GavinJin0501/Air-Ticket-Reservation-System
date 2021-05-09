@@ -1,2 +1,4 @@
 1. all form input should be validated (especially email format)
 2. if data of the chart is 0, what to do?
+3. view my flight, when specify a range, link is down
+4. view my flight, display names: table disorganized

@@ -160,6 +160,23 @@ def view_my_flights():
         pass
 
 
+@app.route('/CustomerNames/<flight_num>', methods=["GET"])
+def view_flight_customers(flight_num):
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        #["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
+        clicked_flight = db_utils.get_specified_flight(conn, session["airline"], flight_num)
+        customer_info = db_utils.get_flight_customers(conn, session["airline"], flight_num)
+        print(clicked_flight, customer_info)
+        return render_template("CustomerNames.html", clicked_flight=clicked_flight, customer_info=customer_info)
+
+
 @app.route('/purchase/<airline_name>/<flight_num>', methods=["GET"])
 def purchase(airline_name, flight_num):
     if not session.get("logged_in", False):
@@ -518,19 +535,56 @@ def compare_of_revenue_earned():
         indirect_sales_year = db_utils.get_airline_sales(conn, LAST_YEAR.strftime("%Y-%m-%d"),
                                                          TODAY.strftime("%Y-%m-%d"), session["airline"], "indirect")
 
-        return render_template("ComparisonOfRevenueEarned.html", status="GET", direct_sales_month=direct_sales_month, indirect_sales_month=indirect_sales_month, direct_sales_year=direct_sales_year, indirect_sales_year=indirect_sales_year, direct_sales_specific=[[0]], indirect_sales_specific=[[0]])
+        return render_template("ComparisonOfRevenueEarned.html", status="GET", direct_sales_month=direct_sales_month,
+                               indirect_sales_month=indirect_sales_month, direct_sales_year=direct_sales_year,
+                               indirect_sales_year=indirect_sales_year, direct_sales_specific=[[0]],
+                               indirect_sales_specific=[[0]])
 
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form.get("end_date", datetime.today().strftime("%Y-%m-%d"))
 
-        print(start_date, end_date)
+        print(start_date, "-", end_date, "-")
         direct_sales_specific = db_utils.get_airline_sales(conn, start_date, end_date, session["airline"], "direct")
         indirect_sales_specific = db_utils.get_airline_sales(conn, start_date, end_date, session["airline"], "indirect")
 
         print(direct_sales_specific, indirect_sales_specific)
 
-        return render_template("ComparisonOfRevenueEarned.html", status="POST", direct_sales_month=[[0]], indirect_sales_month=[[0]], direct_sales_year=[[0]], indirect_sales_year=[[0]], direct_sales_specific=direct_sales_specific, indirect_sales_specific=indirect_sales_specific)
+        return render_template("ComparisonOfRevenueEarned.html", status="POST", direct_sales_month=[[0]],
+                               indirect_sales_month=[[0]], direct_sales_year=[[0]], indirect_sales_year=[[0]],
+                               direct_sales_specific=direct_sales_specific,
+                               indirect_sales_specific=indirect_sales_specific)
+
+
+@app.route('/ViewTopDestinations', methods=["GET", "POST"])
+def view_top_destinations():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        TODAY = datetime.today()
+        LAST_3_MONTH = TODAY - timedelta(days=30 * 3)
+        LAST_YEAR = TODAY - timedelta(days=365)
+
+        top_three_month = db_utils.get_top_destinations(conn, LAST_3_MONTH.strftime("%Y-%m-%d"),
+                                                        TODAY.strftime("%Y-%m-%d"), session["airline"])
+        top_last_year = db_utils.get_top_destinations(conn, LAST_YEAR.strftime("%Y-%m-%d"), TODAY.strftime("%Y-%m-%d"),
+                                                      session["airline"])
+
+        return render_template("ViewTopDestinations.html", status="GET", top_three_month=top_three_month,
+                               top_last_year=top_last_year, top_specified=[["", 0]])
+
+    elif request.method == "POST":
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
+        print(start_date, end_date)
+        top_specified = db_utils.get_top_destinations(conn, start_date, end_date, session["airline"])
+        return render_template("ViewTopDestinations.html", status="POST", top_three_month=[["", 0]],
+                               top_last_year=[["", 0]], top_specified=top_specified)
 
 
 # ======================================================================================

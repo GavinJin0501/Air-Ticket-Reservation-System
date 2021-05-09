@@ -204,6 +204,24 @@ def get_upcoming_flights(conn, identity, email):
     return data
 
 
+def get_specified_flight(conn, airline_name, flight_num):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
+                      arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
+               FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
+               WHERE airline_name = %s AND flight_num = %s
+            """
+    cursor.execute(query, (airline_name, flight_num))
+    data = cursor.fetchall()
+    cursor.close()
+
+    data[0] = list(data[0])
+    data[0][4] = data[0][4].strftime("%Y-%m-%d %H:%M:%S")
+    data[0][7] = data[0][7].strftime("%Y-%m-%d %H:%M:%S")
+    data[0][8] = int(data[0][8])
+    return data
+
 def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
     cursor = conn.cursor(prepared=True)
     query = """SELECT COUNT(ticket_id) 
@@ -569,6 +587,24 @@ def get_customer_flight(conn, customer_email, airline_name):
     return data
 
 
+def get_flight_customers(conn, airline_name, flight_num):
+    cursor = conn.cursor(prepared=True)
+    # ["Customer email", "Customer name", "Phone number", "passport number", "date of birth"];
+    query = """SELECT DISTINCT email, name, phone_number, passport_number, date_of_birth
+               FROM ticket NATURAL JOIN purchases JOIN customer ON (customer.email = purchases.customer_email)
+               WHERE airline_name = %s AND flight_num = %s"""
+    print(query % (airline_name, flight_num))
+    cursor.execute(query, (airline_name, flight_num))
+    data = cursor.fetchall()
+    cursor.close()
+
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i][-1] = data[i][-1].strftime("%Y-%m-%d")
+    print(data)
+    return data
+
+
 def view_reports(conn, airline_name, start_date, end_date):
     cursor = conn.cursor(prepared=True)
     query = """SELECT ticket_id, purchase_date
@@ -584,7 +620,7 @@ def view_reports(conn, airline_name, start_date, end_date):
 
 
 def get_airline_sales(conn, start_date, end_date, airline_name, t):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT SUM(price)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
                WHERE airline_name = %s AND purchase_date BETWEEN %s AND %s
@@ -603,3 +639,33 @@ def get_airline_sales(conn, start_date, end_date, airline_name, t):
     data[0][0] = int(data[0][0])
     # print(data)
     return data
+
+
+def get_top_destinations(conn, start_date, end_date, airline_name):
+    cursor = conn.cursor()
+    query = """CREATE OR REPLACE VIEW top_destinations AS (
+                    SELECT DST.airport_city AS dst, COUNT(ticket_id) AS num_of_purchase
+                    FROM flight AS F JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
+                        NATURAL JOIN purchases NATURAL JOIN ticket
+                    WHERE airline_name = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
+                    GROUP BY dst
+                    
+            ) 
+            """
+    # print(query % (airline_name, start_date, end_date))
+    cursor.execute(query % (airline_name, start_date, end_date))
+
+    cursor.callproc("GetTopDestination")
+    data = []
+    for result in cursor.stored_results():
+        data = result.fetchall()
+
+    conn.commit()
+    cursor.close()
+
+    for i in range(len(data)):
+        data[i] = list(data[i])
+    return data
+
+
+

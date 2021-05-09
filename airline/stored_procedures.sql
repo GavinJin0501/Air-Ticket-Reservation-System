@@ -42,3 +42,20 @@ BEGIN
     ORDER BY t1.amount_of_commission DESC;
 END //
 DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE GetTopDestination()
+BEGIN
+    SELECT *
+    FROM top_destinations AS t1
+    WHERE 2 >= (
+        SELECT COUNT(DISTINCT t2.num_of_purchase)
+        FROM top_destinations AS t2
+        WHERE t2.num_of_purchase > t1.num_of_purchase
+    )
+    ORDER BY t1.num_of_purchase DESC;
+END //
+DELIMITER ;
+
+

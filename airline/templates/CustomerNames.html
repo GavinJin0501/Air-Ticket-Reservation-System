@@ -65,23 +65,23 @@
       generateTableHead(table, data);
       
 
-      var header = document.getElementById("myDIV");
-        var btns = header.getElementsByClassName("navbar__links");
-        for (var i = 0; i < btns.length; i++) {
-        btns[i].addEventListener("click", function() {
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-        });
-        }
+    //   var header = document.getElementById("myDIV");
+    //     var btns = header.getElementsByClassName("navbar__links");
+    //     for (var i = 0; i < btns.length; i++) {
+    //     btns[i].addEventListener("click", function() {
+    //     var current = document.getElementsByClassName("active");
+    //     current[0].className = current[0].className.replace(" active", "");
+    //     this.className += " active";
+    //     });
+    //     }
 
 
 
         let info1 = {{customer_info | safe}};
         let table1 = document.querySelector("table");
         let data1 = ["Customer email", "Customer name", "Phone number", "passport number", "date of birth"];
-        let sessions = "{{session['type']}}"
-            generateTable(table1, info1);
+        let sessions = "{{session['type']}}";
+        generateTable(table1, info1);
         generateTableFoot(table1, data1);
         generateTableHead(table1, data1);
         

@@ -18,9 +18,12 @@
               google.charts.load('current', {'packages':['corechart']});
         
               // Set a callback to run when the Google Visualization API is loaded.
-              google.charts.setOnLoadCallback(drawChart1);
-              google.charts.setOnLoadCallback(drawChart2);
-              google.charts.setOnLoadCallback(drawChart3);
+              {% if status == "GET" %}
+                google.charts.setOnLoadCallback(drawChart1);
+                google.charts.setOnLoadCallback(drawChart2);
+              {% else %}
+                google.charts.setOnLoadCallback(drawChart3);
+              {% endif %}
         
               // Callback that creates and populates a data table,
               // instantiates the pie chart, passes in the data and
@@ -41,7 +44,7 @@
                   };
         
                 // Instantiate and draw our chart, passing in some options.
-                var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div1'));
                 chart.draw(data, options);
               }
         
@@ -207,7 +210,7 @@
         <!-- >>>>>>> Stashed changes -->
                   </table>
                 </br>
-                {%if not {{top_specified}}%}
+            {%if status == "GET"%}
                 <div id="chart_div1"></div>
                 <div id="chart_div2"></div>
             {%else%}
@@ -219,146 +222,32 @@
           </body>
         
           <script>
-              let info = {{my_commission | safe}}
-        
-              function generateTableHead(table, data) {
-                  let thead = table.createTHead();
-                  let row = thead.insertRow();
-                  for (let key of data) {
-                      let th = document.createElement("th");
-                      let text = document.createTextNode(key);
-                      th.appendChild(text);
-                      row.appendChild(th);
-                  }
-              }
-        
-              function generateTable(table, data) {
-                  for (let element of data) {
-                      let row = table.insertRow();
-                      for (key in element) {
-                      let cell = row.insertCell();
-                      let text = document.createTextNode(element[key]);
-                      cell.appendChild(text);
-                      }
-                  }
-              }
-        
-              function generateTableFoot(table, data) {
-                  let tfoot = table.createTFoot();
-                  let frow = tfoot.insertRow(0);
-                  for (let key of data) {
-                      let fth = document.createElement("th");
-                      let ftext = document.createTextNode(key);
-                      fth.appendChild(ftext);
-                      frow.appendChild(fth);
-                  }
-              }
-        
-              let table = document.querySelector("table");
-              let data = ["total commission", "total tickets", "commission/ticket"];
-              generateTable(table, info);
-              // generateTable(table, info2);
-              // generateTableFoot(table, data);
-              generateTableHead(table, data);
-              
-        
-              // $(document).ready(function() {
-              //     // Setup - add a text input to each footer cell
-              //     $('#exa tfoot th').each( function () {
-              //         var title = $(this).text();
-              //         $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
-              //     } );
-              
-              //     // DataTable
-              //     var table = $('#example').DataTable({
-              //         initComplete: function () {
-              //             // Apply the search
-              //             this.api().columns().every( function () {
-              //                 var that = this;
-              
-              //                 $( 'input', this.footer() ).on( 'keyup change clear', function () {
-              //                     if ( that.search() !== this.value ) {
-              //                         that
-              //                             .search( this.value )
-              //                             .draw();
-              //                     }
-              //                 } );
-              //             } );
-              //         }
-              //     });
-              
-              // } );
-        
               function formValidation() {
-                  var start_date, end_date;
-                  start_date = document.getElementsByName("start_date")[0].value;
-                  end_date = document.getElementsByName("end_date")[0].value;
-        
-                  if ((!start_date) && (!end_date)) {
-                      alert("At least one of start/end date should be filled!");
-                      return false;
-                  }
-        
-                  if (end_date > today) {
-                        alert("End date cannot be after today!");
-                        return false;
-                    }
-        
-                  else {
-                      var old_body = document.getElementsByTagName("tbody")[0];
-                      var new_body = document.createElement("tbody");
-                      generateDateTable(new_body, info);
-                      old_body.parentNode.replaceChild(new_body, old_body);
-                  }
-        
-        
-              };
-        
-              function generateDateTable(table, info) {
-                  var start_date, end_date;
-                  start_date = document.getElementsByName("start_date")[0].value;
-                  end_date = document.getElementsByName("end_date")[0].value;
-        
-                  for (let element of info) {
-                      if (start_date && end_date) {
-                          if ((element[4].slice(0,10) >= start_date) && (element[4].slice(0,10) <= end_date)) {
-                              let row = table.insertRow();
-                              for (key in element) {
-                              let cell = row.insertCell();
-                              let text = document.createTextNode(element[key]);
-                              cell.appendChild(text);
-                              }
-                          }
-                      } else if (start_date) {
-                          if (element[4].slice(0,10) >= start_date) {
-                              let row = table.insertRow();
-                              for (key in element) {
-                              let cell = row.insertCell();
-                              let text = document.createTextNode(element[key]);
-                              cell.appendChild(text);
-                              }
-                          }
-                      } else if (end_date) {
-                          if (element[4].slice(0,10) <= end_date) {
-                              let row = table.insertRow();
-                              for (key in element) {
-                              let cell = row.insertCell();
-                              let text = document.createTextNode(element[key]);
-                              cell.appendChild(text);
-                              }
-                          }
-                      }
-                  }
-              }
-              var header = document.getElementById("myDIV");
-                var btns = header.getElementsByClassName("navbar__links");
-                for (var i = 0; i < btns.length; i++) {
-                btns[i].addEventListener("click", function() {
-                var current = document.getElementsByClassName("active");
-                current[0].className = current[0].className.replace(" active", "");
-                this.className += " active";
-                });
+                var start_date, end_date, today;
+
+                start_date = document.getElementsByName("start_date")[0].value;
+                end_date = document.getElementsByName("end_date")[0].value;
+                today = new Date().toISOString().substr(0, 10);
+
+                if (!start_date) {
+                    alert("Start date cannot be empty!");
+                    return false;
                 }
+                if (end_date > today) {
+                    alert("End date cannot be after today!");
+                    return false;
+                }
+                if (!end_date) {
+                    document.getElementsByName("end_date")[0].value = today;
+                    end_date = document.getElementsByName("end_date")[0].value;
+                }
+                if (start_date > end_date) {
+                    alert("Start date should be before end date and today!");
+                    return false;
+                }
+                return true;
+            }
+        
           </script>
           
         </html>
