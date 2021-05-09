@@ -1,7 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
-
 PASSWORD_HASH = "md5"
 
 
@@ -27,28 +26,28 @@ def get_airport_and_city(conn):
 
 
 def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_airport=""):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND """
+               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND """.format(date)
     # city+airport -> city+airport
     if src_airport and dst_airport:
-        query += """F.departure_airport = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
-        cursor.execute(query.format(date, src_airport, dst_airport))
+        query += """F.departure_airport = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
+        cursor.execute(query, (src_airport, dst_airport))
     # city+airport -> city
     elif src_airport:
-        query += """F.departure_airport = \'{}\' AND DST.airport_city= \'{}\' ORDER BY F.departure_time"""
-        cursor.execute(query.format(date, src_airport, dst_city))
+        query += """F.departure_airport = %s AND DST.airport_city= %s ORDER BY F.departure_time"""
+        cursor.execute(query, (src_airport, dst_city))
     # city -> city+airport
     elif dst_airport:
-        query += """SRC.airport_city = \'{}\' AND F.arrival_airport = \'{}\' ORDER BY F.departure_time"""
-        cursor.execute(query.format(date, src_city, dst_airport))
+        query += """SRC.airport_city = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
+        cursor.execute(query, (src_city, dst_airport))
     # city -> city
     else:
-        query += """SRC.airport_city = \'{}\' AND DST.airport_city= \'{}\' ORDER BY F.departure_time"""
-        cursor.execute(query.format(date, src_city, dst_city))
+        query += """SRC.airport_city = %s AND DST.airport_city= %s ORDER BY F.departure_time"""
+        cursor.execute(query, (src_city, dst_city))
     data = cursor.fetchall()
     cursor.close()
 
@@ -62,13 +61,13 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
 
 
 def login_check(conn, username, password, identity):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT password FROM %s WHERE """ % identity
     if identity == "airline_staff":
-        query += """username = \'%s\'"""
+        query += """username = %s"""
     else:
-        query += """email = \'%s\'"""
-    cursor.execute(query % username.replace("\'", "\'\'"))
+        query += """email = %s"""
+    cursor.execute(query, (username.replace("\'", "\'\'"),))
     data = cursor.fetchall()
     cursor.close()
     if not data:
@@ -77,26 +76,26 @@ def login_check(conn, username, password, identity):
 
 
 def airline_staff_initialization(conn, email):
-    cursor = conn.cursor()
-    query = """SELECT airline_name FROM airline_staff WHERE username = \'%s\'""" % email
-    cursor.execute(query)
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT airline_name FROM airline_staff WHERE username = %s"""
+    cursor.execute(query, (email,))
     data = cursor.fetchall()
     cursor.close()
     return data[0][0]
 
 
 def register_check(conn, info, identity):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     if identity == "airline_staff":
-        query = """SELECT airline_name FROM airline WHERE airline_name = \'%s\'""" % info["airline_name"]
-        print(query)
-        cursor.execute(query)
+        query = """SELECT airline_name FROM airline WHERE airline_name = %s"""
+        cursor.execute(query, (info["airline_name"],))
         data = cursor.fetchall()
         if not data:
             cursor.close()
             return False, "No such airline"
-        query = "SELECT username FROM %s WHERE username = \'%s\'" % (identity, info["email"].replace("\'", "\'\'"))
-        cursor.execute(query)
+        query = "SELECT username FROM %s" % identity
+        query += " WHERE username = %s"
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"),))
         data = cursor.fetchall()
         cursor.close()
         if data:
@@ -104,8 +103,9 @@ def register_check(conn, info, identity):
         else:
             return True, ""
     else:
-        query = "SELECT email FROM %s WHERE email = \'%s\'" % (identity, info["email"].replace("\'", "\'\'"))
-        cursor.execute(query)
+        query = "SELECT email FROM %s" % identity
+        query += " WHERE email = %s"
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"),))
         data = cursor.fetchall()
         cursor.close()
         if data:
@@ -115,19 +115,25 @@ def register_check(conn, info, identity):
 
 
 def register_to_database(conn, info, identity):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
+    query = """INSERT INTO %s""" % identity
     if identity == "customer":
-        query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\') """
-        cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), info["name"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
-                                    info["street"].replace("\'", "\'\'"), info["city"].replace("\'", "\'\'"), info["state"], info["phone_number"], info["passport_number"],
-                                    info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
+        query += """ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) """
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"), info["name"].replace("\'", "\'\'"),
+                               generate_password_hash(info["password"], PASSWORD_HASH), info["building_number"],
+                               info["street"].replace("\'", "\'\'"), info["city"].replace("\'", "\'\'"), info["state"],
+                               info["phone_number"], info["passport_number"],
+                               info["passport_expiration"], info["passport_country"], info["date_of_birth"]))
     elif identity == "booking_agent":
-        query = "INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\')"
-        cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
+        query += " VALUES (%s, %s, %s)"
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"),
+                               generate_password_hash(info["password"], PASSWORD_HASH), info["booking_agent_id"]))
     else:
-        query = """INSERT INTO {} VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', \'{}\')"""
-        cursor.execute(query.format(identity, info["email"].replace("\'", "\'\'"), generate_password_hash(info["password"], PASSWORD_HASH), info["first_name"].replace("\'", "\'\'"), info["last_name"].replace("\'", "\'\'"),
-                                    info["date_of_birth"], info["airline_name"]))
+        query += """ VALUES (%s, %s, %s, %s, %s, %s)"""
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"),
+                               generate_password_hash(info["password"], PASSWORD_HASH),
+                               info["first_name"].replace("\'", "\'\'"), info["last_name"].replace("\'", "\'\'"),
+                               info["date_of_birth"], info["airline_name"]))
     conn.commit()
     cursor.close()
     return
@@ -165,7 +171,7 @@ def get_flight_status(conn, flight_num, departure_date, arrival_date):
 
 
 def get_upcoming_flights(conn, identity, email):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     email = email.replace("\'", "\'\'")
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
@@ -175,23 +181,23 @@ def get_upcoming_flights(conn, identity, email):
         query += """WHERE airline_name IN (
                         SELECT airline_name
                         FROM airline_staff
-                        WHERE username = \'%s\'
+                        WHERE username = %s
         )"""
     elif identity == "customer":
         query += """WHERE flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket
-                        WHERE customer_email = \'%s\'
+                        WHERE customer_email = %s
         )"""
     else:
         query += """WHERE flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
-                        WHERE email =  \'%s\'
+                        WHERE email =  %s
         )"""
 
     # print("get upcoming flights query is:\n", query % email)
-    cursor.execute(query % email)
+    cursor.execute(query, (email,))
     data = cursor.fetchall()
     cursor.close()
 
@@ -222,20 +228,21 @@ def get_specified_flight(conn, airline_name, flight_num):
     data[0][8] = int(data[0][8])
     return data
 
+
 def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
     cursor = conn.cursor(prepared=True)
     query = """SELECT COUNT(ticket_id) 
                FROM ticket 
                WHERE flight_num = %s"""
     # print(query)
-    cursor.execute(query, (flight_num, ))
+    cursor.execute(query, (flight_num,))
     ticket_num = cursor.fetchall()
     ticket_num = ticket_num[0][0] if ticket_num else 0
     query = """SELECT seats 
                FROM airplane NATURAL JOIN flight 
                WHERE flight_num = %s"""
     # print(query)
-    cursor.execute(query, (flight_num, ))
+    cursor.execute(query, (flight_num,))
     seat_num = cursor.fetchall()
     seat_num = seat_num[0][0] if seat_num else 0
     # print(ticket_num, seat_num)
@@ -269,13 +276,13 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
 
 
 def get_my_spendings_total_amount(conn, email, start_date, end_date):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT SUM(price)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
-               WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
-            """ % (email, start_date, end_date)
+               WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s
+            """
     # print(query)
-    cursor.execute(query)
+    cursor.execute(query, (email, start_date, end_date))
     data = cursor.fetchall()
     cursor.close()
 
@@ -286,13 +293,13 @@ def get_my_spendings_total_amount(conn, email, start_date, end_date):
 
 
 def get_my_spendings_certain_range(conn, email, start_date, end_date):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT purchase_date, price
                 FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
-                WHERE customer_email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
-            """ % (email, start_date, end_date)
+                WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s
+            """
     print(query)
-    cursor.execute(query)
+    cursor.execute(query, (email, start_date, end_date))
     data = cursor.fetchall()
     cursor.close()
     for i in range(len(data)):
@@ -303,20 +310,20 @@ def get_my_spendings_certain_range(conn, email, start_date, end_date):
 
 
 def get_my_commission(conn, email, start_date, end_date):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE email = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
-            """ % (email, start_date, end_date)
-    cursor.execute(query)
+               WHERE email = %s AND purchase_date BETWEEN %s AND %s
+            """
+    cursor.execute(query, (email, start_date, end_date))
     my_commission = cursor.fetchall()
 
     query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE purchase_date BETWEEN \'%s\' AND \'%s\'
-            """ % (start_date, end_date)
-    print(query)
-    cursor.execute(query)
+               WHERE purchase_date BETWEEN %s AND %s
+            """
+    # print(query)
+    cursor.execute(query, (start_date, end_date))
     all_commission = cursor.fetchall()
     cursor.close()
 
@@ -339,7 +346,7 @@ def get_my_commission(conn, email, start_date, end_date):
 
 
 def top_customers(conn, email):
-    six_month_before = (datetime.today() - timedelta(days=6*31)).strftime("%Y-%m-%d")
+    six_month_before = (datetime.today() - timedelta(days=6 * 31)).strftime("%Y-%m-%d")
     a_year_before = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
 
     cursor = conn.cursor()
@@ -351,36 +358,23 @@ def top_customers(conn, email):
                )""" % (email, six_month_before)
     cursor.execute(query)
 
-    query = """SELECT *
-               FROM top_customers_ticket AS t1
-               WHERE 4 >= (
-                    SELECT COUNT(DISTINCT t2.num_of_ticket)
-                    FROM top_customers_ticket AS t2
-                    WHERE t2.num_of_ticket > t1.num_of_ticket
-               )
-               ORDER BY t1.num_of_ticket DESC
-            """
-    cursor.execute(query)
-    most_tickets = cursor.fetchall()
+    cursor.callproc("GetTopCustomerTicket")
+    most_tickets = []
+    for result in cursor.stored_results():
+        most_tickets = result.fetchall()
 
     query = """CREATE OR REPLACE VIEW top_customers_commission AS (
-                    SELECT customer_email, SUM(price) AS amount_of_commission
+                    SELECT customer_email, SUM(price) * 0.1 AS amount_of_commission
                     FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
                     WHERE email = \'%s\' and purchase_date >= \'%s\'
                     GROUP BY customer_email
             )""" % (email, six_month_before)
     cursor.execute(query)
 
-    query = """SELECT *
-               FROM top_customers_commission AS t1
-               WHERE 4 >= (
-                    SELECT COUNT(DISTINCT t2.amount_of_commission)
-                    FROM top_customers_commission AS t2
-                    WHERE t1.amount_of_commission > t1.amount_of_commission
-               )
-             """
-    cursor.execute(query)
-    most_commission = cursor.fetchall()
+    cursor.callproc("GetTopCustomerCommission")
+    most_commission = []
+    for result in cursor.stored_results():
+        most_commission = result.fetchall()
 
     conn.commit()
     cursor.close()
@@ -395,43 +389,44 @@ def top_customers(conn, email):
 
 
 def create_new_flight(conn, info):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     # Check flight num
-    query = """SELECT flight_num FROM flight WHERE flight_num = \'%s\'""" % info["flight_num"]
-    cursor.execute(query)
+    query = """SELECT flight_num FROM flight WHERE flight_num = %s"""
+    cursor.execute(query, (info["flight_num"],))
     data = cursor.fetchall()
     if data:
         cursor.close()
         return False, "Flight number already exists!"
 
     # Check departure airport name
-    query = """SELECT departure_airport FROM flight WHERE departure_airport = \'%s\'""" % info["departure_airport"]
-    cursor.execute(query)
+    query = """SELECT departure_airport FROM flight WHERE departure_airport = %s"""
+    cursor.execute(query, (info["departure_airport"],))
     data = cursor.fetchall()
     if not data:
         cursor.close()
         return False, "Departure airport does not exist in the database!"
 
     # Check arrival airport name
-    query = """SELECT arrival_airport FROM flight WHERE arrival_airport = \'%s\'""" % info["arrival_airport"]
-    cursor.execute(query)
+    query = """SELECT arrival_airport FROM flight WHERE arrival_airport = %s"""
+    cursor.execute(query, (info["arrival_airport"],))
     data = cursor.fetchall()
     if not data:
         cursor.close()
         return False, "Arrival airport does not exist in the database!"
 
     # Check plane id
-    query = """SELECT airplane_id FROM airplane WHERE airplane_id = \'%s\'""" % info["plane_id"]
-    cursor.execute(query)
+    query = """SELECT airplane_id FROM airplane WHERE airplane_id = %s"""
+    cursor.execute(query, (info["plane_id"],))
     data = cursor.fetchall()
     if not data:
         cursor.close()
         return False, "Airplane does not exist in the database!"
 
     query = """INSERT INTO flight
-               VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %d, \'%s\', \'%s\')
-            """ % (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"], info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["plane_id"])
-    cursor.execute(query)
+               VALUES (%s, %s, %s, %s, %s, %s, %d, %s, %s)
+            """
+    cursor.execute(query, (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"],
+                   info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["plane_id"]))
     conn.commit()
     cursor.close()
     return True, ""
@@ -460,32 +455,32 @@ def change_flight_status(conn, flight_num, status, airline_name):
 
 
 def add_airplane(conn, airline_name, airplane_id, seats):
-    cursor = conn.cursor()
-    query = """SELECT * FROM airplane WHERE airline_name = \'%s\' AND airplane_id = \'%s\'""" % (airline_name, airplane_id)
-    cursor.execute(query)
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT * FROM airplane WHERE airline_name = %s AND airplane_id = %s"""
+    cursor.execute(query, (airline_name, airplane_id))
     data = cursor.fetchall()
     if data:
         cursor.close()
         return False, "You can not add an existing airplane!"
     query = """INSERT INTO airplane
-               VALUES (\'%s\', \'%s\', \'%s\')""" % (airline_name, airplane_id, seats)
-    cursor.execute(query)
+               VALUES (%s, %s, %s)"""
+    cursor.execute(query, (airline_name, airplane_id, seats))
     conn.commit()
     cursor.close()
     return True, ""
 
 
 def add_airport(conn, airport_name, airport_city):
-    cursor = conn.cursor()
-    query = """SELECT * FROM airport WHERE airport_name = \'%s\'""" % airport_name
-    cursor.execute(query)
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT * FROM airport WHERE airport_name = %s"""
+    cursor.execute(query, (airport_name,))
     data = cursor.fetchall()
     if data:
         cursor.close()
         return False, "This airport name already exists!"
     query = """INSERT INTO airport
-               VALUES ('%s\', \'%s\')""" % (airport_name, airport_city)
-    cursor.execute(query)
+               VALUES (%s, %s)"""
+    cursor.execute(query, (airport_name, airport_city))
     conn.commit()
     cursor.close()
     return True, ""
@@ -648,8 +643,7 @@ def get_top_destinations(conn, start_date, end_date, airline_name):
                     FROM flight AS F JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
                         NATURAL JOIN purchases NATURAL JOIN ticket
                     WHERE airline_name = \'%s\' AND purchase_date BETWEEN \'%s\' AND \'%s\'
-                    GROUP BY dst
-                    
+                    GROUP BY dst 
             ) 
             """
     # print(query % (airline_name, start_date, end_date))
@@ -666,6 +660,3 @@ def get_top_destinations(conn, start_date, end_date, airline_name):
     for i in range(len(data)):
         data[i] = list(data[i])
     return data
-
-
-

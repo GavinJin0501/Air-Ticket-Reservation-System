@@ -59,3 +59,30 @@ END //
 DELIMITER ;
 
 
+DELIMITER //
+CREATE PROCEDURE GetTopCustomerTicket()
+BEGIN
+    SELECT *
+    FROM top_customers_ticket AS t1
+    WHERE 4 >= (
+        SELECT COUNT(DISTINCT t2.num_of_ticket)
+        FROM top_customers_ticket AS t2
+        WHERE t2.num_of_ticket > t1.num_of_ticket
+    )
+    ORDER BY t1.num_of_ticket DESC;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE GetTopCustomerCommission()
+BEGIN
+    SELECT *
+    FROM top_customers_commission AS t1
+    WHERE 4 >= (
+        SELECT COUNT(DISTINCT t2.amount_of_commission)
+        FROM top_customers_commission AS t2
+        WHERE t2.amount_of_commission > t1.amount_of_commission
+    )
+    ORDER BY t1.amount_of_commission DESC;
+END //
+DELIMITER ;
