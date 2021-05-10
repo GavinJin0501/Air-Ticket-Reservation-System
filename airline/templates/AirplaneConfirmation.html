@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>B-Airline</title>
+        <link rel="stylesheet" href="../static/public_view.css" />
+        <script src="../static/lib/moment.js"></script>
+    </head>
+
+
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+                {% if session["logged_in"] == True%}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR for {{session["type"]}}</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% else %}
+                    <a href="/SearchFlight" id="navbar__logo">B-AIR</a>
+                    <div class="navbar__toggle" id="mobile-menu">
+                        <span class="bar"></span> <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                {% endif%}
+
+            </div>
+        </nav>
+        <section>
+            <div class="full-container"> 
+                <div class="half-container"> 
+                    <div class="search-container" id="search-container">
+                        <form action="/AirplaneConfirmation" onsubmit="return formValidation()" autocomplete="off" method="POST">
+                            <label id="navbar__logo"> Add airplane here</label>
+                            <label class="label"> </label> </br>
+                            <label class="label">Airplane ID</label> </br>
+                            <input type="text" name = "airplane_id" value="{{session['airplane']}}" readonly/> </br>
+                            <label class="label">Airline name</label> </br>
+                            <input type="text" name = "airline_name" value="{{session['airline']}}" readonly/> </br>
+                            <label class="label">Seats</label> </br>
+                            <input type="text" name = "seats" value="{{session['seats']}}" readonly/> </br>
+                            <input type="submit" value = Confirm />
+                            <label class="label"> </label> </br>
+                        </form>
+                    </div>
+                </div>
+                <div class="half-container">
+                    <div class="half-smaller-container">
+                            <div class="topbutton">
+                                <div class="statusbar-container">
+                                    Airplane ID
+                                </div>
+                                <div class="statusbar-container">
+                                    Airline name
+                                </div>
+                                <div class="statusbar-container">
+                                    Seats
+                                </div>
+                            </div>
+                        
+                            {% for line in plane-display %}
+                                <section>
+                                    <div class="bluebutton">
+                                        <section class="bluebutton">
+                                            <div class="status-button-container1">
+                                                <section class="otherlabel">{{line[0]}}</section>
+                                            </div>
+                                            <div class="status-button-container">
+                                                <section class="otherlabel">{{line[1]}}</section>
+                                            </div>
+                                            <div class="status-button-container1">
+                                                <section class="otherlabel">{{line[2]}}</section>
+                                            </div> 
+                                        </section>
+                                    </div>
+                                </section>
+                            {% endfor%}
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>

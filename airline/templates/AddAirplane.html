@@ -99,9 +99,15 @@
                         <a href="/AddAirplane" class="navbar__links" id="links">Add Airplane</a>
                       </li> -->
                     {% endif %}
-                        <li class="navbar__btn">
-                        <a href="/logout" class="button" id="logout">Logout</a>
-                        </li>
+                    <div class="dropdown">
+                      <button class="dropbtn" id="info">{{session["email"]}} 
+                      <i class="fa fa-caret-down"></i>
+                      </button>
+                      <div class="dropdown-content">
+                      <a href="/Changeinfo">Change my info</a>
+                      <a href="/logout">Logout</a>
+                      </div>
+                  </div>
                     {% else %}
                         <li class="navbar__btn">
                         <a href="/login" class="button" id="login">Login</a>
@@ -116,7 +122,7 @@
         </nav>
 
         <div class="search-container">
-            <form action="/AddAirplane" autocomplete="off" method="POST">
+            <form action="/AddAirplane" onsubmit="return formValidation()" autocomplete="off" method="POST">
                 <label id="navbar__logo"> Add airplane here</label>
                 <label class="label"> </label> </br>
                 <label class="label">Airplane ID</label> </br>
@@ -140,3 +146,16 @@
     {% endif %}
     
     </body>
+
+    <script>
+      function formValidation() {
+            var seats_num;
+            seats_num = document.getElementsByName("seats")[0].value;
+            // if (type[seats_num]!=number) {
+            //     alert("Seat number should be number!");
+            //     return false;
+            // }
+
+            return true;
+      }
+    </script>

@@ -229,6 +229,7 @@
   }
 
 
+
   .barbutton {
     display: flex;
     justify-content: center;
@@ -428,18 +429,38 @@
 
 
 
-  .navbar__links:hover {
+  /* .navbar__links:hover {
     color: #e8cbc0;
     transition: all 0.3s ease;
+  } */
+
+  /* .navbar__links__long:hover {
+    color: #e8cbc0;
+    transition: all 0.3s ease;
+  } */
+
+
+  .navbar__links.active {
+    background-color: #a8b2dd;
+    transition: all 0.3s ease;
   }
+  
+  .dropbtn.active {
+    background-color: #a8b2dd;
+    transition: all 0.3s ease;
+  }
+
+  .navbar__links:hover {
+    background-color: #a8b2dd;
+    transition: all 0.3s ease;
+  } 
+
+  .navbar__links__long.active {
+    background-color: #a8b2dd;
+    transition: all 0.3s ease;
+  } 
 
   .navbar__links__long:hover {
-    color: #e8cbc0;
-    transition: all 0.3s ease;
-  }
-
-
-  .active {
     background-color: #a8b2dd;
     transition: all 0.3s ease;
   } 
@@ -874,8 +895,26 @@
     width: 150px;
     height: 80px;
   }
+
+  .dropdown .dropbtn.active {
+    font-size: 18px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 30px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+    width: 150px;
+    height: 80px;
+  }
   
   .dropdown:hover .dropbtn {
+    background-color: #a8b2dd;
+    width: 150px;
+  }
+
+  .dropdown:active .dropbtn {
     background-color: #a8b2dd;
     width: 150px;
   }
@@ -968,6 +1007,14 @@
   
   .select-items div:hover, .same-as-selected {
     background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  #info {
+    background:  #a8b2dd;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #a8b2dd);
+    background: linear-gradient(to right, #e8cbc0, #a8b2dd);
+    overflow: hidden;
+    width: auto;
   }
 
   /* @chart-width:650px;
