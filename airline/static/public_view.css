@@ -52,6 +52,11 @@
     font-size: 18px;
   }
 
+  .finishedlabel {
+    color: #000000;
+    font-size: 18px;
+  }
+
   .navbar {
     background: #636fa4;
     height: 80px;
