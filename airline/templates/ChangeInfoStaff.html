@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>B-Air Airline Staff Register</title>
+<title>B-Air Airline Staff Change Information</title>
 <link rel="stylesheet" href="../static/public_view.css" />
 <head>
 </head>
@@ -16,14 +16,14 @@
 			<span class="bar"></span>
 		  </div>
 		  <ul class="navbar__menu">
-			<li class="navbar__item">
+			<!-- <li class="navbar__item">
 			  <a href="/register/customer" class="navbar__links" id="links">Customer</a>
 			</li>
 			<li class="navbar__item">
 			  <a href="/register/booking_agent" class="navbar__links" id="links">Booking Agent</a>
 			<li class="navbar__item">
 				<a href="/register/airline_staff" class="navbar__links" id="links">Airline Staff</a>
-			</li>
+			</li> -->
 			<li class="navbar__btn">
 				<a href="/SearchFlight" class="button" id="sign-up">Back to Public View</a>
 			</li>
@@ -34,101 +34,42 @@
 
 
     <div class="register-container" id="register-container">
-        <form action="/register/airline_staff" autocomplete="off" onsubmit="return formValidation()" method="POST">
-            <label id="navbar__logo">Welcome to B-Air, ariline staff!</label>
+        <form action="/ChangeInfo/staff" autocomplete="off" onsubmit="return formValidation()" method="POST">
+            <label id="navbar__logo">Change your information here, ariline staff!</label>
             <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Username</label> </br>
-                        <input type="text" id = "em" name = "username" placeholder="email" required/> </br>
+                        <input type="text" id = "em" name = "username" value="{{info[0]}}" required/> </br>
                         <label class="label"> Password</label> </br>
-                        <input type="text" id = "pword" name = "password" placeholder="password" required/> </br>
+                        <input type="text" id = "pword" name = "password" value="{{info[1]}}" required/> </br>
                     </div>
                     <div class="smaller-container">
                         <label class="label">First name</label> </br>
-                        <input type="text" id = "fm" name = "first_name" placeholder="first name" required/> </br>
+                        <input type="text" id = "fm" name = "first_name" value="{{info[2]}}" required/> </br>
                         <label class="label">Last name</label> </br>
-                        <input type="text" id = "lm" name = "last_name" placeholder="last name" required/> </br>
+                        <input type="text" id = "lm" name = "last_name" value="{{info[3]}}" required/> </br>
                     </div>
                 </div>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Airline name</label> </br>
-                        <input type="text" id = "fm" name = "airline_name" placeholder="airline name" required/> </br>
+                        <input type="text" id = "fm" name = "airline_name" value="{{info[4]}}" readonly/> </br>
                         <label class="label">Date of birth</label>
-                        <input type="date" id = "dob" name = "date_of_birth" placeholder="date of birth" required/>
+                        <input type="date" id = "dob" name = "date_of_birth" value="{{info[5]}}" readonly/>
                     </div>
                     <div class="smaller-container">
                         </br>
-                        <input type="submit" value = Register />
-                        <a href="/login/airline_staff" class="navbar__links__long" id="register-airline_staff">Already have an account? Login</a></br>
-                        <!-- </div> -->
-                        <!-- <label class="label">Confirm Password</label> </br>
-                        <input type="text" id = "cpword" name = "confirm_password" placeholder="confirm password" required/> </br> -->
+                        <label class="label"> </label> </br>
+                        <label class="label"> </label> </br>
+                        <input type="submit" value = Change />
+                        <!-- <a href="/login/airline_staff" class="navbar__links__long" id="register-airline_staff">Already have an account? Login</a></br> -->
                     </div>
                 </div>
                 <div class="bluebutton"></div>
                 <div class="bluebutton"></div>
                 <div class="bluebutton"></div>
             </section>
-
-            <!-- <section>
-                <div class="bluebutton">
-                    <div class="smaller-container">
-                        <label class="label">Building number</label> </br>
-                        <input type="text" id = "bd" name = "building_number" placeholder="building number" required/> </br>
-                        <label class="label">Street</label> </br>
-                        <input type="text" id = "str" name = "street" placeholder="street" required/> </br>
-                    </div>
-                    <div class="smaller-container">
-                        <label class="label">City</label> </br>
-                        <input type="text" id = "ct" name = "city" placeholder="city" required/> </br>
-                        <label class="label">State</label> </br>
-                        <input type="text" id = "sta" name = "state" placeholder="state" required/> </br>
-                    </div>
-                </div>
-            </section>
-            
-            <section>
-                <div class="bluebutton">
-                    <div class="smaller-container">
-                        <label class="label">Phone number</label> </br>
-                        <input type="text" id = "phn" name = "phone_number" placeholder="phone number (11 digits)" required/> </br>
-                        <label class="label">Passport number</label> </br>
-                        <input type="text" id = "pn" name = "passport_number" placeholder="passport number" required/> </br>
-                    </div>
-                    <div class="smaller-container">
-                        <label class="label">Passport expiration</label> </br>
-                        <input type="date" id = "px" name = "passport_expiration" placeholder="passport expiration" required/> </br>
-                        <label class="label">Passport country</label> </br>
-                        <input type="text" id = "pc" name = "passport_country" placeholder="passport country" required/> </br>
-                    </div>
-                </div>
-            </section> -->
-
-            <!-- <section>
-                <div class="bluebutton"> -->
-                    <!-- <div class="smaller-container">
-                        <label class="label">Date of birth</label>
-                        <input type="date" id = "dob" name = "date_of_birth" placeholder="date of birth" required/>
-                    </div> -->
-                    <!-- <div class="smaller-container">
-                        <input type="submit" value = Register />
-                        <a href="/login/booking_agent" class="navbar__links" id="register-booking_agent">Already have an account? Login</a></br>
-                    </div>
-                </div>
-            </section> -->
-            
-            <!-- {% if not password == confirm_password%}
-            <div class="topbutton">
-                <div class='warning'>
-                    Sorry, the password is not confirmed. Please type again.
-                </div>
-            </div>
-            {% endif %} -->
-
-<!-- if account already exist -->
-            <!-- <a href="/" class="button" id="go-back">Go back</a> -->
 
         </form>
     </div>
