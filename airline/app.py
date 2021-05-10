@@ -170,7 +170,7 @@ def view_flight_customers(flight_num):
         return redirect(url_for("home"))
 
     if request.method == "GET":
-        #["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
+        # ["Airline", "Flight", "Depart airport", "Depart city", "Depart time", "Arrive airport", "Arrive city", "Arrive time", "Price", "Status", "Airplane"];
         clicked_flight = db_utils.get_specified_flight(conn, session["airline"], flight_num)
         customer_info = db_utils.get_flight_customers(conn, session["airline"], flight_num)
         print(clicked_flight, customer_info)
@@ -436,7 +436,8 @@ def add_airplane_confirmation(airplane_id, seats):
             status, error = db_utils.add_airplane(conn, session["airline"], airplane_id, seats)
 
         if not status:
-            return render_template("AirplaneConfirmation.html", status=status, error=error, airplane_id=airplane_id, seats=seats,planes=planes)
+            return render_template("AirplaneConfirmation.html", status=status, error=error, airplane_id=airplane_id,
+                                   seats=seats, planes=planes)
         return redirect(url_for("home"))
 
 
@@ -630,6 +631,46 @@ def view_top_destinations():
         top_specified = db_utils.get_top_destinations(conn, start_date, end_date, session["airline"])
         return render_template("ViewTopDestinations.html", status="POST", top_three_month=[["", 0]],
                                top_last_year=[["", 0]], top_specified=top_specified)
+
+
+@app.route('/Changeinfo', methods=["GET", "POST"])
+def change_info():
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+
+    info = db_utils.get_user_info(conn, session["type"], session["email"])
+    if request.method == "GET":
+        return render_template("ChangeInfo_%s.html" % session["type"], info=info, error="")
+    elif request.method == "POST":
+        finfo = {"email": request.form.get("username"),
+                 "password": request.form.get("password"),
+                 "name": request.form.get("name"),
+                 "first_name": request.form.get("first_name"),
+                 "last_name": request.form.get("last_name"),
+                 "building_number": request.form.get("building_number"),
+                 "street": request.form.get("street"),
+                 "city": request.form.get("city"),
+                 "state": request.form.get("state"),
+                 "phone_number": request.form.get("phone_number"),
+                 "passport_number": request.form.get("passport_number"),
+                 "passport_expiration": request.form.get("passport_expiration"),
+                 "passport_country": request.form.get("passport_country"),
+                 "date_of_birth": request.form.get("date_of_birth"),
+                 "booking_agent_id": request.form.get("booking_agent_id"),
+                 "airline_name": request.form.get("airline_name")
+                 }
+        identity = session["type"]
+        if not is_match(finfo["email"], EMAIL_REGEX):
+            error = "Email address invalid"
+            return render_template("ChangeInfo_%s.html" % session["type"], info=info, error=error)
+
+        status, error = db_utils.update_user_info(conn, identity, finfo, session["email"])
+
+        if not status:
+            return render_template("ChangeInfo_%s.html" % session["type"], info=info, error=error)
+        session["email"] = finfo["email"]
+        return redirect(url_for("home"))
 
 
 # ======================================================================================

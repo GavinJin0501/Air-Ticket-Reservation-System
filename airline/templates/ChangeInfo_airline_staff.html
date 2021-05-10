@@ -34,29 +34,29 @@
 
 
     <div class="register-container" id="register-container">
-        <form action="/ChangeInfo/staff" autocomplete="off" onsubmit="return formValidation()" method="POST">
+        <form action="/Changeinfo" autocomplete="off" onsubmit="return formValidation()" method="POST">
             <label id="navbar__logo">Change your information here, ariline staff!</label>
             <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Username</label> </br>
-                        <input type="text" id = "em" name = "username" value="{{info[0]}}" required/> </br>
+                        <input type="text" id = "em" name = "username" value="{{info[0]}}"/> </br>
                         <label class="label"> Password</label> </br>
-                        <input type="text" id = "pword" name = "password" value="{{info[1]}}" required/> </br>
+                        <input type="text" id = "pword" name = "password" value="{{info[1]}}" readonly/> </br>
                     </div>
                     <div class="smaller-container">
                         <label class="label">First name</label> </br>
-                        <input type="text" id = "fm" name = "first_name" value="{{info[2]}}" required/> </br>
+                        <input type="text" id = "fm" name = "first_name" value="{{info[2]}}" /> </br>
                         <label class="label">Last name</label> </br>
-                        <input type="text" id = "lm" name = "last_name" value="{{info[3]}}" required/> </br>
+                        <input type="text" id = "lm" name = "last_name" value="{{info[3]}}" /> </br>
                     </div>
                 </div>
                 <div class="bluebutton">
                     <div class="smaller-container">
                         <label class="label">Airline name</label> </br>
-                        <input type="text" id = "fm" name = "airline_name" value="{{info[4]}}" readonly/> </br>
+                        <input type="text" id = "fm" name = "airline_name" value="{{info[5]}}" readonly/> </br>
                         <label class="label">Date of birth</label>
-                        <input type="date" id = "dob" name = "date_of_birth" value="{{info[5]}}" readonly/>
+                        <input type="date" id = "dob" name = "date_of_birth" value="{{info[4]}}"/>
                     </div>
                     <div class="smaller-container">
                         </br>
@@ -74,7 +74,7 @@
         </form>
     </div>
 
-    {% if error %}
+            {% if error %}
 				<div class="topbutton">
 					<div class='warning'>
 						{{error}}

@@ -40,7 +40,8 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND departure_time > \'{}\' AND """.format(date, datetime.today().strftime("%Y-%m-%d"))
+               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND departure_time > \'{}\' AND """.format(
+        date, datetime.today().strftime("%Y-%m-%d"))
     # city+airport -> city+airport
     if src_airport and dst_airport:
         query += """F.departure_airport = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
@@ -445,7 +446,8 @@ def create_new_flight(conn, info):
                VALUES (%s, %s, %s, %s, %s, %s, %d, %s, %s)
             """
     cursor.execute(query, (info["airline_name"], info["flight_num"], info["departure_airport"], info["departure_time"],
-                   info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"], info["plane_id"]))
+                           info["arrival_airport"], info["arrival_time"], int(info["price"]), info["status"],
+                           info["plane_id"]))
     conn.commit()
     cursor.close()
     return True, ""
@@ -679,3 +681,46 @@ def get_top_destinations(conn, start_date, end_date, airline_name):
     for i in range(len(data)):
         data[i] = list(data[i])
     return data
+
+
+def get_user_info(conn, identity, email):
+    cursor = conn.cursor()
+    query = """SELECT * FROM %s""" % identity
+    if identity == "airline_staff":
+        query += """ WHERE username = %s"""
+    else:
+        query += """ WHERE email = %s"""
+    cursor.execute(query, (email,))
+    data = cursor.fetchall()[0]
+    cursor.close()
+    return data
+
+
+def update_user_info(conn, identity, info, old_email):
+    cursor = conn.cursor(prepared=True)
+    print(info["email"], old_email)
+    if info["email"] != old_email:
+        query = """SELECT * FROM %s""" % identity
+        if identity == "airline_staff":
+            query += """ WHERE username = %s"""
+        else:
+            query += """ WHERE email = %s"""
+        cursor.execute(query, (info["email"],))
+        data = cursor.fetchall()
+        if data:
+            cursor.close()
+            return False, "Email has already been used!"
+    query = """UPDATE %s""" % identity
+    if identity == "airline_staff":
+        query += """ SET username = %s, first_name = %s, last_name = %s, date_of_birth = %s
+                     WHERE username = %s
+                 """
+        cursor.execute(query, (info["email"], info["first_name"], info["last_name"], info["date_of_birth"], old_email))
+    elif identity == "booking_agent":
+        pass
+    else:
+        pass
+
+    conn.commit()
+    cursor.close()
+    return True, ""
