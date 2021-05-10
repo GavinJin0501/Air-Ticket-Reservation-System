@@ -96,7 +96,7 @@ CREATE TABLE `flight` (
   `arrival_time` datetime NOT NULL,
   `price` decimal(10,0) NOT NULL,
   `status` varchar(50) NOT NULL,
-  `airplane_id` varchar(10) NOT NULL,
+  `airplane_id` varchar(10) NOT NULL ON UPDATE CASCADE,
   PRIMARY KEY(`airline_name`, `flight_num`),
   FOREIGN KEY(`airline_name`, `airplane_id`) REFERENCES `airplane`(`airline_name`, `airplane_id`),
   FOREIGN KEY(`departure_airport`) REFERENCES `airport`(`airport_name`),
@@ -128,7 +128,7 @@ CREATE TABLE `ticket` (
 
 CREATE TABLE `purchases` (
   `ticket_id` varchar(20) NOT NULL,
-  `customer_email` varchar(50) NOT NULL,
+  `customer_email` varchar(50) NOT NULL ON UPDATE CASCADE,
   `booking_agent_id` varchar(11),
   `purchase_date` date NOT NULL,
   PRIMARY KEY(`ticket_id`, `customer_email`),

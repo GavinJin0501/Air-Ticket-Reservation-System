@@ -665,7 +665,11 @@ def change_info():
             error = "Email address invalid"
             return render_template("ChangeInfo_%s.html" % session["type"], info=info, error=error)
 
-        status, error = db_utils.update_user_info(conn, identity, finfo, session["email"])
+        if identity == "booking_agent":
+            old_id = info[2]
+        else:
+            old_id = ""
+        status, error = db_utils.update_user_info(conn, identity, finfo, session["email"], old_id)
 
         if not status:
             return render_template("ChangeInfo_%s.html" % session["type"], info=info, error=error)

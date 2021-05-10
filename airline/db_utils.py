@@ -112,6 +112,22 @@ def register_check(conn, info, identity):
             return False, "Email has already been used"
         else:
             return True, ""
+    elif identity == "booking_agent":
+        query = "SELECT email FROM %s" % identity
+        query += " WHERE email = %s"
+        cursor.execute(query, (info["email"].replace("\'", "\'\'"),))
+        data = cursor.fetchall()
+        if data:
+            cursor.close()
+            return False, "Email has already been used"
+        query = "SELECT email FROM %s" % identity
+        query += " WHERE booking_agent_id = %s"
+        cursor.execute(query, (info["booking_agent_id"].replace("\'", "\'\'"),))
+        data = cursor.fetchall()
+        if data:
+            cursor.close()
+            return False, "Agent id has already been used"
+        return True, ""
     else:
         query = "SELECT email FROM %s" % identity
         query += " WHERE email = %s"
@@ -120,8 +136,8 @@ def register_check(conn, info, identity):
         cursor.close()
         if data:
             return False, "Email has already been used"
-        else:
-            return True, ""
+        return True, ""
+
 
 
 def register_to_database(conn, info, identity):
@@ -696,9 +712,8 @@ def get_user_info(conn, identity, email):
     return data
 
 
-def update_user_info(conn, identity, info, old_email):
+def update_user_info(conn, identity, info, old_email, old_agent_id=""):
     cursor = conn.cursor(prepared=True)
-    print(info["email"], old_email)
     if info["email"] != old_email:
         query = """SELECT * FROM %s""" % identity
         if identity == "airline_staff":
@@ -710,6 +725,17 @@ def update_user_info(conn, identity, info, old_email):
         if data:
             cursor.close()
             return False, "Email has already been used!"
+
+    if old_agent_id:
+        if info["booking_agent_id"] != old_agent_id:
+            query = """SELECT * FROM %s""" % identity
+            query += """ WHERE booking_agent_id = %s"""
+            cursor.execute(query, (info["booking_agent_id"],))
+            data = cursor.fetchall()
+            if data:
+                cursor.close()
+                return False, "Agent id has already been used!"
+
     query = """UPDATE %s""" % identity
     if identity == "airline_staff":
         query += """ SET username = %s, first_name = %s, last_name = %s, date_of_birth = %s
@@ -717,7 +743,10 @@ def update_user_info(conn, identity, info, old_email):
                  """
         cursor.execute(query, (info["email"], info["first_name"], info["last_name"], info["date_of_birth"], old_email))
     elif identity == "booking_agent":
-        pass
+        query += """ SET email = %s, booking_agent_id = %s
+                     WHERE email = %s
+                 """
+        cursor.execute(query, (info["email"], info["booking_agent_id"], old_email))
     else:
         pass
 
