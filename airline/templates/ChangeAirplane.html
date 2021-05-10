@@ -72,6 +72,7 @@
                           <a href="/CreateNewFlights">Create New Flights</a>
                           <a href="/ChangeFlightStatus">Change Flights Status</a>
                           <a href="/AddAirplane">Add Airplane</a>
+                          <a href="/ChangeAirplane">Change Airplane</a>
                           <a href="/AddAirport">Add Airport</a>
                         </div>
                       </div> 
@@ -116,17 +117,19 @@
         </nav>
 
         <div class="search-container">
-            <form action="/AddAirplane" autocomplete="off" method="POST">
-                <label id="navbar__logo"> Add airplane here</label>
+            <form action="/ChangeAirplane" autocomplete="off" method="POST">
+                <label id="navbar__logo"> Change airplane here</label>
                 <label class="label"> </label> </br>
-                <label class="label">Airplane ID</label> </br>
-                <input type="text" name = "airplane_id" placeholder="airline id" required/> </br>
-                <label class="label">Airline name</label> </br>
-                <input type="text" name = "airline_name" value="{{session['airline']}}" readonly/> </br>
-                <label class="label">Seats</label> </br>
-                <input type="text" name = "seats" placeholder="seats" required/> </br>
+                <label class="label">Airline Name</label> </br>
+                <input type="text" name = "airline_name" placeholder="airline name" required/> </br>
+                <label class="label">Old Airplane ID</label> </br>
+                <input type="text" name = "airplane_id" placeholder="old airline id" required/> </br>
+                <label class="label">New Airplane ID </label> </br>
+                <input type="text" name = "airplane_id" placeholder="new airline id" required/> </br>
+                <label class="label">New Airplane Seats</label> </br>
+                <input type="text" name = "seats" placeholder="new airplane seats" required/> </br>
                 
-                <input type="submit" value = Add />
+                <input type="submit" value = Change />
                 <label class="label"> </label> </br>
                 <!-- <a href="/" class="button" id="go-back">Go back</a> -->
             </form>
