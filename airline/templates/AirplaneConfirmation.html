@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>B-Airline</title>
-        <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='/public_view.css') }}" />
         <script src="../static/lib/moment.js"></script>
     </head>
 
@@ -32,15 +32,15 @@
             <div class="full-container"> 
                 <div class="half-container"> 
                     <div class="search-container" id="search-container">
-                        <form action="/AirplaneConfirmation" onsubmit="return formValidation()" autocomplete="off" method="POST">
-                            <label id="navbar__logo"> Add airplane here</label>
+                        <form action="/AddAirplane/Confirmation/{{airplane_id}}/{{seats}}" onsubmit="return formValidation()" autocomplete="off" method="POST">
+                            <label id="navbar__logo">Confirm the new airplane here</label>
                             <label class="label"> </label> </br>
                             <label class="label">Airplane ID</label> </br>
-                            <input type="text" name = "airplane_id" value="{{session['airplane']}}" readonly/> </br>
+                            <input type="text" name = "airplane_id" value="{{airplane_id}}" readonly/> </br>
                             <label class="label">Airline name</label> </br>
                             <input type="text" name = "airline_name" value="{{session['airline']}}" readonly/> </br>
                             <label class="label">Seats</label> </br>
-                            <input type="text" name = "seats" value="{{session['seats']}}" readonly/> </br>
+                            <input type="text" name = "seats" value="{{seats}}" readonly/> </br>
                             <input type="submit" value = Confirm />
                             <label class="label"> </label> </br>
                         </form>
@@ -59,8 +59,8 @@
                                     Seats
                                 </div>
                             </div>
-                        
-                            {% for line in plane-display %}
+                        {% if planes %}
+                            {% for line in planes %}
                                 <section>
                                     <div class="bluebutton">
                                         <section class="bluebutton">
@@ -78,10 +78,20 @@
                                 </section>
                             {% endfor%}
                     {% endif %}
+                        {% if error %}
+                            <div class="topbutton">
+                                <div class='warning'>
+                                    {{error}}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </section>
 
     </body>
+
+
+
 </html>

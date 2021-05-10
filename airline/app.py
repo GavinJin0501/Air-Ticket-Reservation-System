@@ -409,12 +409,35 @@ def add_airplane():
     if request.method == "GET":
         return render_template("AddAirplane.html", status=False, error="")
     elif request.method == "POST":
-        airline_name = request.form["airline_name"]
         airplane_id = request.form["airplane_id"]
         seats = request.form["seats"]
 
-        status, error = db_utils.add_airplane(conn, airline_name, airplane_id, seats)
-        return render_template("AddAirplane.html", status=status, error=error)
+        return redirect(url_for("add_airplane_confirmation", airplane_id=airplane_id, seats=seats))
+
+
+@app.route('/AddAirplane/Confirmation/<airplane_id>/<seats>', methods=["GET", "POST"])
+def add_airplane_confirmation(airplane_id, seats):
+    if not session.get("logged_in", False):
+        flash("Don't cheat! Login first!")
+        return redirect(url_for("home"))
+    elif session.get("type", "guest") != "airline_staff":
+        flash("You don't have the authority to do so!")
+        return redirect(url_for("home"))
+
+    planes = db_utils.get_airplanes(conn, session["airline"])
+    if request.method == "GET":
+        print(airplane_id, seats)
+        return render_template("AirplaneConfirmation.html", airplane_id=airplane_id, seats=seats, planes=planes)
+    elif request.method == "POST":
+        if not seats.isdigit():
+            status = False
+            error = "Seats should be integer"
+        else:
+            status, error = db_utils.add_airplane(conn, session["airline"], airplane_id, seats)
+
+        if not status:
+            return render_template("AirplaneConfirmation.html", status=status, error=error, airplane_id=airplane_id, seats=seats,planes=planes)
+        return redirect(url_for("home"))
 
 
 @app.route('/AddAirport', methods=["GET", "POST"])

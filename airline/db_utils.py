@@ -25,6 +25,15 @@ def get_airport_and_city(conn):
     return data2
 
 
+def get_airplanes(conn, airline_name):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT * FROM airplane WHERE airline_name = %s"""
+    cursor.execute(query, (airline_name,))
+    data = cursor.fetchall()
+    cursor.close()
+    return data
+
+
 def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_airport=""):
     cursor = conn.cursor(prepared=True)
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
