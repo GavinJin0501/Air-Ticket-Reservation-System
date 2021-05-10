@@ -132,7 +132,12 @@
   }
   
   #navbar__logo {
-    background-color: #ff8177;
+    color: #fd6f65;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    /* background-color: #ff8177;
     background-image: linear-gradient(to top, #fc3e6d 0%, #ffb199 100%);
     background-size: 100%;
     -webkit-background-clip: text;
@@ -144,7 +149,7 @@
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    font-size: 2rem;
+    font-size: 2rem; */
   }
   
   .navbar__menu {
@@ -704,7 +709,7 @@
   }
 
   .warning{
-    color:#ff8177;
+    color:#fd6f65;
     font-size: 25px;
   }
 
