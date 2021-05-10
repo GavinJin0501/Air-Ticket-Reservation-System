@@ -100,7 +100,8 @@ CREATE TABLE `flight` (
   PRIMARY KEY(`airline_name`, `flight_num`),
   FOREIGN KEY(`airline_name`, `airplane_id`) REFERENCES `airplane`(`airline_name`, `airplane_id`),
   FOREIGN KEY(`departure_airport`) REFERENCES `airport`(`airport_name`),
-  FOREIGN KEY(`arrival_airport`) REFERENCES `airport`(`airport_name`)
+  FOREIGN KEY(`arrival_airport`) REFERENCES `airport`(`airport_name`),
+  CHECK (status in ("Upcoming", "In-progress", "Finished", "Delayed", "Canceled"))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

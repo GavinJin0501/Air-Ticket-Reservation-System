@@ -4,7 +4,7 @@ import mysql.connector
 import re
 import db_utils
 
-# App initlization:
+# App initialization:
 # ======================================================================================
 app = Flask(__name__)
 
@@ -180,7 +180,7 @@ def view_flight_customers(flight_num):
 @app.route('/purchase/<airline_name>/<flight_num>', methods=["GET"])
 def purchase(airline_name, flight_num):
     if not session.get("logged_in", False):
-        return redirect(url_for("home"))
+        return redirect(url_for("login_purchase", airline_name=airline_name, flight_num=flight_num))
     elif session.get("type", "guest") == "airline_staff":
         return redirect(url_for("view_my_flights"))
 
@@ -191,7 +191,7 @@ def purchase(airline_name, flight_num):
 @app.route('/purchase/confirm/<airline_name>/<flight_num>', methods=["GET", "POST"])
 def purchase_confirm(airline_name, flight_num):
     if not session.get("logged_in", False):
-        return redirect(url_for("home"))
+        return redirect(url_for("login_purchase", airline_name=airline_name, flight_num=flight_num))
     elif session.get("type", "guest") == "airline_staff":
         return redirect(url_for("view_my_flights"))
 
@@ -209,12 +209,12 @@ def purchase_confirm(airline_name, flight_num):
             customer_email = request.form.get("customer_email")
             agent_email = session["email"]
 
-        if db_utils.purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
+        status, error = db_utils.purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num)
+        if status:
             print("purchase success")
             return redirect(url_for("view_my_flights"))
         else:
             print("purchase fail")
-            error = "No ticket! This flight is full!"
             return render_template("purchase_confirm.html", email=session["email"], airline_name=airline_name,
                                    flight_num=flight_num, error=error)
 

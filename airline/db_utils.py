@@ -31,7 +31,7 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND """.format(date)
+               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND departure_time > \'{}\' AND """.format(date, datetime.today().strftime("%Y-%m-%d"))
     # city+airport -> city+airport
     if src_airport and dst_airport:
         query += """F.departure_airport = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
@@ -247,7 +247,17 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     seat_num = seat_num[0][0] if seat_num else 0
     # print(ticket_num, seat_num)
     if ticket_num >= seat_num:
-        return False
+        cursor.cloase()
+        return False, "No ticket! This flight is full!"
+
+    query = """SELECT *
+               FROM flight
+               WHERE airline_name = %s AND flight_num = %s AND status = 'Upcoming' AND departure_time > %s"""
+    cursor.execute(query, (airline_name, flight_num, datetime.today().strftime("%Y-%m-%d")))
+    check_flight = cursor.fetchall()
+    if not check_flight:
+        cursor.close()
+        return False, "This flight is expired! Can not buy!"
 
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")
@@ -272,7 +282,7 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     cursor.execute(query, t)
     conn.commit()
     cursor.close()
-    return True
+    return True, ""
 
 
 def get_my_spendings_total_amount(conn, email, start_date, end_date):
