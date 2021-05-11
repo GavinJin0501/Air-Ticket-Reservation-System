@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>B-Airline</title>
         <link rel="stylesheet" href="../static/public_view.css" />
+        <script src="../static/lib/jquery-1.12.4.js"></script>
+        <script src="../static/lib/jquery-ui.js"></script>
         <script src="../static/lib/moment.js"></script>
     </head>
 
@@ -177,8 +179,6 @@
 
   <script>
 
-    var airports_and_city;
-    airports_and_city = {{airport_city | safe}};
         
         $(document).ready(function() {
             $("#src_dl").autocomplete({
@@ -196,7 +196,20 @@
         });
 
     function formValidation() {
-      
+      var airports_and_city, ht={}, temp;
+      airports_and_city = {{airport_city | safe}};
+
+      for (let data of airports_and_city) {
+          temp = data.split(" - ");
+          if (temp.length == 2) {
+              ht[temp[1]] = temp[0];
+          }
+      }
+
+      if (ht[document.getElementsByName("departure_airport")[0].value] == ht[document.getElementsByName("arrival_airport")[0].value]) {
+        alert("Departure airport cannot be in the same city as arrival airport!");
+        return false;
+      }
     }
 
 
