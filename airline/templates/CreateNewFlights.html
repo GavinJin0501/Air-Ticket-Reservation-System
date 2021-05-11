@@ -198,7 +198,9 @@
         });
 
     function formValidation() {
-      var airports_and_city, ht={}, temp;
+      var airports_and_city, ht={}, temp, dpt_airport, arr_airport;
+      dpt_airport = document.getElementsByName("departure_airport")[0].value;
+      arr_airport = document.getElementsByName("arrival_airport")[0].value];
       airports_and_city = {{airport_city | safe}};
 
       for (let data of airports_and_city) {
@@ -208,7 +210,18 @@
           }
       }
 
-      if (ht[document.getElementsByName("departure_airport")[0].value] == ht[document.getElementsByName("arrival_airport")[0].value]) {
+
+      if (!(dpt_airport in ht)) {
+        alert("Enter a valid departure airport!");
+        return false;
+      }
+
+      if (!(arr_airport) in ht) {
+        alert("Enter a valid arrival airport!");
+        return false;
+      }
+
+      if (ht[dpt_airport] == ht[arr_airport] {
         alert("Departure airport cannot be in the same city as arrival airport!");
         return false;
       }
