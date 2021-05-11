@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>B-Airline</title>
         <link rel="stylesheet" href="../static/public_view.css" />
+        <link rel="stylesheet" href="../static/lib/jquery-ui.css">
         <script src="../static/lib/jquery-1.12.4.js"></script>
         <script src="../static/lib/jquery-ui.js"></script>
         <script src="../static/lib/moment.js"></script>
@@ -112,7 +113,7 @@
                           <label class="label">Airline Name</label> </br>
                           <input type="text" id = "em" name = "airline_name" placeholder="airline name" value="{{session['airline']}}" readonlys/> </br>
                           <label class="label">Departure Airport</label> </br>
-                          <input type="text" id = "nm" name = "departure_airport" placeholder="departure airport" required/> </br>
+                          <input type="text" id = "src_dl" name = "departure_airport" placeholder="departure airport" required/> </br>
                       </div>
                       <div class="smaller-container">
                           <label class="label"> Flight Num</label> </br>
@@ -135,7 +136,7 @@
                       </div>
                       <div class="smaller-container">
                           <label class="label">Arrival Airport</label> </br>
-                          <input type="text" id = "bd" name = "arrival_airport" placeholder="arrival airport" required/> </br>
+                          <input type="text" id = "dst_dl" name = "arrival_airport" placeholder="arrival airport" required/> </br>
                           <label class="label">Arrival Time</label> </br>
                           <input type="time" id = "ct" name = "arrival_time" placeholder="arrival time" style = "height: 50px; margin: 10px; width: 260px; font-size:25px; text-align: center;" required/> </br>
                           
@@ -179,26 +180,34 @@
   </body>
 
   <script>
-        var airports_and_city;
+        var airports_and_city, ht={};
         airports_and_city = {{airport_city | safe}};
-        
+
+
+        for (let data of airports_and_city) {
+          temp = data.split(" - ");
+          if (temp.length == 2) {
+              ht[temp[1]] = temp[0];
+          }
+      }
+
         $(document).ready(function() {
             $("#src_dl").autocomplete({
                 source: function(request, response){
-                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    var results = $.ui.autocomplete.filter(Object.keys(ht), request.term);
                     response(results.slice(0, 5));
                 }
             });
             $("#dst_dl").autocomplete({
                 source: function(request, response){
-                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    var results = $.ui.autocomplete.filter(Object.keys(ht), request.term);
                     response(results.slice(0, 5));
                 }
             });
         });
 
     function formValidation() {
-      var airports_and_city, ht={}, temp, dpt_airport, arr_airport, dpt_time, arr_time;
+      var temp, dpt_airport, arr_airport, dpt_time, arr_time;
       // var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test;
       dpt_airport = document.getElementsByName("departure_airport")[0].value;
       arr_airport = document.getElementsByName("arrival_airport")[0].value;
@@ -208,13 +217,7 @@
       arr_time = document.getElementsByName("arrival_date")[0].value + document.getElementsByName("arrival_airport")[0].value;
       airports_and_city = {{airport_city | safe}};
 
-      for (let data of airports_and_city) {
-          temp = data.split(" - ");
-          if (temp.length == 2) {
-              ht[temp[1]] = temp[0];
-          }
-      }
-
+      
 
       if (!(dpt_airport in ht)) {
         alert("Enter a valid departure airport!");
