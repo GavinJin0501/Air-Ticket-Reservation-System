@@ -242,29 +242,28 @@ def get_time_flights(conn, identity, email, start_date, end_date):
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
-               WHERE departure_time BETWEEN %s AND %s 
+               WHERE departure_time >= %s AND departure_time <= %s 
             """
 
     if identity == "airline_staff":
-        query += """WHERE airline_name IN (
+        query += """AND airline_name IN (
                         SELECT airline_name
                         FROM airline_staff
                         WHERE username = %s
         )"""
     elif identity == "customer":
-        query += """WHERE flight_num IN (
+        query += """AND flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket
                         WHERE customer_email = %s
         )"""
     else:
-        query += """WHERE flight_num IN (
+        query += """AND flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
                         WHERE email =  %s
         )"""
-
-    cursor.execute(query, (email, start_date, end_date))
+    cursor.execute(query, (start_date, end_date, email))
     data = cursor.fetchall()
     cursor.close()
 
