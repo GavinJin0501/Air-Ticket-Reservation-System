@@ -153,16 +153,16 @@ def view_my_flights():
     airport_city = db_utils.get_airport_and_city(conn)
     if request.method == "GET":
         upcoming_flights = db_utils.get_upcoming_flights(conn, identity, session["email"])
-        print(upcoming_flights)
+        # print(upcoming_flights)
         return render_template("view_my_flights.html", flights=upcoming_flights, airport_city=airport_city)
     elif request.method == "POST":
         start_date = request.form.get("start_date", "")
         end_date = request.form.get("end_date", "")
-        print(start_date, end_date)
+        # print(start_date, end_date)
 
         source = request.form.get('depart', "")
         destination = request.form.get('arrive', "")
-        print(source, destination)
+        # print(source, destination)
 
         if source:
             source = source.split(" - ")
@@ -389,14 +389,17 @@ def create_new_flights():
         return redirect(url_for("home"))
 
     airport_city = db_utils.get_airport_and_city(conn)
+    print(airport_city)
     if request.method == "GET":
         return render_template("CreateNewFlights.html", status=False, error="", airport_city=airport_city)
     elif request.method == "POST":
         info = {"airline_name": request.form["airline_name"],
                 "flight_num": request.form["flight_num"],  # no repetitive check
                 "departure_airport": request.form["departure_airport"],  # have check
+                "departure_date": request.form["departure_date"],
                 "departure_time": request.form["departure_time"],
                 "arrival_airport": request.form["arrival_airport"],  # have check
+                "arrival_date": request.form["arrival_date"],
                 "arrival_time": request.form["arrival_time"],
                 "price": request.form["price"],
                 "status": request.form.get("status"),
@@ -566,6 +569,7 @@ def view_reports():
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
+        print(start_date, end_date)
         start_year, start_month = int(start_date[:4]), int(start_date[5:7])
         end_year, end_month = int(end_date[:4]), int(end_date[5:7])
 
