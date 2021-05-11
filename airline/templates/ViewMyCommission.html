@@ -52,12 +52,12 @@
       function drawChart1() {
         let info = {{my_commission | safe}}
         let info2 = {{all_commission | safe}}
-        var other = info2[0][0]-info[0][0]
+        // var other = info2[0][0]-info[0][0]
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
           ['my', info[0][0]],
-          ['other booking agent', other]]
+          ['other booking agent', info2[0][0]]]
         );
 
 
@@ -76,12 +76,12 @@
 
         let info = {{my_commission | safe}}
         let info2 = {{all_commission | safe}}
-        var other = info2[0][1]-info[0][1]
+        // var other = info2[0][1]-info[0][1]
 
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
           ['my', info[0][1]],
-          ['other booking agent', other]]
+          ['other booking agent', info2[0][1]]]
         );
 
 
@@ -93,30 +93,29 @@
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
         chart.draw(data, options);
-        }
+      }
       
 
         function drawChart3() {
 
-          let info = {{my_commission | safe}}
-        let info2 = {{all_commission | safe}}
-        var other = info2[0][2]-info[0][2]
+            let info = {{my_commission | safe}};
+            let info2 = {{all_commission | safe}};
+          // var other = info2[0][2]-info[0][2]
+            var xxx = [['my', info[0][2]],['other booking agent', info2[0][2]]];
 
-          var data = google.visualization.arrayToDataTable([
-            ['string', 'number'],
-            ['my', info[0][2]],
-            ['other booking agent', other]]
-          );
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'identity');
+            data.addColumn('number', 'Commission/ticket');
+            data.addRows(xxx);
 
+            // Set chart options
+            var options = {
+                title: 'Commission/ticket percentage of all booking agents: '
+              };
 
-          // Set chart options
-          var options = {
-              title: 'Commission/ticket percentage of all booking agents: ',
-            };
-
-          // Instantiate and draw our chart, passing in some options.
-          var chart = new google.visualization.PieChart(document.getElementById('chart_div3'));
-          chart.draw(data, options);
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.BarChart(document.getElementById('chart_div3'));
+            chart.draw(data, options);
           }
 
     </script>

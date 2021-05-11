@@ -535,6 +535,7 @@
     max-width: 2000px;
     margin: 100px;
     padding: 0;
+    overflow: scroll;
   }
 
   .half-container1 {
