@@ -745,7 +745,7 @@ def update_user_info(conn, identity, info, old_email, old_agent_id=""):
         query += """ SET username = %s, first_name = %s, last_name = %s
                      WHERE username = %s
                  """
-        cursor.execute(query, (info["email"], info["first_name"], info["last_name"], info["date_of_birth"], old_email))
+        cursor.execute(query, (info["email"], info["first_name"], info["last_name"], old_email))
     elif identity == "booking_agent":
         query += """ SET email = %s, booking_agent_id = %s
                      WHERE email = %s
