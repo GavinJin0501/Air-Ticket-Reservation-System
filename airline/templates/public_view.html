@@ -289,9 +289,9 @@
                 alert("Destination is not valid! Choose from the datalist!");
                 return false;
             }
-            if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
-                alert("Source and destination can not be the same!");
-                return false;
+            if (form_src && form_dst && form_src.split(" - ", 1)[0] == form_dst.split(" - ", 1)[0]) {
+                    alert("Source and destination can not be the same!");
+                    return false;
             }
             if (form_date < today) {
                 alert("You can only search flights after (include) today")
