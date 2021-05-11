@@ -38,7 +38,8 @@
       
       
               // Set chart options
-              var options = {'title':'Top 5 booking agents based on past month ticket sales',};
+              var options = {'title':'Top 5 booking agents based on past month ticket sales',
+              hAxis: {format: '#'}};
       
               // Instantiate and draw our chart, passing in some options.
               var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
@@ -59,7 +60,8 @@
       
       
               // Set chart options
-              var options = {'title':'Top 5 booking agents based on past year ticket sales',};
+              var options = {'title':'Top 5 booking agents based on past year ticket sales',
+              hAxis: {format: '#'}};
       
               // Instantiate and draw our chart, passing in some options.
               var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
@@ -80,7 +82,8 @@
       
       
               // Set chart options
-              var options = {'title':'Top 5 booking agents based on past year commission',};
+              var options = {'title':'Top 5 booking agents based on past year commission',
+              hAxis: {format: '#'}};
       
               // Instantiate and draw our chart, passing in some options.
               var chart = new google.visualization.BarChart(document.getElementById('chart_div3'));
