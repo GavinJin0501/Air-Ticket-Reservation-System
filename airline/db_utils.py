@@ -201,7 +201,50 @@ def get_upcoming_flights(conn, identity, email):
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
-                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) """
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
+               WHERE status = 'Upcoming' AND """
+    if identity == "airline_staff":
+        query += """ airline_name IN (
+                        SELECT airline_name
+                        FROM airline_staff
+                        WHERE username = %s
+        )"""
+    elif identity == "customer":
+        query += """ flight_num IN (
+                        SELECT flight_num
+                        FROM purchases NATURAL JOIN ticket
+                        WHERE customer_email = %s
+        )"""
+    else:
+        query += """ flight_num IN (
+                        SELECT flight_num
+                        FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
+                        WHERE email =  %s
+        )"""
+
+    # print("get upcoming flights query is:\n", query % email)
+    cursor.execute(query, (email,))
+    data = cursor.fetchall()
+    cursor.close()
+
+    # need to pre-process the data!!!!
+    for i in range(len(data)):
+        data[i] = list(data[i])
+        data[i][4] = data[i][4].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][7] = data[i][7].strftime("%Y-%m-%d %H:%M:%S")
+        data[i][8] = int(data[i][8])
+    return data
+
+
+def get_time_flights(conn, identity, email, start_date, end_date):
+    cursor = conn.cursor(prepared=True)
+    query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
+                      arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
+               FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
+               WHERE departure_time BETWEEN %s AND %s 
+            """
+
     if identity == "airline_staff":
         query += """WHERE airline_name IN (
                         SELECT airline_name
@@ -221,8 +264,7 @@ def get_upcoming_flights(conn, identity, email):
                         WHERE email =  %s
         )"""
 
-    # print("get upcoming flights query is:\n", query % email)
-    cursor.execute(query, (email,))
+    cursor.execute(query, (email, start_date, end_date))
     data = cursor.fetchall()
     cursor.close()
 
@@ -256,6 +298,15 @@ def get_specified_flight(conn, airline_name, flight_num):
 
 def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, flight_num):
     cursor = conn.cursor(prepared=True)
+    query = """SELECT *
+                   FROM flight
+                   WHERE airline_name = %s AND flight_num = %s AND status = 'Upcoming' AND departure_time > %s"""
+    cursor.execute(query, (airline_name, flight_num, datetime.today().strftime("%Y-%m-%d")))
+    check_flight = cursor.fetchall()
+    if not check_flight:
+        cursor.close()
+        return False, "Don't cheat! Can't buy this flight!"
+
     query = """SELECT COUNT(ticket_id) 
                FROM ticket 
                WHERE flight_num = %s"""
@@ -272,17 +323,10 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
     seat_num = seat_num[0][0] if seat_num else 0
     # print(ticket_num, seat_num)
     if ticket_num >= seat_num:
-        cursor.cloase()
+        cursor.close()
         return False, "No ticket! This flight is full!"
 
-    query = """SELECT *
-               FROM flight
-               WHERE airline_name = %s AND flight_num = %s AND status = 'Upcoming' AND departure_time > %s"""
-    cursor.execute(query, (airline_name, flight_num, datetime.today().strftime("%Y-%m-%d")))
-    check_flight = cursor.fetchall()
-    if not check_flight:
-        cursor.close()
-        return False, "This flight is expired! Can not buy!"
+
 
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")

@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'some key that you will never guess'
 conn = mysql.connector.connect(host='localhost',
                                user='root',
-                               password='bbbb',
+                               password='',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
@@ -157,7 +157,10 @@ def view_my_flights():
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
-        pass
+        print(start_date, end_date)
+
+        flights = db_utils.get_time_flights(conn, identity, session["email"], start_date, end_date)
+        return render_template("view_my_flights.html", flights=flights)
 
 
 @app.route('/CustomerNames/<flight_num>', methods=["GET"])
