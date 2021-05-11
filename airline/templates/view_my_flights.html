@@ -115,19 +115,22 @@
           
         <div class="table-container">
             <section>
-                <div class="bluebutton">
-                    <div class="smaller-date-container">
-                        <label class="label">Start date</label>             
-                        <input type="date" name = "start_date">
+                <form action="/ViewMyCommission" onsubmit="return submitdate()" autocomplete="off" method="POST"></form>
+                    <div class="bluebutton">
+                        <div class="smaller-date-container">
+                            <label class="label">Start date</label>             
+                            <input type="date" name = "start_date">
+                        </div>
+                        <div class="smaller-date-container">
+                            <label class="label">End date</label>             
+                            <input type="date" name = "end_date">
+                        </div>
+                        <div class="smaller-date-container">
+                            <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
+                            <input type="submit" value = Filter>
+                        </div>
                     </div>
-                    <div class="smaller-date-container">
-                        <label class="label">End date</label>             
-                        <input type="date" name = "end_date">
-                    </div>
-                    <div class="smaller-date-container">
-                        <button class="datebutton" onclick="submitdate()">Filter</button>
-                    </div>
-                </div>
+                </form>
             </section>
 <!-- <<<<<<< Updated upstream -->
             <table id="example" class="display">
