@@ -139,7 +139,6 @@ def register_check(conn, info, identity):
         return True, ""
 
 
-
 def register_to_database(conn, info, identity):
     cursor = conn.cursor(prepared=True)
     query = """INSERT INTO %s""" % identity

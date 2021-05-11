@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'some key that you will never guess'
 conn = mysql.connector.connect(host='localhost',
                                user='root',
-                               password='bbbb',
+                               password='',
                                database='air_ticket_reservation_system')
 app.config["SEND-FILE_MAX_AGE_DEFAULT"] = 1
 EMAIL_REGEX = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
