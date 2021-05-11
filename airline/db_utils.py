@@ -752,9 +752,8 @@ def update_user_info(conn, identity, info, old_email, old_agent_id=""):
                  """
         cursor.execute(query, (info["email"], info["booking_agent_id"], old_email))
     else:
-        query += """SET email = %s, name = %s, building_number = %s, street = %s, city = %s, state = %s, phone_number 
-        = %s, passport_number = %s, passport_expiration = %s, passport_country = %s
-                    WHERE email = %s
+        query += """ SET email = %s, name = %s, building_number = %s, street = %s, city = %s, state = %s, phone_number = %s, passport_number = %s, passport_expiration = %s, passport_country = %s
+                     WHERE email = %s
                 """
         cursor.execute(query, (info["email"], info["name"], info["building_number"], info["street"], info["city"], info["state"],
                                info["phone_number"], info["passport_number"], info["passport_expiration"], info["passport_country"], old_email))
