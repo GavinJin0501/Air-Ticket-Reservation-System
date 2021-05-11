@@ -296,29 +296,30 @@
       // } );
 
       function formValidation() {
-          var start_date, end_date;
-          start_date = document.getElementsByName("start_date")[0].value;
-          end_date = document.getElementsByName("end_date")[0].value;
-
-          if ((!start_date) && (!end_date)) {
-              alert("At least one of start/end date should be filled!");
-              return false;
-          }
-
-          if (end_date > today) {
-                alert("End date cannot be after today!");
-                return false;
-            }
-
-          else {
-              var old_body = document.getElementsByTagName("tbody")[0];
-              var new_body = document.createElement("tbody");
-              generateDateTable(new_body, info);
-              old_body.parentNode.replaceChild(new_body, old_body);
-          }
-
-
-      };
+                var start_date, end_date, today;
+    
+                start_date = document.getElementsByName("start_date")[0].value;
+                end_date = document.getElementsByName("end_date")[0].value;
+                today = new Date().toISOString().substr(0, 10);
+    
+                if (!start_date) {
+                    alert("Start date cannot be empty!");
+                    return false;
+                }
+                if (end_date > today) {
+                    alert("End date cannot be after today!");
+                    return false;
+                }
+                if (!end_date) {
+                    document.getElementsByName("end_date")[0].value = today;
+                    end_date = document.getElementsByName("end_date")[0].value;
+                }
+                if (start_date > end_date) {
+                    alert("Start date should be before end date and today!");
+                    return false;
+                }
+                return true;
+            };
 
       function generateDateTable(table, info) {
           var start_date, end_date;

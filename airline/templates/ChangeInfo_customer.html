@@ -144,35 +144,35 @@
             return false;
         }
 
-        // if (form_pn.length>11) {
-        //     alert("Phone number too long, should be within 11 characters! Please try again");
-        //     return false;
-        // }
+        if (form_pn.length>11) {
+            alert("Phone number too long, should be within 11 characters! Please try again");
+            return false;
+        }
 
-        // if (form_pw != form_cpw) {
-        //     alert("Password is not confirmed! Please try again");
-        //     return false;
-        // }
+        if (form_pw != form_cpw) {
+            alert("Password is not confirmed! Please try again");
+            return false;
+        }
         
-        // if (form_px < today) {
-        //     alert("Passport expiration date can not before today!");
-        //     return false;
-        // }
+        if (form_px < today) {
+            alert("Passport expiration date can not before today!");
+            return false;
+        }
 
         if ((form_dob >= today) || (form_dob < pastest)) {
             alert("Date of birth invalid!");
             return false;
         }
 
-        // if (!moment(form_px, date_format, true).isValid()) {
-        //     alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
-        //     return false;
-        // }
+        if (!moment(form_px, date_format, true).isValid()) {
+            alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
+            return false;
+        }
 
-        // if (!moment(form_dob, date_format, true).isValid()) {
-        //     alert("Date of birth date is not valid. Support format: 'YYYY-MM-DD'");
-        //     return false;
-        // }
+        if (!moment(form_dob, date_format, true).isValid()) {
+            alert("Date of birth date is not valid. Support format: 'YYYY-MM-DD'");
+            return false;
+        }
         
         return true;
         }
