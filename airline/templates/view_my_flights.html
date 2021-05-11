@@ -128,11 +128,11 @@
                         </div>
                         <div class="smaller-date-container">
                             <label class="label">Source</label>             
-                            <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" required/> </br>
+                            <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" /> </br>
                         </div>
                         <div class="smaller-date-container">
                             <label class="label">Destination</label>
-                            <input type="text" id="dst_dl" name = "arrive" placeholder="arrive city or airport" required/> </br>
+                            <input type="text" id="dst_dl" name = "arrive" placeholder="arrive city or airport" /> </br>
                         </div>
                         <div class="smaller-date-container">
                             <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
@@ -286,45 +286,49 @@
     } );
 } );
 
-function submitdate() {
-                var start_date, end_date, today, form_src, form_dst;
+        function submitdate() {
+                var start_date, end_date, today, form_src, form_dst, date_format;
     
                 start_date = document.getElementsByName("start_date")[0].value;
                 end_date = document.getElementsByName("end_date")[0].value;
                 form_src = document.getElementsByName("depart")[0].value;
                 form_dst = document.getElementsByName("arrive")[0].value;
                 today = new Date().toISOString().substr(0, 10);
-    
-                if (!airports_and_city.includes(form_src)) {
+                date_format = 'YYYY-MM-DD';
+
+                if ((!form_src) && (!form_dst) && (!start_date) && (!end_date)) {
+                    alart("At least one of the filter needs to be applied!");
+                    return false;
+                }
+                
+                if (form_src && !airports_and_city.includes(form_src)) {
                 alert("Source is not valid! Choose from the datalist!");
                 return false;
                 }
-                if (!airports_and_city.includes(form_dst)) {
+                if (form_dst && !airports_and_city.includes(form_dst)) {
                     alert("Destination is not valid! Choose from the datalist!");
                     return false;
                 }
-                if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
+                if (form_src && form_dst && form_src.split(" ", 1) == form_dst.split(" ", 1)) {
                     alert("Source and destination can not be the same!");
                     return false;
                 }
-                // if (!start_date) {
-                //     alert("Start date cannot be empty!");
-                //     return false;
-                // }
-                // if (!end_date) {
-                //     alert("End date cannot be empty!");
-                //     return false;
-                // }
-                if (start_date > end_date) {
+                
+                if (start_date && end_date && estart_date > end_date) {
                     alert("Start date should be before end date and today!");
                     return false;
                 }
 
-                if (!moment(form_date, date_format, true).isValid()) {
+                if (!moment(start_date, date_format, true).isValid()) {
                 alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
                 return false;
                 }
-                
+
+                if (!moment(end_date, date_format, true).isValid()) {
+                alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+                return false;
+                }
+
                 return true;
             };
 
