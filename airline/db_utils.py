@@ -242,7 +242,7 @@ def get_time_flights(conn, identity, email, start_date, end_date):
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
-               WHERE departure_time >= %s AND departure_time <= %s 
+               WHERE DATE(departure_time) BETWEEN %s AND %s 
             """
 
     if identity == "airline_staff":
@@ -325,7 +325,12 @@ def purchase_ticket(conn, identity, customer_email, agent_email, airline_name, f
         cursor.close()
         return False, "No ticket! This flight is full!"
 
-
+    query = """SELECT * FROM customer WHERE email = %s"""
+    cursor.execute(query, (customer_email,))
+    data = cursor.fetchall()
+    if not data:
+        cursor.close()
+        return False, "Customer does not exists!"
 
     ticket_id = flight_num[:2] + datetime.now().strftime("%Y%m%d%H%M%S")
     today = datetime.today().strftime("%Y-%m-%d")
