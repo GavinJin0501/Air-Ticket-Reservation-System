@@ -10,6 +10,7 @@
         <script src="../static/lib/jquery-ui.js"></script>
         <script type="text/javascript" src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" href="http://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+        <script src="../static/lib/moment.js"></script>
     </head>
 
     <!-- <style>
@@ -126,9 +127,18 @@
                             <input type="date" name = "end_date">
                         </div>
                         <div class="smaller-date-container">
+                            <label class="label">Source</label>             
+                            <input type="text" id="src_dl" name = "depart" placeholder="depart city or airport" required/> </br>
+                        </div>
+                        <div class="smaller-date-container">
+                            <label class="label">Destination</label>
+                            <input type="text" id="dst_dl" name = "arrive" placeholder="arrive city or airport" required/> </br>
+                        </div>
+                        <div class="smaller-date-container">
                             <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
                             <input type="submit" value = Filter>
                         </div>
+                    </br>
                     </div>
                 </form>
             </section>
@@ -277,27 +287,71 @@
 } );
 
 function submitdate() {
-                var start_date, end_date, today;
+                var start_date, end_date, today, form_src, form_dst;
     
                 start_date = document.getElementsByName("start_date")[0].value;
                 end_date = document.getElementsByName("end_date")[0].value;
+                form_src = document.getElementsByName("depart")[0].value;
+                form_dst = document.getElementsByName("arrive")[0].value;
                 today = new Date().toISOString().substr(0, 10);
     
-                
-                if (!start_date) {
-                    alert("Start date cannot be empty!");
+                if (!airports_and_city.includes(form_src)) {
+                alert("Source is not valid! Choose from the datalist!");
+                return false;
+                }
+                if (!airports_and_city.includes(form_dst)) {
+                    alert("Destination is not valid! Choose from the datalist!");
                     return false;
                 }
-                if (!end_date) {
-                    alert("End date cannot be empty!");
+                if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
+                    alert("Source and destination can not be the same!");
                     return false;
                 }
+                // if (!start_date) {
+                //     alert("Start date cannot be empty!");
+                //     return false;
+                // }
+                // if (!end_date) {
+                //     alert("End date cannot be empty!");
+                //     return false;
+                // }
                 if (start_date > end_date) {
                     alert("Start date should be before end date and today!");
                     return false;
                 }
+
+                if (!moment(form_date, date_format, true).isValid()) {
+                alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+                return false;
+                }
+                
                 return true;
             };
+
+
+            // if (!airports_and_city.includes(form_src)) {
+            //     alert("Source is not valid! Choose from the datalist!");
+            //     return false;
+            // }
+            // if (!airports_and_city.includes(form_dst)) {
+            //     alert("Destination is not valid! Choose from the datalist!");
+            //     return false;
+            // }
+            // if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
+            //     alert("Source and destination can not be the same!");
+            //     return false;
+            // }
+            // if (form_date < today) {
+            //     alert("You can only search flights after (include) today")
+            //     return false;
+            // }
+                
+            // if (!moment(form_date, date_format, true).isValid()) {
+            //     alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+            //     return false;
+            // }
+            // return true;
+            // };
 
         function generateDateTable(table, info) {
             var start_date, end_date;
@@ -390,5 +444,26 @@ function submitdate() {
         this.className += " active";
         });
         }
+
+
+
+        var airports_and_city;
+        airports_and_city = {{airport_city | safe}};
+        
+        $(document).ready(function() {
+            $("#src_dl").autocomplete({
+                source: function(request, response){
+                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    response(results.slice(0, 5));
+                }
+            });
+            $("#dst_dl").autocomplete({
+                source: function(request, response){
+                    var results = $.ui.autocomplete.filter(airports_and_city, request.term);
+                    response(results.slice(0, 5));
+                }
+            });
+        });
+        
     </script>
     
