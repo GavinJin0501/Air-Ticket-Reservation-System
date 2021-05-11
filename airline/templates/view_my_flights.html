@@ -135,7 +135,6 @@
                             <input type="text" id="dst_dl" name = "arrive" placeholder="arrive city or airport" /> </br>
                         </div>
                         <div class="smaller-date-container">
-                            <!-- <button class="datebutton" onclick="submitdate()">Filter</button> -->
                             <input type="submit" value = Filter>
                         </div>
                     </br>
@@ -236,74 +235,46 @@
         generateTableHead(table, data);
         
 
-        // $(document).ready(function() {
-        //     // Setup - add a text input to each footer cell
-        //     $('#example tfoot th').each( function () {
-        //         var title = $(this).text();
-        //         $(this).html( '<input type="text" id="tabletext" placeholder="'+title+'" />' );
-        //     } );
-        
-        //     // DataTable
-        //     var table = $('#example').DataTable({
-        //         initComplete: function () {
-        //             // Apply the search
-        //             this.api().columns().every( function () {
-        //                 var that = this;
-        
-        //                 $( 'input', this.footer() ).on( 'keyup change clear', function () {
-        //                     if ( that.search() !== this.value ) {
-        //                         that
-        //                             .search( this.value )
-        //                             .draw();
-        //                     }
-        //                 } );
-        //             } );
-        //         }
-        //     });
-        
-        // } );
-
         $(document).ready(function() {
-    // Setup - add a text input to each footer cell
-    $('#example thead tr').clone(true).appendTo( '#example thead' );
-    $('#example thead tr:eq(1) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
- 
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( table.column(i).search() !== this.value ) {
-                table
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    } );
- 
-    var table = $('#example').DataTable( {
-        orderCellsTop: true,
-        fixedHeader: true
-    } );
-} );
+            // Setup - add a text input to each footer cell
+            $('#example thead tr').clone(true).appendTo( '#example thead' );
+            $('#example thead tr:eq(1) th').each( function (i) {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        
+                $( 'input', this ).on( 'keyup change', function () {
+                    if ( table.column(i).search() !== this.value ) {
+                        table
+                            .column(i)
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        
+            var table = $('#example').DataTable( {
+                orderCellsTop: true,
+                fixedHeader: true
+            });
+         });
 
         function submitdate() {
-                var start_date, end_date, today, form_src, form_dst, date_format;
+                var start_date, end_date, form_src, form_dst, date_format;
     
                 start_date = document.getElementsByName("start_date")[0].value;
                 end_date = document.getElementsByName("end_date")[0].value;
                 form_src = document.getElementsByName("depart")[0].value;
                 form_dst = document.getElementsByName("arrive")[0].value;
-                today = new Date().toISOString().substr(0, 10);
                 date_format = 'YYYY-MM-DD';
 
                 if ((!form_src) && (!form_dst) && (!start_date) && (!end_date)) {
-                    alart("At least one of the filter needs to be applied!");
+                    alert("At least one of the filter needs to be applied!");
                     return false;
                 }
                 
                 if (form_src && !airports_and_city.includes(form_src)) {
-                alert("Source is not valid! Choose from the datalist!");
-                return false;
+                    alert("Source is not valid! Choose from the datalist!");
+                    return false;
                 }
                 if (form_dst && !airports_and_city.includes(form_dst)) {
                     alert("Destination is not valid! Choose from the datalist!");
@@ -319,43 +290,19 @@
                     return false;
                 }
 
-                if (!moment(start_date, date_format, true).isValid()) {
-                alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
-                return false;
+                if (start_date && !moment(start_date, date_format, true).isValid()) {
+                    alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+                    return false;
                 }
 
-                if (!moment(end_date, date_format, true).isValid()) {
-                alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
-                return false;
+                if (end_date && !moment(end_date, date_format, true).isValid()) {
+                    alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
+                    return false;
                 }
 
                 return true;
             };
-
-
-            // if (!airports_and_city.includes(form_src)) {
-            //     alert("Source is not valid! Choose from the datalist!");
-            //     return false;
-            // }
-            // if (!airports_and_city.includes(form_dst)) {
-            //     alert("Destination is not valid! Choose from the datalist!");
-            //     return false;
-            // }
-            // if (form_src.split(" ", 1) == form_dst.split(" ", 1)) {
-            //     alert("Source and destination can not be the same!");
-            //     return false;
-            // }
-            // if (form_date < today) {
-            //     alert("You can only search flights after (include) today")
-            //     return false;
-            // }
-                
-            // if (!moment(form_date, date_format, true).isValid()) {
-            //     alert("Date format is not valid. Support format: 'YYYY-MM-DD' ");
-            //     return false;
-            // }
-            // return true;
-            // };
+            
 
         function generateDateTable(table, info) {
             var start_date, end_date;
