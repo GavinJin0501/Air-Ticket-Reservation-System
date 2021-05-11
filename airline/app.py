@@ -644,7 +644,6 @@ def change_info():
         return render_template("ChangeInfo_%s.html" % session["type"], info=info, error="")
     elif request.method == "POST":
         finfo = {"email": request.form.get("username"),
-                 "password": request.form.get("password"),
                  "name": request.form.get("name"),
                  "first_name": request.form.get("first_name"),
                  "last_name": request.form.get("last_name"),
@@ -656,9 +655,7 @@ def change_info():
                  "passport_number": request.form.get("passport_number"),
                  "passport_expiration": request.form.get("passport_expiration"),
                  "passport_country": request.form.get("passport_country"),
-                 "date_of_birth": request.form.get("date_of_birth"),
-                 "booking_agent_id": request.form.get("booking_agent_id"),
-                 "airline_name": request.form.get("airline_name")
+                 "booking_agent_id": request.form.get("booking_agent_id")
                  }
         identity = session["type"]
         if not is_match(finfo["email"], EMAIL_REGEX):
