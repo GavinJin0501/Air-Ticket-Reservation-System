@@ -283,17 +283,14 @@ function submitdate() {
                 end_date = document.getElementsByName("end_date")[0].value;
                 today = new Date().toISOString().substr(0, 10);
     
+                
                 if (!start_date) {
                     alert("Start date cannot be empty!");
                     return false;
                 }
-                if (end_date > today) {
-                    alert("End date cannot be after today!");
-                    return false;
-                }
                 if (!end_date) {
-                    document.getElementsByName("end_date")[0].value = today;
-                    end_date = document.getElementsByName("end_date")[0].value;
+                    alert("End date cannot be empty!");
+                    return false;
                 }
                 if (start_date > end_date) {
                     alert("Start date should be before end date and today!");
