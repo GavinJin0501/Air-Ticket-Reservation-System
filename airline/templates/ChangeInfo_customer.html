@@ -35,35 +35,68 @@
 
     <div class="register-container" id="register-container">
         <form action="/Changeinfo" autocomplete="off" onsubmit="return formValidation()" method="POST">
-            <label id="navbar__logo">Change your information here, ariline staff!</label>
+            <label id="navbar__logo">Change your information here, customer!</label>
             <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
-                        <label class="label">Username</label> </br>
+                        <label class="label">Email</label> </br>
                         <input type="text" id = "em" name = "username" value="{{info[0]}}" required/> </br>
-                        <label class="label">Airline name</label> </br>
-                        <input type="text" id = "fm" name = "airline_name" value="{{info[5]}}" readonly/> </br>                   
+                        <label class="label">Date of birth</label>
+                        <input type="date" id = "dob" name = "date_of_birth" value="{{info[10]}}" readonly/>
                     </div>
                     <div class="smaller-container">
-                        <label class="label">First name</label> </br>
-                        <input type="text" id = "fm" name = "first_name" value="{{info[2]}}" required/> </br>
-                        <label class="label">Last name</label> </br>
-                        <input type="text" id = "lm" name = "last_name" value="{{info[3]}}" required/> </br>
+                        <label class="label">Name</label> </br>
+                        <input type="text" id = "nm" name = "name" value="{{info[1]}}" required/> </br>
+                        
                     </div>
                 </div>
+            </section>
+
+            <section>
                 <div class="bluebutton">
                     <div class="smaller-container">
-                        <label class="label">Date of birth</label>
-                        <input type="date" id = "dob" name = "date_of_birth" value="{{info[4]}}"/>
+                        <label class="label">Building number</label> </br>
+                        <input type="text" id = "bd" name = "building_number" value="{{info[2]}}" required/> </br>
+                        <label class="label">Street</label> </br>
+                        <input type="text" id = "str" name = "street" value="{{info[3]}}" required/> </br>
+                    </div>
+                    <div class="smaller-container">
+                        <label class="label">City</label> </br>
+                        <input type="text" id = "ct" name = "city" value="{{info[4]}}" required/> </br>
+                        <label class="label">State</label> </br>
+                        <input type="text" id = "sta" name = "state" value="{{info[5]}}" required/> </br>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <div class="bluebutton">
+                    <div class="smaller-container">
+                        <label class="label">Phone number</label> </br>
+                        <input type="text" id = "phn" name = "phone_number" value="{{info[6]}}" required/> </br>
+                        <label class="label">Passport number</label> </br>
+                        <input type="text" id = "pn" name = "passport_number" value="{{info[7]}}" required/> </br>
+                    </div>
+                    <div class="smaller-container">
+                        <label class="label">Passport expiration</label> </br>
+                        <input type="date" id = "px" name = "passport_expiration" value="{{info[8]}}" required/> </br>
+                        <label class="label">Passport country</label> </br>
+                        <input type="text" id = "pc" name = "passport_country" value="{{info[9]}}" required/> </br>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="bluebutton">
+                    <div class="smaller-container">
+                        <!-- <label class="label">Date of birth</label>
+                        <input type="date" id = "dob" name = "date_of_birth" placeholder="date of birth" required/> -->
                     </div>
                     <div class="smaller-container">
                         <input type="submit" value = Change />
-                        <!-- <a href="/login/airline_staff" class="navbar__links__long" id="register-airline_staff">Already have an account? Login</a></br> -->
+                        <!-- <a href="/login/customer" class="navbar__links__long" id="register-customer">Already have an account? Login</a></br> -->
                     </div>
                 </div>
-                <div class="bluebutton"></div>
-                <div class="bluebutton"></div>
-                <div class="bluebutton"></div>
             </section>
 
         </form>
