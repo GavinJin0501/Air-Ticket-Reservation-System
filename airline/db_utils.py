@@ -356,10 +356,10 @@ def get_my_commission(conn, email, start_date, end_date):
 
     query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE purchase_date BETWEEN %s AND %s
+               WHERE purchase_date BETWEEN %s AND %s AND email != %s
             """
     # print(query)
-    cursor.execute(query, (start_date, end_date))
+    cursor.execute(query, (start_date, end_date, email))
     all_commission = cursor.fetchall()
     cursor.close()
 
