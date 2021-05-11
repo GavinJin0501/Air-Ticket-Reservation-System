@@ -708,6 +708,7 @@ def get_user_info(conn, identity, email):
         query += """ WHERE email = %s"""
     cursor.execute(query, (email,))
     data = cursor.fetchall()[0]
+    data.pop(1)
     cursor.close()
     return data
 
@@ -738,7 +739,7 @@ def update_user_info(conn, identity, info, old_email, old_agent_id=""):
 
     query = """UPDATE %s""" % identity
     if identity == "airline_staff":
-        query += """ SET username = %s, first_name = %s, last_name = %s, date_of_birth = %s
+        query += """ SET username = %s, first_name = %s, last_name = %s
                      WHERE username = %s
                  """
         cursor.execute(query, (info["email"], info["first_name"], info["last_name"], info["date_of_birth"], old_email))
@@ -748,7 +749,12 @@ def update_user_info(conn, identity, info, old_email, old_agent_id=""):
                  """
         cursor.execute(query, (info["email"], info["booking_agent_id"], old_email))
     else:
-        pass
+        query += """SET email = %s, name = %s, building_number = %s, street = %s, city = %s, state = %s, phone_number 
+        = %s, passport_number = %s, passport_expiration = %s, passport_country = %s
+                    WHERE email = %s
+                """
+        cursor.execute(query, (info["email"], info["name"], info["building_number"], info["street"], info["city"], info["state"],
+                               info["phone_number"], info["passport_number"], info["passport_expiration"], info["passport_country"], old_email))
 
     conn.commit()
     cursor.close()
