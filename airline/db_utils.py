@@ -708,7 +708,10 @@ def get_user_info(conn, identity, email):
         query += """ WHERE email = %s"""
     cursor.execute(query, (email,))
     data = cursor.fetchall()[0]
-    data.pop(1)
+    if identity == "customer":
+        data.pop(2)
+    else:
+        data.pop(1)
     cursor.close()
     return data
 
