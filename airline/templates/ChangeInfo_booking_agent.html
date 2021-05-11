@@ -88,14 +88,9 @@
     document.getElementsByName("date_of_birth")[0].setAttribute('max', today);
 
     function formValidation() {
-        var form_usn, form_pn, form_pw, form_cpw;
+        var form_usn;
 
         form_usn = document.getElementsByName("username")[0].value;
-        form_pn = document.getElementsByName("phone_number")[0].value;
-        form_pw = document.getElementsByName("password")[0].value;
-        form_cpw = document.getElementsByName("confirm_password")[0].value;
-        form_px = document.getElementsByName("passport_expiration")[0].value;
-        form_dob = document.getElementsByName("date_of_birth")[0].value;
 
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!re.test(form_usn.toLowerCase())) {
@@ -103,36 +98,6 @@
             return false;
         }
 
-        // if (form_pn.length>11) {
-        //     alert("Phone number too long, should be within 11 characters! Please try again");
-        //     return false;
-        // }
-
-        // if (form_pw != form_cpw) {
-        //     alert("Password is not confirmed! Please try again");
-        //     return false;
-        // }
-        
-        // if (form_px < today) {
-        //     alert("Passport expiration date can not before today!");
-        //     return false;
-        // }
-
-        // if ((form_dob >= today) || (form_dob < pastest)) {
-        //     alert("Date of birth invalid!");
-        //     return false;
-        // }
-
-        // if (!moment(form_px, date_format, true).isValid()) {
-        //     alert("Passport expiration date is not valid. Support format: 'YYYY-MM-DD'");
-        //     return false;
-        // }
-
-        // if (!moment(form_dob, date_format, true).isValid()) {
-        //     alert("Date of birth date is not valid. Support format: 'YYYY-MM-DD'");
-        //     return false;
-        // }
-        
         return true;
-        }
+    }
 </script>

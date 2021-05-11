@@ -196,6 +196,7 @@ def get_flight_status(conn, flight_num, departure_date, arrival_date):
 
 
 def get_upcoming_flights(conn, identity, email):
+    next_thirty_days = (datetime.today() + timedelta(days=30)).strftime("%Y-%m-%d")
     cursor = conn.cursor(prepared=True)
     email = email.replace("\'", "\'\'")
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
@@ -204,6 +205,7 @@ def get_upcoming_flights(conn, identity, email):
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
                WHERE status = 'Upcoming' AND """
     if identity == "airline_staff":
+        query += """DATE(departure_time) <= \'%s\' AND """ % next_thirty_days
         query += """ airline_name IN (
                         SELECT airline_name
                         FROM airline_staff
@@ -451,7 +453,7 @@ def top_customers(conn, email):
                     FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
                     WHERE email = \'%s\' and purchase_date >= \'%s\'
                     GROUP BY customer_email
-            )""" % (email, six_month_before)
+            )""" % (email, a_year_before)
     cursor.execute(query)
 
     cursor.callproc("GetTopCustomerCommission")

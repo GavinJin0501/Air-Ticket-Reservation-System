@@ -184,9 +184,11 @@
                 <div class="bar-container">
                     Plane number
                 </div>
-                <div class="bar-container">
-                    buy
-                </div>
+                {%if not session.get("logged_in", False) or session.get("type", "") !="airline_staff" %}
+                    <div class="bar-container">
+                        buy
+                    </div>
+                {%endif%}
 
             </div>
 
@@ -224,16 +226,18 @@
                                 <section class="otherlabel">{{line[10]}}</section>
                             </div>
                             {% if not session.get("logged_in", False) %}
-                            <div class="flight-button-container1">
-<!--                                <a href="/login" class="button" id="buybutton" onclick="">BUY</a>-->
-                                <button class="button" type="submit" formaction="/purchase/login/{{line[0]}}/{{line[1]}}" formmethod="GET">BUY</button>
-                            </div>
+                                <div class="flight-button-container1">
+    <!--                                <a href="/login" class="button" id="buybutton" onclick="">BUY</a>-->
+                                    <button class="button" type="submit" formaction="/purchase/login/{{line[0]}}/{{line[1]}}" formmethod="GET">BUY</button>
+                                </div>
                             {% else %}
-                            <div class="flight-button-container1">
-<!--                                <a href="/purchase/{{line[0]}}/{{line[1]}}" class="button" id="buybutton" methods="POST">BUY</a>-->
-                                <button class="button" type="submit" formaction="/purchase/{{line[0]}}/{{line[1]}}" formmethod="GET">BUY</button>
+                                {%if session.get("type","") !="airline_staff"%}
+                                <div class="flight-button-container1">
+    <!--                                <a href="/purchase/{{line[0]}}/{{line[1]}}" class="button" id="buybutton" methods="POST">BUY</a>-->
+                                    <button class="button" type="submit" formaction="/purchase/{{line[0]}}/{{line[1]}}" formmethod="GET">BUY</button>
 
-                            </div>
+                                </div>
+                                {%endif%}
                             {% endif %}
 
                 </section>
