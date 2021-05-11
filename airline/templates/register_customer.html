@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>B-Air Customer Register</title>
@@ -30,8 +30,14 @@
 		  </ul>
 		</div>
 	</nav>
-
-
+    <div></br></div>
+{% if error %}
+    <div class="topbutton">
+        <div class='warning'>
+            {{error}}
+        </div>
+    </div>
+{% endif %}
 
     <div class="register-container" id="register-container">
         <form action="/register/customer" autocomplete="off" onsubmit="return formValidation()" method="POST">
@@ -112,13 +118,7 @@
             <!-- <a href="/" class="button" id="go-back">Go back</a> -->
         </form>
     </div>
-    {% if error %}
-    <div class="topbutton">
-        <div class='warning'>
-            {{error}}
-        </div>
-    </div>
-{% endif %}
+
 </body>
 
 
