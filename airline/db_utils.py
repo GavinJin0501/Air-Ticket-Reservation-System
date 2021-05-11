@@ -40,24 +40,10 @@ def get_flights_by_location(conn, date, src_city, dst_city, src_airport="", dst_
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id 
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
                                 JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
-               WHERE F.departure_time LIKE \'{}%\' AND F.status = 'Upcoming' AND departure_time > \'{}\' AND """.format(
-        date, datetime.today().strftime("%Y-%m-%d"))
-    # city+airport -> city+airport
-    if src_airport and dst_airport:
-        query += """F.departure_airport = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
-        cursor.execute(query, (src_airport, dst_airport))
-    # city+airport -> city
-    elif src_airport:
-        query += """F.departure_airport = %s AND DST.airport_city= %s ORDER BY F.departure_time"""
-        cursor.execute(query, (src_airport, dst_city))
-    # city -> city+airport
-    elif dst_airport:
-        query += """SRC.airport_city = %s AND F.arrival_airport = %s ORDER BY F.departure_time"""
-        cursor.execute(query, (src_city, dst_airport))
-    # city -> city
-    else:
-        query += """SRC.airport_city = %s AND DST.airport_city= %s ORDER BY F.departure_time"""
-        cursor.execute(query, (src_city, dst_city))
+               WHERE DATE(F.departure_time) = %s AND F.status = 'Upcoming' AND SRC.airport_city = %s AND DST.airport_city= %s AND (F.departure_airport = %s OR %s = '') AND (F.arrival_airport = %s OR %s = '')
+               ORDER BY departure_time
+             """
+    cursor.execute(query, (date, src_city, dst_city, src_airport, src_airport, dst_airport, dst_airport))
     data = cursor.fetchall()
     cursor.close()
 
@@ -238,34 +224,40 @@ def get_upcoming_flights(conn, identity, email):
     return data
 
 
-def get_time_flights(conn, identity, email, start_date, end_date):
+def get_time_flights(conn, identity, email, start_date, end_date, src_city, dst_city, src_airport, dst_airport):
     cursor = conn.cursor(prepared=True)
     query = """SELECT airline_name, flight_num, departure_airport, SRC.airport_city, departure_time,
                       arrival_airport, DST.airport_city, arrival_time, price, status, airplane_id
                FROM flight AS F JOIN airport AS SRC ON (F.departure_airport = SRC.airport_name) 
-                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name) 
-               WHERE DATE(departure_time) BETWEEN %s AND %s 
+                                JOIN airport AS DST ON (F.arrival_airport = DST.airport_name)
+               WHERE 
             """
 
     if identity == "airline_staff":
-        query += """AND airline_name IN (
+        query += """ airline_name IN (
                         SELECT airline_name
                         FROM airline_staff
                         WHERE username = %s
         )"""
     elif identity == "customer":
-        query += """AND flight_num IN (
+        query += """ flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket
                         WHERE customer_email = %s
         )"""
     else:
-        query += """AND flight_num IN (
+        query += """ flight_num IN (
                         SELECT flight_num
                         FROM purchases NATURAL JOIN ticket NATURAL JOIN booking_agent
-                        WHERE email =  %s
+                        WHERE email = %s
         )"""
-    cursor.execute(query, (start_date, end_date, email))
+
+    query += """ AND (DATE(departure_time) >= %s OR %s = '') AND (DATE(departure_time) <= %s OR %s = ''') 
+                 AND (SRC.airport_city = % OR %s = '') AND (DST.airport_city = % OR %s = '') 
+                 AND (departure_airport = % OR %s = '') AND (arrival_airport = % OR %s = '') 
+                 ORDER BY departure_time
+             """
+    cursor.execute(query, (email, start_date, start_date, end_date, end_date, src_city, src_city, dst_city, dst_city, src_airport, src_airport, dst_airport, dst_airport))
     data = cursor.fetchall()
     cursor.close()
 

@@ -150,17 +150,40 @@ def view_my_flights():
         return redirect(url_for("home"))
 
     identity = session.get("type", "guest")
+    airport_city = db_utils.get_airport_and_city(conn)
     if request.method == "GET":
         upcoming_flights = db_utils.get_upcoming_flights(conn, identity, session["email"])
         print(upcoming_flights)
-        return render_template("view_my_flights.html", flights=upcoming_flights)
+        return render_template("view_my_flights.html", flights=upcoming_flights, airport_city=airport_city)
     elif request.method == "POST":
-        start_date = request.form["start_date"]
-        end_date = request.form["end_date"]
+        start_date = request.form.get("start_date", "")
+        end_date = request.form.get("end_date", "")
         print(start_date, end_date)
 
-        flights = db_utils.get_time_flights(conn, identity, session["email"], start_date, end_date)
-        return render_template("view_my_flights.html", flights=flights)
+        source = request.form.get('depart', "")
+        destination = request.form.get('arrive', "")
+        print(source, destination)
+
+        if source:
+            source = source.split(" - ")
+            src_city = source[0]
+            src_airport = ""
+            if len(source) == 2:
+                src_airport = source[1]
+        else:
+            src_city = src_airport = ""
+
+        if destination:
+            destination = destination.split(" - ")
+            dst_city = destination[0]
+            dst_airport = ""
+            if len(destination) == 2:
+                dst_airport = destination[1]
+        else:
+            dst_city = dst_airport = ""
+
+        flights = db_utils.get_time_flights(conn, identity, session["email"], start_date, end_date, src_city, dst_city, src_airport, dst_airport)
+        return render_template("view_my_flights.html", flights=flights, airport_city=airport_city)
 
 
 @app.route('/CustomerNames/<flight_num>', methods=["GET"])
@@ -365,8 +388,9 @@ def create_new_flights():
         flash("You don't have the authority to do so!")
         return redirect(url_for("home"))
 
+    airport_city = db_utils.get_airport_and_city(conn)
     if request.method == "GET":
-        return render_template("CreateNewFlights.html", status=False, error="")
+        return render_template("CreateNewFlights.html", status=False, error="", airport_city=airport_city)
     elif request.method == "POST":
         info = {"airline_name": request.form["airline_name"],
                 "flight_num": request.form["flight_num"],  # no repetitive check
@@ -379,7 +403,7 @@ def create_new_flights():
                 "plane_id": request.form["plane_id"],  # have check
                 }
         status, error = db_utils.create_new_flight(conn, info)
-        return render_template("CreateNewFlights.html", status=status, error=error)
+        return render_template("CreateNewFlights.html", status=status, error=error, airport_city=airport_city)
 
 
 @app.route('/ChangeFlightStatus', methods=["GET", "POST"])

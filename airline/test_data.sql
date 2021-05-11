@@ -18,4 +18,5 @@ VALUES ("China Eastern Airlines", "MU0001", "PVG", "2021-05-01 08:00:00", "PEK",
         ("China Eastern Airlines", "MU0005", "PEK", "2021-05-11 12:00:00", "PVG", "2021-05-11 14:00:00", 670, "Upcoming", "A330-300"),
         ("China Eastern Airlines", "MU0006", "PEK", "2021-05-11 13:00:00", "SHA", "2021-05-11 15:00:00", 1000, "Upcoming", "A330-200"),
         ("China Eastern Airlines", "MU0007", "PKX", "2021-06-01 14:00:00", "PVG", "2021-06-01 16:00:00", 3000, "Upcoming", "A330-200"),
-        ("China Eastern Airlines", "MU0008", "PKX", "2021-06-01 15:00:00", "SHA", "2021-06-01 17:00:00", 1470, "Upcoming", "A330-300");
+        ("China Eastern Airlines", "MU0008", "PKX", "2021-06-01 15:00:00", "SHA", "2021-06-01 17:00:00", 1470, "Upcoming", "A330-300")，
+        ("China Eastern Airlines", "MU0009", "CTU", "2021-07-22 21:30:00", "CSX", "2021-07-22 23:30:00", 1760, "Upcoming", "A330-300");
