@@ -252,9 +252,9 @@ def get_time_flights(conn, identity, email, start_date, end_date, src_city, dst_
                         WHERE email = %s
         )"""
 
-    query += """ AND (DATE(departure_time) >= %s OR %s = '') AND (DATE(departure_time) <= %s OR %s = ''') 
-                 AND (SRC.airport_city = % OR %s = '') AND (DST.airport_city = % OR %s = '') 
-                 AND (departure_airport = % OR %s = '') AND (arrival_airport = % OR %s = '') 
+    query += """ AND (DATE(departure_time) >= %s OR %s = '') AND (DATE(departure_time) <= %s OR %s = '') 
+                 AND (SRC.airport_city = %s OR %s = '') AND (DST.airport_city = %s OR %s = '') 
+                 AND (departure_airport = %s OR %s = '') AND (arrival_airport = %s OR %s = '') 
                  ORDER BY departure_time
              """
     cursor.execute(query, (email, start_date, start_date, end_date, end_date, src_city, src_city, dst_city, dst_city, src_airport, src_airport, dst_airport, dst_airport))
