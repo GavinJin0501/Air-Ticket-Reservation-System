@@ -475,7 +475,7 @@ def create_new_flight(conn, info):
         return False, "Flight number already exists!"
 
     # Check departure airport name
-    query = """SELECT departure_airport FROM flight WHERE departure_airport = %s"""
+    query = """SELECT airport_name FROM airport WHERE airport_name = %s"""
     cursor.execute(query, (info["departure_airport"],))
     data = cursor.fetchall()
     if not data:
@@ -483,7 +483,7 @@ def create_new_flight(conn, info):
         return False, "Departure airport does not exist in the database!"
 
     # Check arrival airport name
-    query = """SELECT arrival_airport FROM flight WHERE arrival_airport = %s"""
+    query = """SELECT airport_name FROM airport WHERE airport_name = %s"""
     cursor.execute(query, (info["arrival_airport"],))
     data = cursor.fetchall()
     if not data:
