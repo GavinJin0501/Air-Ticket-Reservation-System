@@ -64,7 +64,7 @@ def get_each_month(month_wise, start_year, start_month, end_year, end_month, sta
         month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
 
 
-def update_month_wise(my_spendings, month_wise):
+def update_month_wise_my_spendings(my_spendings, month_wise):
     for i in my_spendings:
         for j in range(len(month_wise)):
             if j == len(month_wise) - 1:
@@ -77,6 +77,23 @@ def update_month_wise(my_spendings, month_wise):
                     break
     for i in range(len(month_wise)):
         month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
+
+
+def update_month_wise_reports(reports, month_wise):
+    for i in reports:
+        for j in range(len(month_wise)):
+            if j == len(month_wise) - 1:
+                if month_wise[j][0] <= i[1] <= month_wise[j][1]:
+                    month_wise[j][2] += 1
+                    break
+            else:
+                if month_wise[j][0] <= i[1] < month_wise[j][1]:
+                    month_wise[j][2] += 1
+                    break
+    for i in range(len(month_wise)):
+        month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
+
+
 # ======================================================================================
 
 
@@ -195,7 +212,8 @@ def view_my_flights():
         else:
             dst_city = dst_airport = ""
 
-        flights = db_utils.get_time_flights(conn, identity, session["email"], start_date, end_date, src_city, dst_city, src_airport, dst_airport)
+        flights = db_utils.get_time_flights(conn, identity, session["email"], start_date, end_date, src_city, dst_city,
+                                            src_airport, dst_airport)
         return render_template("view_my_flights.html", flights=flights, airport_city=airport_city)
 
 
@@ -315,7 +333,7 @@ def track_my_spending():
                                                                month_wise[0][1])
 
         month_wise.sort()
-        update_month_wise(my_spendings, month_wise)
+        update_month_wise_my_spendings(my_spendings, month_wise)
         return render_template("track_my_spending.html", status="GET", total_amount=total_amount, month_wise=month_wise)
 
     elif request.method == "POST":
@@ -332,9 +350,10 @@ def track_my_spending():
         my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], start_date, end_date)
         # print(total_amount)
 
-        update_month_wise(my_spendings, month_wise)
-    
-        return render_template("track_my_spending.html", status="POST", total_amount=total_amount, month_wise=month_wise, start_date=start_date, end_date=end_date)
+        update_month_wise_my_spendings(my_spendings, month_wise)
+
+        return render_template("track_my_spending.html", status="POST", total_amount=total_amount,
+                               month_wise=month_wise, start_date=start_date, end_date=end_date)
 
 
 @app.route('/ViewMyCommission', methods=["GET", "POST"])
@@ -551,15 +570,9 @@ def view_reports():
             month_wise.append(temp)
 
         reports = db_utils.view_reports(conn, session["airline"], month_wise[-1][0], TODAY.strftime("%Y-%m-%d"))
-        for i in reports:
-            for j in month_wise:
-                if j[0] < i[1] <= j[1]:
-                    j[2] += 1
-                    break
-        # print(reports)
-        # print(month_wise)
-        for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
+
+        month_wise.sort()
+        update_month_wise_reports(reports, month_wise)
 
         return render_template("ViewReports.html", month_wise=month_wise)
 
@@ -573,15 +586,7 @@ def view_reports():
         get_each_month(month_wise, start_year, start_month, end_year, end_month, start_date, end_date)
 
         reports = db_utils.view_reports(conn, session["airline"], start_date, end_date)
-        for i in reports:
-            for j in month_wise:
-                if j[0] < i[1] <= j[1]:
-                    j[2] += 1
-                    break
-        # print(reports)
-        # print(month_wise)
-        for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
+        update_month_wise_reports(reports, month_wise)
         return render_template("ViewReports.html", month_wise=month_wise)
 
 
