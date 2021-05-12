@@ -101,8 +101,14 @@
               </ul>
             </div>
         </nav>
-
-
+      </br>
+        {% if error %}
+        <div class="topbutton">
+          <div class='warning'>
+            {{error}}
+          </div>
+        </div>
+            {% endif %}
 
         <div class="register-container" id="register-container">
           <form action="/CreateNewFlights" autocomplete="off" onsubmit="return formValidation()" method="POST">
@@ -167,13 +173,6 @@
                   </div>
               </section>
               
-              {% if error %}
-          <div class="topbutton">
-            <div class='warning'>
-              {{error}}
-            </div>
-          </div>
-              {% endif %}
           </form>
       </div>
   
@@ -207,7 +206,7 @@
         });
 
     function formValidation() {
-      var temp, dpt_airport, arr_airport, dpt_time, arr_time;
+      var temp, dpt_airport, arr_airport, dpt_time, arr_time, p;
       // var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test;
       dpt_airport = document.getElementsByName("departure_airport")[0].value;
       arr_airport = document.getElementsByName("arrival_airport")[0].value;
@@ -215,6 +214,7 @@
       arr_date = document.getElementsByName("arrival_date")[0].value;
       dpt_time = document.getElementsByName("departure_time")[0].value;
       arr_time = document.getElementsByName("arrival_date")[0].value + document.getElementsByName("arrival_airport")[0].value;
+      p = document.getElementsByName("price")[0].value;
       airports_and_city = {{airport_city | safe}};
 
       
@@ -224,7 +224,7 @@
         return false;
       }
 
-      if (!(arr_airport) in ht) {
+      if (!(arr_airport in ht)) {
         alert("Enter a valid arrival airport!");
         return false;
       }
@@ -242,6 +242,16 @@
         alert("Depart time should be before arrive time!");
         return false;
       }
+
+      if (!Number.isInteger(Number(p))) {
+                alert("Price should be number!");
+                return false;
+            }
+
+      if (Number(p) < 0) {
+                alert("Pricw should be greater than 0!");
+                return false;
+            }
 
       return true;
     }
