@@ -651,6 +651,8 @@ def view_most_frequent_customer(conn, start_date, end_date, airline_name):
     for i in range(len(most_customer)):
         most_customer[i] = list(most_customer[i])
     others[0] = list(others[0])
+    if not most_customer:
+        most_customer = [["", 0]]
     return most_customer, others
 
 
