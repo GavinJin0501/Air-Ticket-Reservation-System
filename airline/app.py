@@ -64,6 +64,19 @@ def get_each_month(month_wise, start_year, start_month, end_year, end_month, sta
         month_wise.append(["%d-%02d-01" % (end_year, end_month), end_date, 0])
 
 
+def update_month_wise(my_spendings, month_wise):
+    for i in my_spendings:
+        for j in range(len(month_wise)):
+            if j == len(month_wise) - 1:
+                if month_wise[j][0] <= i[0] <= month_wise[j][1]:
+                    month_wise[j][2] += i[1]
+                    break
+            else:
+                if month_wise[j][0] <= i[0] < month_wise[j][1]:
+                    month_wise[j][2] += i[1]
+                    break
+    for i in range(len(month_wise)):
+        month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
 # ======================================================================================
 
 
@@ -283,6 +296,7 @@ def track_my_spending():
         TODAY = datetime.today()
         PAST = (TODAY - timedelta(days=365))
         THIS_YEAR, PAST_YEAR, THIS_MONTH = TODAY.year, TODAY.year - 1, TODAY.month
+
         month_wise.append(["%d-%02d-01" % (THIS_YEAR, THIS_MONTH), TODAY.strftime("%Y-%m-%d"), 0])
         for i in range(1, 6):
             if THIS_MONTH - i > 0:
@@ -299,20 +313,10 @@ def track_my_spending():
                                                               TODAY.strftime("%Y-%m-%d"))
         my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], month_wise[-1][0],
                                                                month_wise[0][1])
-        print(my_spendings)
-        print(total_amount)
-        print(month_wise)
 
-        for i in my_spendings:
-            for j in month_wise:
-                if j[0] < i[0] <= j[1]:
-                    j[2] += i[1]
-                    break
-
-        for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0] + " - " + month_wise[i][1], month_wise[i][2]]
-
-        return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
+        month_wise.sort()
+        update_month_wise(my_spendings, month_wise)
+        return render_template("track_my_spending.html", status="GET", total_amount=total_amount, month_wise=month_wise)
 
     elif request.method == "POST":
         start_date = request.form["start_date"]
@@ -326,18 +330,11 @@ def track_my_spending():
 
         total_amount = db_utils.get_my_spendings_total_amount(conn, session["email"], start_date, end_date)
         my_spendings = db_utils.get_my_spendings_certain_range(conn, session["email"], start_date, end_date)
-        print(total_amount)
+        # print(total_amount)
 
-        for i in my_spendings:
-            for j in month_wise:
-                if j[0] < i[0] <= j[1]:
-                    j[2] += i[1]
-                    break
-
-        for i in range(len(month_wise)):
-            month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
-
-        return render_template("track_my_spending.html", total_amount=total_amount, month_wise=month_wise)
+        update_month_wise(my_spendings, month_wise)
+    
+        return render_template("track_my_spending.html", status="POST", total_amount=total_amount, month_wise=month_wise, start_date=start_date, end_date=end_date)
 
 
 @app.route('/ViewMyCommission', methods=["GET", "POST"])
@@ -517,7 +514,7 @@ def view_frequent_customers():
     start_date = datetime.today().strftime("%Y-%m-%d")
     end_date = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
     most_customer, others = db_utils.view_most_frequent_customer(conn, end_date, start_date, session["airline"])
-    print(most_customer, others)
+    # print(most_customer, others)
     if request.method == "GET":
         return render_template("ViewFrequentCustomers.html", most_customer=most_customer, others=others)
     elif request.method == "POST":
@@ -559,8 +556,8 @@ def view_reports():
                 if j[0] < i[1] <= j[1]:
                     j[2] += 1
                     break
-        print(reports)
-        print(month_wise)
+        # print(reports)
+        # print(month_wise)
         for i in range(len(month_wise)):
             month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
 
@@ -569,7 +566,7 @@ def view_reports():
     elif request.method == "POST":
         start_date = request.form["start_date"]
         end_date = request.form["end_date"]
-        print(start_date, end_date)
+        # print(start_date, end_date)
         start_year, start_month = int(start_date[:4]), int(start_date[5:7])
         end_year, end_month = int(end_date[:4]), int(end_date[5:7])
 
@@ -581,8 +578,8 @@ def view_reports():
                 if j[0] < i[1] <= j[1]:
                     j[2] += 1
                     break
-        print(reports)
-        print(month_wise)
+        # print(reports)
+        # print(month_wise)
         for i in range(len(month_wise)):
             month_wise[i] = [month_wise[i][0] + " -> " + month_wise[i][1], month_wise[i][2]]
         return render_template("ViewReports.html", month_wise=month_wise)

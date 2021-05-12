@@ -358,7 +358,6 @@ def get_my_spendings_total_amount(conn, email, start_date, end_date):
                FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
                WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s
             """
-    # print(query)
     cursor.execute(query, (email, start_date, end_date))
     data = cursor.fetchall()
     cursor.close()
@@ -725,7 +724,7 @@ def get_top_destinations(conn, start_date, end_date, airline_name):
                     GROUP BY dst 
             ) 
             """
-    # print(query % (airline_name, start_date, end_date))
+    print(query % (airline_name, start_date, end_date))
     cursor.execute(query % (airline_name, start_date, end_date))
 
     cursor.callproc("GetTopDestination")

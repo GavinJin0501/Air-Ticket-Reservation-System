@@ -33,7 +33,7 @@
         var data = google.visualization.arrayToDataTable([
           ['string', 'number'],
           [info[0][0], info[0][1]],
-          ['other booking agent', other]]
+          ['other customers', other]]
         );
 
 
@@ -42,6 +42,7 @@
             title: 'Ticket percentage of the most frequent costomer: ',
             width: 600,
             height: 300,
+            pieSliceText: 'value-and-percentage'
           };
 
         // Instantiate and draw our chart, passing in some options.
