@@ -570,7 +570,7 @@ def add_airport(conn, airport_name, airport_city):
     return True, ""
 
 
-def view_booking_agents(conn):
+def view_booking_agents(conn, airline_name):
     PAST_MONTH = (datetime.today() - timedelta(days=31)).strftime("%Y-%m-%d")
     PAST_YEAR = (datetime.today() - timedelta(days=365)).strftime("%Y-%m-%d")
 
@@ -578,17 +578,19 @@ def view_booking_agents(conn):
     view_query1 = """CREATE OR REPLACE VIEW top_agents_ticket AS (
                         SELECT email, COUNT(ticket_id) AS num_of_ticket
                         FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
-                        WHERE purchase_date >= \'%s\'
+                        WHERE purchase_date >= \'%s\' AND airline_name = \'%s\'
                         GROUP BY email
                    )"""
-    cursor.execute(view_query1 % PAST_MONTH)
-    cursor.callproc("GetTopAgentsTicket")
+    cursor.execute(view_query1 % (PAST_MONTH, airline_name))
+    # cursor.callproc("GetTopAgentsTicket")
+    cursor.callproc("GetTopFiveAgentsTicket")
     ticket_month = []
     for result in cursor.stored_results():
         ticket_month = result.fetchall()
 
-    cursor.execute(view_query1 % PAST_YEAR)
-    cursor.callproc("GetTopAgentsTicket")
+    cursor.execute(view_query1 % (PAST_YEAR, airline_name))
+    # cursor.callproc("GetTopAgentsTicket")
+    cursor.callproc("GetTopFiveAgentsTicket")
     ticket_year = []
     for result in cursor.stored_results():
         ticket_year = result.fetchall()
@@ -596,10 +598,10 @@ def view_booking_agents(conn):
     view_query2 = """CREATE OR REPLACE VIEW top_agents_commission AS (
                         SELECT email, SUM(price * 0.1) AS amount_of_commission
                         FROM booking_agent NATURAL JOIN purchases NATURAL JOIN ticket NATURAL JOIN flight
-                        WHERE purchase_date >= \'%s\'
+                        WHERE purchase_date >= \'%s\' AND airline_name = \'%s\'
                         GROUP BY email
                    )"""
-    cursor.execute(view_query2 % PAST_YEAR)
+    cursor.execute(view_query2 % (PAST_YEAR, airline_name))
     cursor.callproc("GetTopAgentsCommission")
     commission_year = []
     for result in cursor.stored_results():
@@ -629,17 +631,19 @@ def view_most_frequent_customer(conn, start_date, end_date, airline_name):
                WHERE purchase_date BETWEEN %s AND %s AND airline_name = %s
                GROUP BY customer_email
                HAVING COUNT(ticket_id) >= ALL (SELECT COUNT(ticket_id)
-                                               FROM purchases
-                                               WHERE purchase_date BETWEEN %s AND %s
+                                               FROM purchases NATURAL JOIN ticket
+                                               WHERE purchase_date BETWEEN %s AND %s AND airline_name = %s
                                                GROUP BY customer_email)
+               ORDER BY customer_email
             """
-
-    cursor.execute(query, (start_date, end_date, airline_name, start_date, end_date))
+    # print(query % (start_date, end_date, airline_name, start_date, end_date, airline_name))
+    cursor.execute(query, (start_date, end_date, airline_name, start_date, end_date, airline_name))
     most_customer = cursor.fetchall()
 
     query = """SELECT COUNT(ticket_id)
                FROM purchases NATURAL JOIN ticket
                WHERE purchase_date BETWEEN %s AND %s AND airline_name = %s"""
+    # print(query % (start_date, end_date, airline_name))
     cursor.execute(query, (start_date, end_date, airline_name))
     others = cursor.fetchall()
     cursor.close()
@@ -672,7 +676,7 @@ def get_flight_customers(conn, airline_name, flight_num):
     query = """SELECT DISTINCT email, name, phone_number, passport_number, date_of_birth
                FROM ticket NATURAL JOIN purchases JOIN customer ON (customer.email = purchases.customer_email)
                WHERE airline_name = %s AND flight_num = %s"""
-    print(query % (airline_name, flight_num))
+    # print(query % (airline_name, flight_num))
     cursor.execute(query, (airline_name, flight_num))
     data = cursor.fetchall()
     cursor.close()
@@ -733,7 +737,8 @@ def get_top_destinations(conn, start_date, end_date, airline_name):
     print(query % (airline_name, start_date, end_date))
     cursor.execute(query % (airline_name, start_date, end_date))
 
-    cursor.callproc("GetTopDestination")
+    # cursor.callproc("GetTopDestination")
+    cursor.callproc("GetTopThreeDestination")
     data = []
     for result in cursor.stored_results():
         data = result.fetchall()

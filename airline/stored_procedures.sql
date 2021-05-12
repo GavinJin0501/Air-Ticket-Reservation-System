@@ -28,6 +28,16 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE GetTopFiveAgentsTicket()
+BEGIN
+	SELECT *
+    FROM top_agents_ticket
+    ORDER BY num_of_ticket DESC, email
+    LIMIT 5;
+END //
+DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE GetTopAgentsCommission()
@@ -45,6 +55,19 @@ DELIMITER ;
 
 
 DELIMITER //
+CREATE PROCEDURE GetTopFiveAgentsCommission()
+BEGIN
+    SELECT *
+    FROM top_agents_commission
+    ORDER BY t1.amount_of_commission DESC, email
+    LIMIT 5;
+END //
+DELIMITER ;
+
+
+
+
+DELIMITER //
 CREATE PROCEDURE GetTopDestination()
 BEGIN
     SELECT *
@@ -55,6 +78,17 @@ BEGIN
         WHERE t2.num_of_purchase > t1.num_of_purchase
     )
     ORDER BY t1.num_of_purchase DESC;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE GetTopThreeDestination()
+BEGIN
+    SELECT *
+    FROM top_destinations
+    ORDER BY num_of_purchase DESC, dst
+    LIMIT 3;
 END //
 DELIMITER ;
 
