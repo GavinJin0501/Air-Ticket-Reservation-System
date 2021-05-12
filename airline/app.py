@@ -409,7 +409,7 @@ def create_new_flights():
     if request.method == "GET":
         return render_template("CreateNewFlights.html", status=False, error="", airport_city=airport_city)
     elif request.method == "POST":
-        info = {"airline_name": request.form["airline_name"],
+        info = {"airline_name": session["airline"],
                 "flight_num": request.form["flight_num"],  # no repetitive check
                 "departure_airport": request.form["departure_airport"],  # have check
                 "departure_date": request.form["departure_date"],

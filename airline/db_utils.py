@@ -374,7 +374,7 @@ def get_my_spendings_certain_range(conn, email, start_date, end_date):
                 FROM ticket NATURAL JOIN purchases NATURAL JOIN flight
                 WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s
             """
-    print(query)
+    # print(query)
     cursor.execute(query, (email, start_date, end_date))
     data = cursor.fetchall()
     cursor.close()
