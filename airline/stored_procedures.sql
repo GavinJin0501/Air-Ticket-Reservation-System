@@ -74,6 +74,16 @@ END //
 DELIMITER ;
 
 DELIMITER //
+CREATE PROCEDURE GetTopFiveCustomerTicket()
+BEGIN
+    SELECT *
+    FROM top_customers_ticket
+    ORDER BY num_of_ticket DESC, customer_email
+    LIMIT 5;
+END //
+DELIMITER ;
+
+DELIMITER //
 CREATE PROCEDURE GetTopCustomerCommission()
 BEGIN
     SELECT *
@@ -84,5 +94,15 @@ BEGIN
         WHERE t2.amount_of_commission > t1.amount_of_commission
     )
     ORDER BY t1.amount_of_commission DESC;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE GetTopFiveCustomerCommission()
+BEGIN
+    SELECT *
+    FROM top_customers_commission
+    ORDER BY amount_of_commission DESC, customer_email
+    LIMIT 5;
 END //
 DELIMITER ;

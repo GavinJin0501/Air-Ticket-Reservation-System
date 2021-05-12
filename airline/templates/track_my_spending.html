@@ -123,9 +123,9 @@
                 </form>
             </section>
             {% if status == "GET" %}
-                <div class="warning1">My total spending in the past year: {{total_amount}}</div>
+                <div class="warning">My total spending in the past year: {{total_amount}}</div>
             {% else %}
-                <div class="warning1">My total spending from {{start_date}} to {{end_date}}: {{total_amount}}</div>
+                <div class="warning">My total spending from {{start_date}} to {{end_date}}: {{total_amount}}</div>
             {% endif %}
             </br>
             <div id="chart_div" align="center"></div>

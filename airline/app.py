@@ -370,13 +370,13 @@ def view_my_commission():
         start_date = (TODAY - timedelta(days=30)).strftime("%Y-%m-%d")
         end_date = TODAY.strftime("%Y-%m-%d")
         my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
-        print(my_commission, all_commission)
+        # print(my_commission, all_commission)
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
     elif request.method == "POST":
-        start_date = request.form["start_date"]
-        end_date = request.form["end_date"]
+        start_date = request.form.get("start_date", "")
+        end_date = request.form.get("end_date", "")
         my_commission, all_commission = db_utils.get_my_commission(conn, session["email"], start_date, end_date)
-        print(my_commission, all_commission)
+        # print(my_commission, all_commission)
         return render_template("ViewMyCommission.html", my_commission=my_commission, all_commission=all_commission)
 
 
@@ -634,7 +634,7 @@ def compare_of_revenue_earned():
         return render_template("ComparisonOfRevenueEarned.html", status="POST", direct_sales_month=[[0]],
                                indirect_sales_month=[[0]], direct_sales_year=[[0]], indirect_sales_year=[[0]],
                                direct_sales_specific=direct_sales_specific,
-                               indirect_sales_specific=indirect_sales_specific)
+                               indirect_sales_specific=indirect_sales_specific, start_date=start_date, end_date=end_date)
 
 
 @app.route('/ViewTopDestinations', methods=["GET", "POST"])
@@ -665,7 +665,7 @@ def view_top_destinations():
         print(start_date, end_date)
         top_specified = db_utils.get_top_destinations(conn, start_date, end_date, session["airline"])
         return render_template("ViewTopDestinations.html", status="POST", top_three_month=[["", 0]],
-                               top_last_year=[["", 0]], top_specified=top_specified)
+                               top_last_year=[["", 0]], top_specified=top_specified, start_date=start_date, end_date=end_date)
 
 
 @app.route('/Changeinfo', methods=["GET", "POST"])

@@ -389,17 +389,17 @@ def get_my_commission(conn, email, start_date, end_date):
     cursor = conn.cursor(prepared=True)
     query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE email = %s AND purchase_date BETWEEN %s AND %s
+               WHERE email = %s AND (purchase_date >= %s OR %s = '') AND (purchase_date <= %s OR %s = '')
             """
-    cursor.execute(query, (email, start_date, end_date))
+    cursor.execute(query, (email, start_date, start_date, end_date, end_date))
     my_commission = cursor.fetchall()
 
     query = """SELECT SUM(price) * 0.1, COUNT(ticket_id), SUM(price) * 0.1 / COUNT(ticket_id)
                FROM ticket NATURAL JOIN purchases NATURAL JOIN booking_agent NATURAL JOIN flight
-               WHERE purchase_date BETWEEN %s AND %s AND email != %s
+               WHERE email != %s AND (purchase_date >= %s OR %s = '') AND (purchase_date <= %s OR %s = '')
             """
     # print(query)
-    cursor.execute(query, (start_date, end_date, email))
+    cursor.execute(query, (email, start_date, start_date, end_date, end_date))
     all_commission = cursor.fetchall()
     cursor.close()
 
@@ -434,7 +434,8 @@ def top_customers(conn, email):
                )""" % (email, six_month_before)
     cursor.execute(query)
 
-    cursor.callproc("GetTopCustomerTicket")
+    # cursor.callproc("GetTopCustomerTicket")
+    cursor.callproc("GetTopFiveCustomerTicket")
     most_tickets = []
     for result in cursor.stored_results():
         most_tickets = result.fetchall()
@@ -447,7 +448,8 @@ def top_customers(conn, email):
             )""" % (email, a_year_before)
     cursor.execute(query)
 
-    cursor.callproc("GetTopCustomerCommission")
+    # cursor.callproc("GetTopCustomerCommission")
+    cursor.callproc("GetTopFiveCustomerCommission")
     most_commission = []
     for result in cursor.stored_results():
         most_commission = result.fetchall()
