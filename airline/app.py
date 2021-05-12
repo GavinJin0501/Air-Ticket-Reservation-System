@@ -422,7 +422,9 @@ def create_new_flights():
                 "plane_id": request.form["plane_id"],  # have check
                 }
         status, error = db_utils.create_new_flight(conn, info)
-        return render_template("CreateNewFlights.html", status=status, error=error, airport_city=airport_city)
+        if not status:
+            return render_template("CreateNewFlights.html", status=status, error=error, airport_city=airport_city)
+        return redirect(url_for("home"))
 
 
 @app.route('/ChangeFlightStatus', methods=["GET", "POST"])
