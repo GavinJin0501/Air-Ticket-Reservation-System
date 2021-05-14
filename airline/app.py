@@ -259,6 +259,7 @@ def purchase_confirm(airline_name, flight_num):
     elif request.method == "POST":
         # print(airline_name, flight_num)
         identity = session["type"]
+
         if identity == "customer":
             customer_email = session["email"]
             agent_email = ""
