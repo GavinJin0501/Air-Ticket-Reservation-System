@@ -13,7 +13,7 @@ BEGIN
 END //
 DELIMITER ;
 
-
+"""
 DELIMITER //
 CREATE PROCEDURE GetTopAgentsTicket()
 BEGIN
@@ -27,6 +27,7 @@ BEGIN
     ORDER BY t1.num_of_ticket DESC;
 END //
 DELIMITER ;
+"""
 
 DELIMITER //
 CREATE PROCEDURE GetTopFiveAgentsTicket()
@@ -39,6 +40,7 @@ END //
 DELIMITER ;
 
 
+"""
 DELIMITER //
 CREATE PROCEDURE GetTopAgentsCommission()
 BEGIN
@@ -52,7 +54,7 @@ BEGIN
     ORDER BY t1.amount_of_commission DESC;
 END //
 DELIMITER ;
-
+"""
 
 DELIMITER //
 CREATE PROCEDURE GetTopFiveAgentsCommission()
@@ -66,7 +68,7 @@ DELIMITER ;
 
 
 
-
+"""
 DELIMITER //
 CREATE PROCEDURE GetTopDestination()
 BEGIN
@@ -80,7 +82,7 @@ BEGIN
     ORDER BY t1.num_of_purchase DESC;
 END //
 DELIMITER ;
-
+"""
 
 DELIMITER //
 CREATE PROCEDURE GetTopThreeDestination()
@@ -93,6 +95,7 @@ END //
 DELIMITER ;
 
 
+"""
 DELIMITER //
 CREATE PROCEDURE GetTopCustomerTicket()
 BEGIN
@@ -106,6 +109,8 @@ BEGIN
     ORDER BY t1.num_of_ticket DESC;
 END //
 DELIMITER ;
+"""
+
 
 DELIMITER //
 CREATE PROCEDURE GetTopFiveCustomerTicket()
@@ -117,6 +122,7 @@ BEGIN
 END //
 DELIMITER ;
 
+"""
 DELIMITER //
 CREATE PROCEDURE GetTopCustomerCommission()
 BEGIN
@@ -130,6 +136,7 @@ BEGIN
     ORDER BY t1.amount_of_commission DESC;
 END //
 DELIMITER ;
+"""
 
 DELIMITER //
 CREATE PROCEDURE GetTopFiveCustomerCommission()

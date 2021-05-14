@@ -151,27 +151,14 @@ def register_to_database(conn, info, identity):
 
 
 def get_flight_status(conn, flight_num, departure_date, arrival_date):
-    cursor = conn.cursor()
+    cursor = conn.cursor(prepared=True)
     query = """SELECT airline_name, flight_num, status, airport_city, departure_time
-                FROM flight JOIN airport ON (flight.arrival_airport = airport.airport_name) """
-    if not flight_num:
-        query += """WHERE departure_time LIKE \'{}%\'"""
-        cursor.execute(query.format(departure_date))
-        data = cursor.fetchall()
-    else:
-        query += """WHERE flight_num = \'%s\' AND """ % flight_num
-        if departure_date and arrival_date:
-            query += """departure_time LIKE \'{}%\' AND arrival_time LIKE \'{}%\'"""
-            cursor.execute(query.format(departure_date, arrival_date))
-            data = cursor.fetchall()
-        elif departure_date:
-            query += """departure_time LIKE \'{}%\'"""
-            cursor.execute(query.format(departure_date))
-            data = cursor.fetchall()
-        else:
-            query += """arrival_time LIKE \'{}%\'"""
-            cursor.execute(query.format(arrival_date))
-            data = cursor.fetchall()
+                FROM flight JOIN airport ON (flight.arrival_airport = airport.airport_name)
+                WHERE (flight_num = %s OR %s = '') AND 
+                      (DATE(departure_time) = %s OR %s = '') AND 
+                      (DATE(arrival_time) = %s OR %s = '')"""
+    cursor.execute(query, (flight_num, flight_num, departure_date, departure_date, arrival_date, arrival_date))
+    data = cursor.fetchall()
     cursor.close()
 
     for i in range(len(data)):
