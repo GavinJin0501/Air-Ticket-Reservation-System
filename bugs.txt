@@ -1,2 +1,0 @@
-1. all form input should be validated (especially email format)
-2. if data of the chart is 0, what to do?
